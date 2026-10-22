@@ -1,0 +1,24 @@
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +120
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 120, reused 120, downloaded 0, added 120, done
+
+dependencies:
++ vue 3.5.41
+
+devDependencies:
++ @cloudflare/vite-plugin 1.54.2
++ @cloudflare/vitest-plugin 1.1.2
++ @playwright/test 1.64.1
++ @types/node 22.20.1
++ @vitejs/plugin-vue 5.2.4
++ @vitest/runner 4.1.10
++ @vitest/snapshot 4.1.10
++ typescript 5.6.3
++ vite 6.4.3
++ vitest 4.1.10
++ vue-tsc 2.2.12
++ wrangler 4.127.1
+
+Done in 894ms using pnpm v11.5.1

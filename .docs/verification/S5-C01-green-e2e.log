@@ -1,0 +1,65 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:20960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:7392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (721ms)
+  ok 2 tests\e2e\uploads.spec.ts:11:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (588ms)
+  x  3 tests\e2e\uploads.spec.ts:33:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (5.4s)
+(node:1880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 tests\e2e\uploads.spec.ts:66:1 › TC16: failed fresh policy GET starts no upload and preserves queue (354ms)
+
+
+  1) tests\e2e\uploads.spec.ts:33:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('listitem').filter({ hasText: 'lost.txt' })
+    Expected substring: "서버 확인 중"
+    Received string:    "lost.txt5 B전송 중제거"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('listitem').filter({ hasText: 'lost.txt' }) with timeout 5000ms
+      - waiting for getByRole('listitem').filter({ hasText: 'lost.txt' })
+        14 × locator resolved to <li class="queue-item sending">…</li>
+           - unexpected value "lost.txt5 B전송 중제거"
+
+
+      50 |   await confirmedStored;
+      51 |   await expect(row(page,'first.txt')).toContainText('업로드 완료');
+    > 52 |   await expect(row(page,'lost.txt')).toContainText('서버 확인 중');
+         |                                      ^
+      53 |   await expect(page.getByRole('checkbox',{name:'exe',exact:true})).toBeDisabled();
+      54 |   await expect(page.getByRole('button',{name:'first.txt 목록에서 제거'})).toBeDisabled();
+      55 |   release();
+        at D:\garage\file-uploader-demo\tests\e2e\uploads.spec.ts:52:38
+
+    Error Context: test-results\uploads-TC14-15-real-write-2148b-l-retry-sends-failures-only\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\uploads-TC14-15-real-write-2148b-l-retry-sends-failures-only\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\uploads-TC14-15-real-write-2148b-l-retry-sends-failures-only\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\uploads.spec.ts:33:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only 
+  3 passed (10.1s)
+[ELIFECYCLE] Command failed with exit code 1.

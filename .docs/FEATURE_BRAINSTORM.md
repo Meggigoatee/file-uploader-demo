@@ -159,3 +159,7 @@
 - [MDN: File drag and drop](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop) — 파일 선택과 드롭 처리, 선택 대안 유지, 브라우저 기본 동작 확인.
 - [MDN: XMLHttpRequest upload](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/upload) 및 [XMLHttpRequestUpload](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestUpload) — 업로드 진행 이벤트와 서버 결과 처리 분리 근거.
 - [MDN: Common media types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types) — 대표 형식 예시 참고. 사전 분류가 내용 검증을 대신하지 않음.
+
+## 2026-10-22 화면 수정 요청에 대한 목록 정리 의견
+
+출처: 사용자가 완료 목록을 다음 업로드 전에 정리할 방식(수동 버튼/자동)을 질문했다. AI 제안은 **‘완료 항목 비우기’ 수동 버튼**이다. 성공 상태만 제거하고 대기·사전 차단·실패·완료 확인 실패는 보존하며 전송 중에는 잠그는 방향을 권고한다. 서버 파일 삭제를 뜻하지 않는다. 자동 정리보다 결과 확인 기회를 남기고 불확실한 결과를 숨기지 않는다는 이유다. 상태는 **사용자 선택 대기 / 미구현**이다. 확정 기능이나 기존 시간 여유 옵션으로 편입하지 않는다.

@@ -1,0 +1,22 @@
+$ node .docs/harness/e2e.mjs "layout.spec.ts"
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:10376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:31752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\layout.spec.ts:9:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (639ms)
+  ok 2 tests\e2e\layout.spec.ts:40:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (524ms)
+
+  2 passed (3.7s)

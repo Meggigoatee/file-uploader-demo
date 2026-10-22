@@ -1,0 +1,129 @@
+$ vitest run --config vitest.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/unit/rules.test.ts (39 tests | 10 failed) 7ms
+     × . SH  -> sh 3ms
+     × PDF -> pdf 0ms
+     × aaaaaaaaaaaaaaaaaaaa -> aaaaaaaaaaaaaaaaaaaa 0ms
+     × 7z -> 7z 0ms
+     × accepts 문서.PDF 0ms
+     × accepts archive.tar.gz 0ms
+     × accepts report.final.pdf 0ms
+     × accepts aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt 0ms
+     × accepts 가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가aa.txt 0ms
+     × compares every token after basename, without hidden block list or URL decoding 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rules.test.ts > TC01: extension normalization > . SH  -> sh
+AssertionError: expected null to be 'sh' // Object.is equality
+
+- Expected:
+"sh"
+
++ Received:
+null
+
+ ❯ tests/unit/rules.test.ts:5:157
+      3|
+      4| describe('TC01: extension normalization', () => {
+      5|   it.each([['. SH ', 'sh'], ['PDF', 'pdf'], ['a'.repeat(20), 'a'.repea…
+       |                                                                                                                                                             ^
+      6|   it.each(['', ' ', '..sh', 'tar.gz', 'a b', 'a-b', '한글', 'K', 'a'.rep…
+      7| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/unit/rules.test.ts > TC01: extension normalization > PDF -> pdf
+AssertionError: expected null to be 'pdf' // Object.is equality
+
+- Expected:
+"pdf"
+
++ Received:
+null
+
+ ❯ tests/unit/rules.test.ts:5:157
+      3|
+      4| describe('TC01: extension normalization', () => {
+      5|   it.each([['. SH ', 'sh'], ['PDF', 'pdf'], ['a'.repeat(20), 'a'.repea…
+       |                                                                                                                                                             ^
+      6|   it.each(['', ' ', '..sh', 'tar.gz', 'a b', 'a-b', '한글', 'K', 'a'.rep…
+      7| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/unit/rules.test.ts > TC01: extension normalization > aaaaaaaaaaaaaaaaaaaa -> aaaaaaaaaaaaaaaaaaaa
+AssertionError: expected null to be 'aaaaaaaaaaaaaaaaaaaa' // Object.is equality
+
+- Expected:
+"aaaaaaaaaaaaaaaaaaaa"
+
++ Received:
+null
+
+ ❯ tests/unit/rules.test.ts:5:157
+      3|
+      4| describe('TC01: extension normalization', () => {
+      5|   it.each([['. SH ', 'sh'], ['PDF', 'pdf'], ['a'.repeat(20), 'a'.repea…
+       |                                                                                                                                                             ^
+      6|   it.each(['', ' ', '..sh', 'tar.gz', 'a b', 'a-b', '한글', 'K', 'a'.rep…
+      7| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/unit/rules.test.ts > TC01: extension normalization > 7z -> 7z
+AssertionError: expected null to be '7z' // Object.is equality
+
+- Expected:
+"7z"
+
++ Received:
+null
+
+ ❯ tests/unit/rules.test.ts:5:157
+      3|
+      4| describe('TC01: extension normalization', () => {
+      5|   it.each([['. SH ', 'sh'], ['PDF', 'pdf'], ['a'.repeat(20), 'a'.repea…
+       |                                                                                                                                                             ^
+      6|   it.each(['', ' ', '..sh', 'tar.gz', 'a b', 'a-b', '한글', 'K', 'a'.rep…
+      7| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/unit/rules.test.ts > TC02: names and conservative dot tokens > accepts 문서.PDF
+ FAIL  tests/unit/rules.test.ts > TC02: names and conservative dot tokens > accepts archive.tar.gz
+ FAIL  tests/unit/rules.test.ts > TC02: names and conservative dot tokens > accepts report.final.pdf
+ FAIL  tests/unit/rules.test.ts > TC02: names and conservative dot tokens > accepts aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt
+ FAIL  tests/unit/rules.test.ts > TC02: names and conservative dot tokens > accepts 가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가가aa.txt
+AssertionError: expected null not to be null
+ ❯ tests/unit/rules.test.ts:9:169
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/unit/rules.test.ts > TC02: names and conservative dot tokens > compares every token after basename, without hidden block list or URL decoding
+AssertionError: expected null to deeply equal [ 'exe', 'txt' ]
+
+- Expected:
+[
+  "exe",
+  "txt",
+]
+
++ Received:
+null
+
+ ❯ tests/unit/rules.test.ts:12:44
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 29 passed (39)
+   Start at  22:14:07
+   Duration  193ms (transform 21ms, setup 0ms, import 30ms, tests 7ms, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.

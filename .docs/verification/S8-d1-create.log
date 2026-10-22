@@ -1,0 +1,18 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+✅ Successfully created DB 'file-uploader-demo' in region APAC
+Created your new D1 database.
+
+To access your new D1 Database in your Worker, add the following snippet to your configuration file:
+{
+  "d1_databases": [
+    {
+      "binding": "file_uploader_demo",
+      "database_name": "file-uploader-demo",
+      "database_id": "a5987b22-0ad5-4813-9b4c-55132f580912"
+    }
+  ]
+}
+? Would you like Wrangler to add it on your behalf?
+🤖 Using fallback value in non-interactive context: no

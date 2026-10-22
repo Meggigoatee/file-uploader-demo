@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-22T12:20:45.521Z",
+  "scope": "Isolated runner control flow with a fake pnpm CLI; no application tests",
+  "checks": [
+    {
+      "name": "fail-fast",
+      "result": "passed",
+      "harnessExit": 1,
+      "childExit": 7,
+      "executed": [
+        "typecheck",
+        "build",
+        "test:unit"
+      ]
+    },
+    {
+      "name": "ordered-success",
+      "result": "passed",
+      "harnessExit": 0,
+      "executed": [
+        "typecheck",
+        "build",
+        "test:unit",
+        "test:integration",
+        "test:e2e"
+      ]
+    }
+  ],
+  "result": "passed"
+}

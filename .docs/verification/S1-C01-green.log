@@ -1,0 +1,35 @@
+$ vitest run --config vitest.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/unit/rules.test.ts (39 tests | 1 failed) 5ms
+     × . SH  -> sh 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rules.test.ts > TC01: extension normalization > . SH  -> sh
+AssertionError: expected null to be 'sh' // Object.is equality
+
+- Expected:
+"sh"
+
++ Received:
+null
+
+ ❯ tests/unit/rules.test.ts:5:157
+      3|
+      4| describe('TC01: extension normalization', () => {
+      5|   it.each([['. SH ', 'sh'], ['PDF', 'pdf'], ['a'.repeat(20), 'a'.repea…
+       |                                                                                                                                                             ^
+      6|   it.each(['', ' ', '..sh', 'tar.gz', 'a b', 'a-b', '한글', 'K', 'a'.rep…
+      7| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 38 passed (39)
+   Start at  22:14:27
+   Duration  150ms (transform 21ms, setup 0ms, import 33ms, tests 5ms, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.

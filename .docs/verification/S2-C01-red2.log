@@ -1,0 +1,99 @@
+$ vitest run --config vitest.integration.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/integration/policies.test.ts (5 tests | 4 failed) 166ms
+     × seeds seven unchecked fixed rows; refresh and repeated seed preserve changes 34ms
+     × normalizes additions; rejects duplicate/fixed; deletion is idempotent 42ms
+     × limits customs to 200 atomically on the same DB 30ms
+     × validates origin, content type, JSON shape and actual body size 23ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > seeds seven unchecked fixed rows; refresh and repeated seed preserve changes
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/policies.test.ts:17:29
+     15|   it('seeds seven unchecked fixed rows; refresh and repeated seed pres…
+     16|     const response = await api();
+     17|     expect(response.status).toBe(200);
+       |                             ^
+     18|     const data = await response.json<any>();
+     19|     expect(data.fixed.map((p: any) => p.extension).sort()).toEqual([..…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > normalizes additions; rejects duplicate/fixed; deletion is idempotent
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/integration/policies.test.ts:28:75
+     26|   });
+     27|   it('normalizes additions; rejects duplicate/fixed; deletion is idemp…
+     28|     expect((await api('/custom', 'POST', { extension: '. SH ' })).stat…
+       |                                                                           ^
+     29|     expect((await api('/custom', 'POST', { extension: 'SH' })).status)…
+     30|     expect((await api('/custom', 'POST', { extension: 'exe' })).status…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > limits customs to 200 atomically on the same DB
+AssertionError: expected [ 404, 404 ] to deeply equal [ 201, 409 ]
+
+- Expected
++ Received
+
+  [
+-   201,
+-   409,
++   404,
++   404,
+  ]
+
+ ❯ tests/integration/policies.test.ts:45:47
+     43|     await env.DB.batch(Array.from({length:199}, (_, i) => env.DB.prepa…
+     44|     const results = await Promise.all([api('/custom','POST',{extension…
+     45|     expect(results.map(r => r.status).sort()).toEqual([201,409]);
+       |                                               ^
+     46|     expect(await env.DB.prepare("SELECT count(*) AS n FROM extension_p…
+     47|     const same = await Promise.all([api('/custom','POST',{extension:'o…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > validates origin, content type, JSON shape and actual body size
+AssertionError: expected 404 to be 415 // Object.is equality
+
+- Expected
++ Received
+
+- 415
++ 404
+
+ ❯ tests/integration/policies.test.ts:52:99
+     50|   it('validates origin, content type, JSON shape and actual body size'…
+     51|     expect((await api('/fixed/exe','PATCH',{blocked:true},{origin:'htt…
+     52|     expect((await api('/fixed/exe','PATCH',{blocked:true},{'content-ty…
+       |                                                                                                   ^
+     53|     for (const body of [null, [], {}, {blocked:'true'}, {blocked:true,…
+     54|     const raw = (body: string) => exports.default.fetch('https://examp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  4 failed | 2 passed (6)
+   Start at  22:17:29
+   Duration  1.73s (transform 30ms, setup 0ms, import 53ms, tests 173ms, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.

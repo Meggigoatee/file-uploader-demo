@@ -1,0 +1,38 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:29940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3340) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:31656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (20.1s)
+
+
+  1) tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input 
+
+    Test timeout of 20000ms exceeded.
+
+    Error Context: test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input 
+[ELIFECYCLE] Command failed with exit code 1.

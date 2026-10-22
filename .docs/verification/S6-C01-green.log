@@ -1,0 +1,29 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:30972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:19388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\errors.spec.ts:12:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (627ms)
+  ok 2 tests\e2e\errors.spec.ts:32:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (383ms)
+  ok 3 tests\e2e\errors.spec.ts:42:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (511ms)
+  ok 4 tests\e2e\errors.spec.ts:65:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (2.4s)
+  ok 5 tests\e2e\errors.spec.ts:79:1 › TC17: keyboard add, raw length preservation and narrow layout (393ms)
+  ok 6 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (632ms)
+  ok 7 tests\e2e\uploads.spec.ts:12:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (548ms)
+  ok 8 tests\e2e\uploads.spec.ts:34:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (621ms)
+  ok 9 tests\e2e\uploads.spec.ts:69:1 › TC16: failed fresh policy GET starts no upload and preserves queue (335ms)
+
+  9 passed (10.1s)

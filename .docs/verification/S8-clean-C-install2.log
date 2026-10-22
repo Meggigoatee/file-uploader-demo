@@ -1,0 +1,40 @@
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +120
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 120, reused 0, downloaded 46, added 46
+[WARN] Tarball download average speed 12 KiB/s (size 20 KiB) is below 50 KiB/s: https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.9.tgz (GET)
+Progress: resolved 120, reused 0, downloaded 97, added 97
+[WARN] Tarball download average speed 16 KiB/s (size 16 KiB) is below 50 KiB/s: https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-6.3.0.tgz (GET)
+[WARN] Tarball download average speed 9 KiB/s (size 9 KiB) is below 50 KiB/s: https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz (GET)
+Progress: resolved 120, reused 0, downloaded 111, added 111
+Progress: resolved 120, reused 0, downloaded 112, added 112
+Progress: resolved 120, reused 0, downloaded 116, added 116
+Progress: resolved 120, reused 0, downloaded 119, added 119
+Progress: resolved 120, reused 0, downloaded 120, added 119
+Progress: resolved 120, reused 0, downloaded 120, added 120, done
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/workerd postinstall$ node install.js
+.../esbuild@0.28.1/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.28.1/node_modules/esbuild postinstall: Done
+.../node_modules/workerd postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+dependencies:
++ vue 3.5.41
+
+devDependencies:
++ @cloudflare/vite-plugin 1.54.2
++ @cloudflare/vitest-plugin 1.1.2
++ @playwright/test 1.64.1
++ @types/node 22.20.1
++ @vitejs/plugin-vue 5.2.4
++ @vitest/runner 4.1.10
++ @vitest/snapshot 4.1.10
++ typescript 5.6.3
++ vite 6.4.3
++ vitest 4.1.10
++ vue-tsc 2.2.12
++ wrangler 4.127.1
+
+Done in 8.8s using pnpm v11.5.1

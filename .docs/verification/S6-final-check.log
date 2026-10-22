@@ -1,0 +1,4 @@
+$ node .docs/harness/check.mjs app
+blocked: .docs\verification\runs\CHECK-2026-10-22T13-40-40-440Z-053747f1\report.json
+Run through pnpm run check so the existing pnpm CLI can be reused.
+[ELIFECYCLE] Command failed with exit code 2.

@@ -1,0 +1,22 @@
+{
+  "runId": "CHECK-2026-10-22T12-16-58-955Z-87aea6fd",
+  "mode": "environment",
+  "startedAt": "2026-10-22T12:16:58.956Z",
+  "node": "v24.16.0",
+  "result": "passed",
+  "steps": [
+    {
+      "name": "environment",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "D:\\garage\\file-uploader-demo\\.docs\\verification\\check-environment.mjs",
+        "D:\\garage\\file-uploader-demo\\.docs\\verification\\runs\\CHECK-2026-10-22T12-16-58-955Z-87aea6fd\\environment.json"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "environment.txt"
+    }
+  ],
+  "finishedAt": "2026-10-22T12:17:01.549Z"
+}

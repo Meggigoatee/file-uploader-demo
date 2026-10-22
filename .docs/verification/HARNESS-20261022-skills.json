@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-22T12:20:45.516Z",
+  "scope": "Two authored skills; restricted two-plain-scalar frontmatter and maintained references; not general YAML or agent behavior evaluation",
+  "skills": [
+    {
+      "name": "uploader-worker-checks",
+      "description": "파일 업로더의 Worker 정책 API·업로드·저장 예산을 변경하거나 검증할 때 실제 로컬 D1/R2와 정책 판정 시점의 증거를 확인한다. 단순 Wrangler 명령 실행에는 적용하지 않는다.",
+      "result": "passed"
+    },
+    {
+      "name": "uploader-ui-checks",
+      "description": "파일 업로더의 대기 목록·진행률·정책 편집·재시도 상태를 변경하거나 검증할 때 Vue 화면과 서버 결과의 일치를 Playwright로 확인한다. 단순 CLI 실행이나 정적 문구·스타일 수정에는 적용하지 않는다.",
+      "result": "passed"
+    }
+  ]
+}

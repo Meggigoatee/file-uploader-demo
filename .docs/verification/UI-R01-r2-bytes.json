@@ -1,0 +1,11 @@
+{
+  "verifiedAt": "2026-10-22T23:42:37.6961307+09:00",
+  "match": true,
+  "budgetRefunded": false,
+  "localBodyRemoved": true,
+  "objectId": "36220451-08b1-4eb4-924d-299ba02af161",
+  "expectedSha256": "41D320B5514001480B0F01AB16026FAB99E34E9E7BA9BC2D2DB0CD67475BDE62",
+  "actualSha256": "41D320B5514001480B0F01AB16026FAB99E34E9E7BA9BC2D2DB0CD67475BDE62",
+  "bytes": 39,
+  "ownObjectDeleted": true
+}

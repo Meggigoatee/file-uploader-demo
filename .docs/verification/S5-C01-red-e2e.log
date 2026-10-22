@@ -1,0 +1,118 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:21100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:31012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (676ms)
+  x  2 tests\e2e\uploads.spec.ts:11:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (20.1s)
+(node:26464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 tests\e2e\uploads.spec.ts:33:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (20.1s)
+(node:5092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 tests\e2e\uploads.spec.ts:66:1 › TC16: failed fresh policy GET starts no upload and preserves queue (20.1s)
+
+
+  1) tests\e2e\uploads.spec.ts:11:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh 
+
+    Test timeout of 20000ms exceeded.
+
+    Error: locator.setInputFiles: Test timeout of 20000ms exceeded.
+    Call log:
+      - waiting for getByLabel('파일 선택', { exact: true })
+
+
+      13 |   await page.getByRole('checkbox',{name:'exe',exact:true}).check();
+      14 |   await expect(page.getByText('정책을 저장했습니다.',{exact:true})).toBeVisible();
+    > 15 |   await page.getByLabel('파일 선택', {exact:true}).setInputFiles([file('ok.txt'),file('bad.exe'),file('empty.txt','')]);
+         |   ^
+      16 |   await expect(row(page,'bad.exe')).toContainText('사전 차단');
+      17 |   await expect(row(page,'empty.txt')).toContainText('빈 파일');
+      18 |   await page.getByRole('button',{name:'empty.txt 목록에서 제거'}).click();
+        at D:\garage\file-uploader-demo\tests\e2e\uploads.spec.ts:15:3
+
+    Error Context: test-results\uploads-TC13-mixed-queue-d-4b0dc-ole-batch-limit-and-refresh\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\uploads-TC13-mixed-queue-d-4b0dc-ole-batch-limit-and-refresh\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\uploads-TC13-mixed-queue-d-4b0dc-ole-batch-limit-and-refresh\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\uploads.spec.ts:33:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only 
+
+    Test timeout of 20000ms exceeded.
+
+    Error: locator.setInputFiles: Test timeout of 20000ms exceeded.
+    Call log:
+      - waiting for getByLabel('파일 선택', { exact: true })
+
+
+      46 |   });
+      47 |   await page.goto('/');
+    > 48 |   await page.getByLabel('파일 선택',{exact:true}).setInputFiles([file('first.txt'),file('lost.txt'),file('remaining.txt')]);
+         |   ^
+      49 |   await page.getByRole('button',{name:'업로드 시작 (3)',exact:true}).click();
+      50 |   await confirmedStored;
+      51 |   await expect(row(page,'first.txt')).toContainText('업로드 완료');
+        at D:\garage\file-uploader-demo\tests\e2e\uploads.spec.ts:48:3
+
+    Error Context: test-results\uploads-TC14-15-real-write-2148b-l-retry-sends-failures-only\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\uploads-TC14-15-real-write-2148b-l-retry-sends-failures-only\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\uploads-TC14-15-real-write-2148b-l-retry-sends-failures-only\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests\e2e\uploads.spec.ts:66:1 › TC16: failed fresh policy GET starts no upload and preserves queue 
+
+    Test timeout of 20000ms exceeded.
+
+    Error: locator.setInputFiles: Test timeout of 20000ms exceeded.
+    Call log:
+      - waiting for getByLabel('파일 선택', { exact: true })
+
+
+      68 |   page.on('request',r=>{if(r.url().endsWith('/api/uploads')) count++;});
+      69 |   await page.goto('/');
+    > 70 |   await page.getByLabel('파일 선택',{exact:true}).setInputFiles(file('waiting.txt'));
+         |   ^
+      71 |   await page.route('**/api/policies',route=>route.abort('failed'));
+      72 |   await page.getByRole('button',{name:'업로드 시작 (1)',exact:true}).click();
+      73 |   await expect(page.getByText(/정책을 불러오지 못했습니다/)).toBeVisible();
+        at D:\garage\file-uploader-demo\tests\e2e\uploads.spec.ts:70:3
+
+    Error Context: test-results\uploads-TC16-failed-fresh--0c8e4--upload-and-preserves-queue\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\uploads-TC16-failed-fresh--0c8e4--upload-and-preserves-queue\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\uploads-TC16-failed-fresh--0c8e4--upload-and-preserves-queue\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests\e2e\uploads.spec.ts:11:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh 
+    tests\e2e\uploads.spec.ts:33:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only 
+    tests\e2e\uploads.spec.ts:66:1 › TC16: failed fresh policy GET starts no upload and preserves queue 
+  1 passed (1.1m)
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,45 @@
+$ vitest run --config vitest.integration.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/integration/policies.test.ts (5 tests | 5 failed) 180ms
+     × seeds seven unchecked fixed rows; refresh and repeated seed preserve changes 66ms
+     × normalizes additions; rejects duplicate/fixed; deletion is idempotent 26ms
+     × enforces schema constraints even through direct SQL 26ms
+     × limits customs to 200 atomically on the same DB 24ms
+     × validates origin, content type, JSON shape and actual body size 36ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > seeds seven unchecked fixed rows; refresh and repeated seed preserve changes
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > normalizes additions; rejects duplicate/fixed; deletion is idempotent
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > enforces schema constraints even through direct SQL
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > limits customs to 200 atomically on the same DB
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > validates origin, content type, JSON shape and actual body size
+Error: D1_ERROR: SQL code did not contain a statement.
+ ❯ D1DatabaseSessionAlwaysPrimary._sendOrThrow cloudflare-internal:d1-api:188:19
+ ❯ cloudflare-internal:d1-api:137:19
+ ❯ applyD1Migrations node_modules/.pnpm/@cloudflare+vitest-plugin@1_0929c74d495b4f19c87345d2cacbdef8/node_modules/@cloudflare/vitest-plugin/src/worker/d1.ts:84:2
+ ❯ tests/integration/policies.test.ts:9:3
+      7| beforeEach(async () => {
+      8|   await reset();
+      9|   await applyD1Migrations(env.DB, [{ name: '0001', queries: sql.split(…
+       |   ^
+     10| });
+     11| const api = (path = '', method = 'GET', body?: unknown, headers: Recor…
+
+Caused by: Error: SQL code did not contain a statement.
+ ❯ D1DatabaseSessionAlwaysPrimary._sendOrThrow cloudflare-internal:d1-api:189:24
+ ❯ cloudflare-internal:d1-api:137:19
+ ❯ applyD1Migrations node_modules/.pnpm/@cloudflare+vitest-plugin@1_0929c74d495b4f19c87345d2cacbdef8/node_modules/@cloudflare/vitest-plugin/dist/worker/lib/cloudflare/test-internal.mjs:34:3
+ ❯ tests/integration/policies.test.ts:9:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  5 failed | 1 passed (6)
+   Start at  22:15:49
+   Duration  2.06s (transform 38ms, setup 0ms, import 68ms, tests 185ms, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,17 @@
+{
+  "runId": "CHECK-2026-10-22T12-16-15-043Z-a8ec1695",
+  "mode": "app",
+  "startedAt": "2026-10-22T12:16:15.045Z",
+  "node": "v24.16.0",
+  "result": "blocked",
+  "steps": [],
+  "reason": "Application check scripts are not configured yet.",
+  "missingScripts": [
+    "typecheck",
+    "build",
+    "test:unit",
+    "test:integration",
+    "test:e2e"
+  ],
+  "finishedAt": "2026-10-22T12:16:15.045Z"
+}

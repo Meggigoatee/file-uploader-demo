@@ -1,0 +1,190 @@
+$ vitest run --config vitest.integration.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/integration/uploads.test.ts (9 tests | 9 failed) 263ms
+     × stores exact bytes under a private UUID key; ignores supplied MIME 30ms
+     × allows unchecked exe but rejects checked and embedded dot tokens without storing 47ms
+     × rejects missing fixed policy using actual DB fixture and never writes 28ms
+     × enforces 1 byte, exact 5 MiB, and 5 MiB+1 boundaries 26ms
+     × validates actual streamed body length even with false Content-Length 27ms
+     × rejects malformed multipart, wrong type, extra/multiple/string file fields 23ms
+     × rejects dangerous raw multipart filenames without URL decoding 26ms
+     × reserves app budget atomically on same DB and does not put on rejection 27ms
+     × T snapshot stays accepted when policy changes after check, while next request is blocked 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > stores exact bytes under a private UUID key; ignores supplied MIME
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/integration/uploads.test.ts:23:29
+     21|   it('stores exact bytes under a private UUID key; ignores supplied MI…
+     22|     const response = await send('문서.txt', new Uint8Array([0,255,42]), …
+     23|     expect(response.status).toBe(201);
+       |                             ^
+     24|     const data = await response.json<any>();
+     25|     expect(data).toMatchObject({ id: expect.stringMatching(/^[0-9a-f-]…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > allows unchecked exe but rejects checked and embedded dot tokens without storing
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/integration/uploads.test.ts:33:42
+     31|   });
+     32|   it('allows unchecked exe but rejects checked and embedded dot tokens…
+     33|     expect((await send('a.exe')).status).toBe(201);
+       |                                          ^
+     34|     await env.DB.prepare("UPDATE extension_policies SET blocked=1 WHER…
+     35|     for (const name of ['a.EXE', 'a.exe.txt']) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > rejects missing fixed policy using actual DB fixture and never writes
+AssertionError: expected 404 to be 503 // Object.is equality
+
+- Expected
++ Received
+
+- 503
++ 404
+
+ ❯ tests/integration/uploads.test.ts:44:35
+     42|   it('rejects missing fixed policy using actual DB fixture and never w…
+     43|     await env.DB.prepare("DELETE FROM extension_policies WHERE extensi…
+     44|     expect((await send()).status).toBe(503);
+       |                                   ^
+     45|     expect(await objectCount()).toBe(0);
+     46|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > enforces 1 byte, exact 5 MiB, and 5 MiB+1 boundaries
+AssertionError: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ tests/integration/uploads.test.ts:48:48
+     46|   });
+     47|   it('enforces 1 byte, exact 5 MiB, and 5 MiB+1 boundaries', async () …
+     48|     expect((await send('zero.txt','')).status).toBe(422);
+       |                                                ^
+     49|     expect((await send('max.txt',new Uint8Array(LIMITS.file))).status)…
+     50|     expect((await send('over.txt',new Uint8Array(LIMITS.file+1))).stat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > validates actual streamed body length even with false Content-Length
+AssertionError: expected 404 to be 413 // Object.is equality
+
+- Expected
++ Received
+
+- 413
++ 404
+
+ ❯ tests/integration/uploads.test.ts:55:55
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > rejects malformed multipart, wrong type, extra/multiple/string file fields
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/integration/uploads.test.ts:64:123
+     62|       if (mode === 'extra') form.append('other','x');
+     63|       if (mode === 'multiple') form.append('file',new File(['x'],'b.tx…
+     64|       expect((await upload(new Request('https://example.test/api/uploa…
+       |                                                                                                                           ^
+     65|     }
+     66|     expect((await upload(new Request('https://example.test/api/uploads…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > rejects dangerous raw multipart filenames without URL decoding
+AssertionError: ../a.txt: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ tests/integration/uploads.test.ts:73:184
+     71|     for (const name of ['../a.txt','a/b.txt','c:a.txt','.env','a..txt'…
+     72|       const body = `--raw\r\nContent-Disposition: form-data; name="fil…
+     73|       expect((await upload(new Request('https://example.test/api/uploa…
+       |                                                                                                                                                                                        ^
+     74|     }
+     75|     expect(await objectCount()).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > reserves app budget atomically on same DB and does not put on rejection
+Error: D1_ERROR: no such table: upload_budget: SQLITE_ERROR
+ ❯ D1DatabaseSessionAlwaysPrimary._sendOrThrow cloudflare-internal:d1-api:188:19
+ ❯ cloudflare-internal:d1-api:478:19
+ ❯ tests/integration/uploads.test.ts:78:5
+     76|   });
+     77|   it('reserves app budget atomically on same DB and does not put on re…
+     78|     await env.DB.prepare('UPDATE upload_budget SET reserved_bytes=?,re…
+       |     ^
+     79|     const results = await Promise.all([send('one.txt','x'),send('two.t…
+     80|     expect(results.map(r=>r.status).sort()).toEqual([201,503]);
+
+Caused by: Error: no such table: upload_budget: SQLITE_ERROR
+ ❯ D1DatabaseSessionAlwaysPrimary._sendOrThrow cloudflare-internal:d1-api:189:24
+ ❯ cloudflare-internal:d1-api:478:19
+ ❯ tests/integration/uploads.test.ts:78:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  tests/integration/uploads.test.ts > TC06-10: bounded receive, T, real D1 budget and R2 bytes > T snapshot stays accepted when policy changes after check, while next request is blocked
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/integration/uploads.test.ts:93:46
+     91|       return original(...args);
+     92|     });
+     93|     expect((await send('first.exe')).status).toBe(201);
+       |                                              ^
+     94|     expect(spy).toHaveBeenCalledTimes(1);
+     95|     expect((await send('next.exe')).status).toBe(422);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  9 failed | 6 passed (15)
+   Start at  22:19:23
+   Duration  2.70s (transform 45ms, setup 0ms, import 88ms, tests 487ms, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.

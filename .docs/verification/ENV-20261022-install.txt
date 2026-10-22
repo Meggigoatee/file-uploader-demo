@@ -1,0 +1,30 @@
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 131, reused 61, downloaded 2, added 0
+Progress: resolved 224, reused 107, downloaded 13, added 0
+Progress: resolved 225, reused 107, downloaded 15, added 0
+Packages: +120
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 226, reused 107, downloaded 16, added 120, done
+.../node_modules/workerd postinstall$ node install.js
+.../esbuild@0.28.1/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.28.1/node_modules/esbuild postinstall: Done
+.../node_modules/workerd postinstall: Done
+
+dependencies:
++ vue 3.5.41 (3.5.42 is available)
+
+devDependencies:
++ @cloudflare/vite-plugin 1.54.2 (1.64.0 is available)
++ @cloudflare/vitest-plugin 1.1.2 (1.4.6 is available)
++ @playwright/test 1.64.1
++ @types/node 22.20.1 (26.4.0 is available)
++ @vitejs/plugin-vue 5.2.4 (6.0.8 is available)
++ @vitest/runner 4.1.10 (4.1.11 is available)
++ @vitest/snapshot 4.1.10 (4.1.11 is available)
++ typescript 5.6.3 (7.0.2 is available)
++ vite 6.4.3 (8.2.2 is available)
++ vitest 4.1.10 (4.1.11 is available)
++ vue-tsc 2.2.12 (3.3.11 is available)
++ wrangler 4.127.1
+
+Done in 5.3s using pnpm v11.5.1

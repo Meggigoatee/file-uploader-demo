@@ -1,0 +1,28 @@
+$ vitest run --config vitest.integration.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/integration/policies.test.ts (6 tests | 1 failed) 252ms
+     × records policy mutation outcome without filename, body or credentials 30ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/policies.test.ts > TC03-05: real D1 policy API > records policy mutation outcome without filename, body or credentials
+AssertionError: expected "info" to be called at least once
+ ❯ tests/integration/policies.test.ts:19:17
+     17|     const log=vi.spyOn(console,'info').mockImplementation(()=>{});
+     18|     expect((await api('/fixed/exe','PATCH',{blocked:true})).status).to…
+     19|     expect(log).toHaveBeenCalled();
+       |                 ^
+     20|     const entry=JSON.parse(log.mock.calls[0][0] as string);
+     21|     expect(entry).toMatchObject({operation:'policy.fixed',extension:'e…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 18 passed (19)
+   Start at  22:38:08
+   Duration  3.23s (transform 48ms, setup 0ms, import 94ms, tests 1.08s, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.

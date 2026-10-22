@@ -1,0 +1,30 @@
+$ wrangler types
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+Generating project types...
+
+interface __BaseEnv_Env {
+	UPLOADS: R2Bucket;
+	DB: D1Database;
+	ASSETS: Fetcher;
+}
+declare namespace Cloudflare {
+	interface GlobalProps {
+		mainModule: typeof import("./server/index");
+	}
+	interface Env extends __BaseEnv_Env {}
+}
+interface Env extends __BaseEnv_Env {}
+
+Generating runtime types...
+
+Runtime types generated.
+
+
+✨ Types written to worker-configuration.d.ts
+
+📖 Read about runtime types
+https://developers.cloudflare.com/workers/languages/typescript/#generate-types
+📣 Remember to rerun 'wrangler types' after you change your wrangler.jsonc file.
+

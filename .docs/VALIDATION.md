@@ -1,13 +1,25 @@
 # 검증 계획과 결과
 
-상태: **미실행**. 애플리케이션·의존성·테스트 코드가 아직 없다. 아래는 구현 후 수행할 최소 검증이다. 문서 작업을 위해 테스트 코드를 미리 작성하지 않는다.
+상태: **로컬 앱 검증·실제 공개 배포/원격 저장 검증 완료** (2026-10-22). 아래 V 표는 기준 명세이며 실제 수행/한계는 실행 원장을 따른다. 환경 스모크와 앱 결과를 구분한다. 조건부 V31 옵션은 미구현이다.
 
 ## 검증 방식
 
 - Vitest 순수 규칙 검증: 정규화, 파일명 토큰 추출, 차단 판정, 경계값.
-- Workers 런타임 통합: 실제 로컬 D1/R2 바인딩을 사용해 API·제약·경쟁·저장 실패를 확인한다. 전부 mock으로 통과시키지 않는다. 장애 재현처럼 필요한 경우에만 좁은 실패 대역을 사용한다.
+- Workers 런타임 통합: 실제 로컬 D1/R2 바인딩을 사용해 API·제약·경쟁·실제 저장·앱 예산 거절을 확인한다. Cloudflare 운영 장애·계정 쿼터 응답을 Error/503 대역으로 모방하는 검사는 제외한다. 실제 저장 후 응답 전달 차단은 클라이언트 처리 검증으로 구분한다.
 - Playwright: 한 화면의 핵심 사용자 흐름과 UI/서버 상태 일치를 확인한다. 실제 로컬 Worker API와 저장소를 사용한다.
 - 배포 수동 검증: 별도 테스트용 파일/커스텀 값으로 원격 D1/R2와 공개 URL을 확인한다. 결과는 로컬 결과와 구분한다.
+
+## TDD 실행 계획과 기록
+
+사용자가 수정된 [TDD_PLAN](./TDD_PLAN.md)을 승인해 S0부터 실제 구현했다. TC18/V31은 조건부 옵션으로 생략했다. Cloudflare 응답 모방 제외에 따라 V17/V35/V40은 앱 자체 조건과 클라이언트 통신 제어만 검사한다.
+
+승인 후 매 루프 테스트 선행·실제 Red의 원인 기록·최소 구현·리팩토링·대상 재검증 및 누적 회귀 확인을 수행한다. 실패 분류·실제 메시지·각 실행 명령/종료 코드·리팩토링 이유·기존 기능 결과는 [TDD_LOG](./TDD_LOG.md)에 남기고 여기의 관련 V 항목과 증거를 연결한다. 지금까지 구현된 기능의 단위/Worker 통합/핵심 E2E를 회귀 대상으로 누적하며 미구현 계층은 통과로 세지 않는다.
+
+실제 앱 TDD 루프는 S0-C01~S5-C01 및 S6-C01/C02로 [TDD_LOG](./TDD_LOG.md)에 기록했다. S2 초기 fixture 오류와 절차 보정, S4 환경 오류, S5 통신 제어 fixture 오류도 누락하지 않았다. 아래 과거 환경/계획 검사 결과를 기능 Red/Green으로 소급하지 않는다.
+
+후속 범위 수정 확인(22:04 KST): Cloudflare 실제 장애·계정 한도 응답의 모방 제외, 앱 자체 예산/정책 불변식/클라이언트 통신 제어 유지. 문서 32개/로컬 링크 185개, 깨진 참조 0개·보호 파일 9개 해시 동일·Git 공백 검사 성공. 증거는 `.docs/verification/TDD-SCOPE-20261022-docs.json`. 앱/Cloudflare 장애 테스트는 미실행이다.
+
+2026-10-22 21:49 KST 계획 문서 확인: Markdown 31개/로컬 링크 183개, 깨진 경로·앵커 0개. S0~S8·TC01~TC19와 기존 V01~V40의 참조 누락 없음(V31 조건부). 원본·패키지·lockfile·하네스·기존 스킬 등 9개 보호 파일의 SHA-256 동일, 앱/테스트/설정/SQL 미생성, Git 공백 검사 성공. 증거는 `.docs/verification/TDDPLAN-20261022-docs.json`이며 앱 테스트가 아닌 문서 검사 결과다.
 
 ## 기본 계획(P0) 검증표
 
@@ -31,7 +43,7 @@ P0는 우선순위이며 과제 필수 여부나 상호 합의를 뜻하지 않�
 | V14 (K2) | Content-Length 없는 큰 본문 및 런타임이 허용하는 길이 불일치 요청 | 실제 바이트 상한 적용, 저장 없음 | HTTP/통합, 전송 계층의 선제 거절은 별도 기록 |
 | V15 (K2) | 파일 없음/2개/중복 file/문자열 file/추가 필드/깨진 multipart | 400, 저장 없음 | 통합 |
 | V16 (B1/K2) | 차단 파일의 MIME을 image/png로 위조 | MIME과 무관하게 정책 차단 | 통합 |
-| V17 (K3) | D1 조회 실패/고정 정책 누락, R2 put 실패 | 503, 성공 UI 없음, DB 실패 시 R2 미호출 | 통합 실패 주입 + E2E |
+| V17 (K3, 범위 축소) | 실제 로컬 D1의 고정 정책 누락 | 앱 503, 성공 UI 없음, 정책 불변식 오류 시 R2 미호출. 실제 D1/R2 운영 장애/비정상 반환 모방은 제외·미검증 | 실제 D1 fixture + E2E |
 | V18 (A2/A3/K3) | 정책 저장 실패 및 저장 후 응답 유실 | 실패 시 기존 값 유지, 불확실 시 GET으로 재동기화 | 통합 + E2E |
 | V19 (A2/K4) | 서로 다른 항목 동시 변경 / 같은 항목 동시 변경 | 서로 보존 / 마지막 커밋 우선 | 통합 |
 | V20 (B1/K4) | 정책 조회 전 변경 / 조회 후 변경 | DESIGN의 판정 시점과 일치 | 통합, 해당 경계만 제어 |
@@ -49,12 +61,12 @@ P0는 우선순위이며 과제 필수 여부나 상호 합의를 뜻하지 않�
 | V32 (AI-01/02) | 대기 목록 제외 후 시작, 성공/실패 혼합에서 실패 항목만 재시도 | 제외 파일 미전송, 성공 항목 유지/재전송 없음, 자동 재시도 없음 | E2E + 통합 |
 | V33 (AI-03) | 등록된 fixed/custom 검색, 중복 입력, 미등록 값 조회 | 해당 등록 항목만 확인, 중복 추가 방지 보조, 외부 검색/자동 신규 등록 없음 | E2E + 통합 |
 | V34 (AI-08) | T 이전/이후 정책 변경, 성공 후 현재 정책 재조회 | T 전 변경 반영, T 후 변경은 다음 요청 적용, 완료 결과 유지 | 통합 + E2E |
-| V35 (AI-05) | 누적 예산 경계의 동시 예약, 예약 실패/응답 유실, R2 저장 실패, seed 재실행 | 예산 초과 없음, 예약 성공 확인 전 put 없음, 실패 예산 환급/자동 초기화 없음 | 실제 D1/R2 통합 |
+| V35 (AI-05, 앱 예산) | 앱 누적 예산 경계의 동시 예약/조건부 거절, 실제 저장 후 클라이언트 응답 유실, seed 재실행 | 앱 예산 초과 없음·예약 거절 시 put 없음. 앱 예산 오류 반환·응답 유실/seed에 따른 환급/자동 초기화 없음. Cloudflare 계정 한도/저장 장애 모방 제외 | 실제 로컬 D1/R2 + 응답 전달 제어 |
 | V36 (AI-02/05/06/08) | 정상 저장 후 응답 유실·파싱 실패·타임아웃, 사용자가 수동 재업로드 | 성공 추정/상태 polling 없음, 완료 확인 실패 안내, 새 T 판정과 추가 예산 소비, 비공개 저장 | 실패 주입 + E2E |
 | V37 (A3, UI F03) | 원문 20/21자, 정규화 후 20자가 되는 점 포함 21자, 초과 붙여넣기 | 원문과 정규화 값 모두 상한 적용, 21자 거절, 무단 잘라 등록하지 않고 입력 보존 | 단위 + 통합 + E2E |
 | V38 (UI C01/02/06) | 목록 8개에서 3개 추가, 같은 이름의 별도 파일, 선택 창 취소, 완료 행 제거 | 초과 묶음 전체 거절/기존 8개 유지, 같은 이름 별도 처리, 취소 시 보존, 행 제거는 서버 파일 삭제 요청 없음 | E2E |
-| V39 (UI C04/08) | 추가 입력으로 등록 확인, 해제된 fixed 조회, 대표 항목 클릭 | 현재 등록 값의 정확한 일치만 확인, 등록/차단 구분, 대표 클릭은 입력만 채우며 자동 정책 쓰기 없음 | E2E + 통합 |
-| V40 (UI 5절) | 전송 전 정책 GET 실패, 그룹 중 편집/추가/제거, 한 파일 거절/전체 장애, 새로고침 | 조회 실패 시 미전송, 처리 중 조작 잠금, 파일 거절 뒤 재확인/가능 항목 계속, 장애/예산 소진은 다음 요청 중단. 새로고침 시 정책 유지/전송 목록 초기화 | 실패 주입 + E2E |
+| V39 (UI C04/08, 후속 입력 분리) | 별도 등록 확인 입력, 해제된 fixed 조회, 대표 클릭 시 추가 입력만 변경 | 현재 등록 값의 정확한 일치만 확인, 등록/차단 구분, 대표 클릭은 입력만 채우며 자동 정책 쓰기 없음 | E2E + 통합 |
+| V40 (UI 5절, 범위 명확화) | 정책 GET의 앱 오류/클라이언트 차단, 그룹 중 편집/추가/제거, 개별 거절/브라우저 통신 차단/앱 자체 예산 거절, 새로고침 | GET 실패 시 미전송·조작 잠금. 개별 거절 뒤 가능한 항목 계속, 통신 실패/앱 예산 거절은 다음 요청 중단. 새로고침 시 정책 유지/목록 초기화. Cloudflare 응답 모방 제외 | 실제 API·앱 예산 E2E + 클라이언트 통신 제어 |
 
 시그니처 검사는 이번 범위에서 생략한다. 파일 헤더/내용 검사 통과를 성공 조건이나 UI 문구로 사용하지 않는지 확인한다. 검사 대안 자체는 FEATURE_BRAINSTORM에 보관한다.
 
@@ -67,13 +79,46 @@ P0는 우선순위이며 과제 필수 여부나 상호 합의를 뜻하지 않�
 5. 필요한 typecheck/build, 위 단위·통합 검증, 핵심 E2E가 통과하면 결과를 정리하고 배포로 진행한다. 새 변경/실패가 없으면 같은 검사를 불필요하게 반복하지 않는다.
 6. 파일 기반 증거는 `.docs/verification/`에 두고 실행 ID로 연결한다. 의존성 캐시나 로컬 DB 자체를 증거로 커밋하지 않는다.
 
-## 실행 결과 원장
+## 개발 환경 실행 결과
+
+공통 환경: Windows x64, 기존 Node.js v24.16.0/pnpm 11.5.1, PC 전역 스토어 `D:\.pnpm-store\v11`. 아래 시각은 도구 확인 KST이며 사용자 전송 시각이 아니다. 설치/기동 명령은 PC 계정 실행 환경에서 수행했다. 전체 버전과 재현 방법은 [DEVELOPMENT.md](./DEVELOPMENT.md)에 있다.
+
+| 실행 ID | KST 시각 | 실제 명령·절차 | 결과 | 증거·한계 |
+| --- | --- | --- | --- | --- |
+| ENV-01 | 2026-10-22 20:55~20:56 | `pnpm install --reporter=append-only` | 종료 0, 직접 의존성 13개. 캐시 재사용 107개/다운로드 16개, 연결 120개. strict peer 검사 성공 | [설치 로그](./verification/ENV-20261022-install.txt). 기존 캐시 버전 유지, 정확한 직접 버전과 lockfile 생성 |
+| ENV-02 | 2026-10-22 20:56~20:57 | `pnpm exec playwright install chromium` | 종료 0, Chromium/Headless Shell 156.0.8078.4 및 FFmpeg/Winldd 설치 | [브라우저 설치 로그](./verification/ENV-20261022-browsers.txt). Firefox/WebKit 미설치 |
+| ENV-03 | 2026-10-22 20:56 | `pnpm exec vite --version`, `tsc --version`, `vue-tsc --version`, `vitest --version`, `playwright --version`, `wrangler --version` (각 CLI에 `pnpm exec` 사용), `pnpm list --depth=0` | 모두 실행 성공. Vite 6.4.3/TS 5.6.3/Vitest 4.1.10/Playwright 1.64.1/Wrangler 4.127.1 | vue-tsc CLI 출력은 사용하는 TS 버전 5.6.3이다. 패키지 버전 자체는 2.2.12. 실제 패키지 버전은 ENV-04 JSON에서도 확인 |
+| ENV-04a | 2026-10-22 20:58:17 | `node .docs/verification/check-environment.mjs` | 종료 1. 점검 스크립트의 가상 Vite 진입 경로 오류 | [실패 1](./verification/ENV-20261022-smoke-attempt1.json). 앱/의존성 문제로 단정하지 않음 |
+| ENV-04b | 2026-10-22 20:58:36 | 위 명령, 가상 진입 경로 수정 후 재실행 | 종료 1. 빌드 반환값 배열을 객체로 처리한 점검 코드 오류 | [실패 2](./verification/ENV-20261022-smoke-attempt2.json). 결과 배열 형식 처리로 수정 |
+| ENV-04c | 2026-10-22 20:58:51 | 위 명령, 결과 배열 처리 수정 후 재실행 | 종료 1. Vue 빌드 통과, Miniflare 5의 옵션 형식 불일치 | [실패 3](./verification/ENV-20261022-smoke-attempt3.json). 설치된 타입 정의를 확인해 제공 API `convertV4MiniflareOptions` 사용 |
+| ENV-04 | 2026-10-22 20:59:22 | 위 명령, 옵션 변환 수정 후 재실행 | 종료 0. 패키지 버전·플러그인 import, Vue/TS 메모리 빌드, 로컬 Worker 응답/D1 SELECT/R2 put·get·delete, Chromium headless 기동 성공 | [최종 JSON](./verification/ENV-20261022-smoke.json), [stdout](./verification/ENV-20261022-smoke.txt), [점검 스크립트](./verification/check-environment.mjs). 실제 storeDir도 확인. 임시 로컬 리소스만 사용, 앱 기능/원격/성능 검증 아님 |
+| ENV-05 | 2026-10-22 20:59~21:00 | `pnpm install --frozen-lockfile --offline --reporter=append-only`, 실행 전후 `Get-FileHash pnpm-lock.yaml -Algorithm SHA256` | 종료 0, 추가 다운로드 없음, lockfile 해시 동일 | [설치 결과](./verification/ENV-20261022-frozen-offline.txt), [해시 확인](./verification/ENV-20261022-lockfile.json). 기존 설치와 캐시를 사용한 재현 확인이며 별도 깨끗한 PC 검증은 아님 |
+
+세 번의 스모크 실패는 AI가 작성한 환경 점검 스크립트의 오류였다. 수정 시 패키지 버전은 유지했고 통과 후 같은 스모크를 반복하지 않았다. 테스트용 Worker 코드는 점검 스크립트의 메모리 내 응답만 다루며 앱/API 구현·SQL 마이그레이션을 만들지 않는다.
+
+## 스킬·하네스 준비 확인 (2026-10-22)
+
+앱 검증과 구분한다. 새 의존성 설치 없이 기존 Node/pnpm으로 실행했다. 구성·선정 근거는 [HARNESS](./HARNESS.md)를 따른다.
+
+| 실행 ID | KST 시각 | 실제 명령·절차 | 결과·한계 | 증거 |
+| --- | --- | --- | --- | --- |
+| HARNESS-01 | 21:16 | `pnpm run check:plan` | 종료 0. 환경/앱 모드와 없는 앱 스크립트 5개 표시. 검사를 실행한 결과가 아님 | 사용자에게 보인 도구 출력·HARNESS 문서 |
+| HARNESS-02 | 21:16 | `pnpm run check`, `node .docs/harness/check.mjs invalid` | 각각 종료 2. 앱 준비 부재와 잘못된 인수를 통과로 처리하지 않음. 앱 하위 단계 0개 실행 | [미준비 JSON](./verification/runs/CHECK-2026-10-22T12-16-15-043Z-a8ec1695/report.json) |
+| HARNESS-03 | 21:17 | `pnpm run check:env` | 종료 0. CLI 연결·실행별 증거·기존 환경 스모크 통과. 앱 테스트 아님 | [하네스 결과](./verification/runs/CHECK-2026-10-22T12-16-58-955Z-87aea6fd/report.json), [환경 결과](./verification/runs/CHECK-2026-10-22T12-16-58-955Z-87aea6fd/environment.json) |
+| HARNESS-04 | 21:20 | Node 내장 기능으로 임시 디렉터리에 실행기·대역 pnpm CLI를 두고 정상/실패 실행 | 5단계 정상은 종료 0, test:unit 자식 종료 7이면 하네스 종료 1·뒤 2단계 미실행. 앱 스크립트를 구현한 것이 아님 | [제어 흐름 결과](./verification/HARNESS-20261022-runner-control.json) |
+| HARNESS-05 | 21:16~21:20 | `quick_validate.py` 시도, 이후 Node 내장 기능으로 두 SKILL.md frontmatter 검사 | 번들 검증기는 PyYAML 부재로 실행 실패. 추가 설치 없이 작성한 두 단순 scalar frontmatter의 필드·이름·설명 검사 성공. 범용 YAML/자동 선택/실제 행동 평가는 미검증 | [제한된 구조 검사](./verification/HARNESS-20261022-skills.json) |
+
+기존 환경 스모크에 출력 파일 경로를 전달하도록 수정해 과거 기준 결과를 보존했다. 실제 앱 검증의 순차 연결은 앱 구현 후 확인한다. 스킬은 관련 작업의 판단 기준이며 실행만으로 도메인 검증이 자동 보장되는 것은 아니다.
+
+21:24 KST 최종 확인: Markdown 28개(스킬 2개 포함), 로컬 링크 149개, 깨진 경로·앵커 0개. Git 공백 검사 성공. 직접 의존성 버전 13개·lockfile SHA-256·이전 환경 기준 JSON 보존을 확인했고 앱 스캐폴딩 파일이 생성되지 않았음을 확인했다. 증거: `.docs/verification/HARNESS-20261022-final.json`. 앱 테스트 통과로 표시하지 않는다.
+
+## 애플리케이션 실행 결과 원장
 
 | 실행 ID | KST 시각 | 환경/버전 | 실제 명령·절차 | 검증 ID | 결과/실패 | 증거/후속 조치 |
 | --- | --- | --- | --- | --- | --- | --- |
 | 미실행 | — | 구현 전 | — | 전체 | 계획만 작성 | 구현 요청 후 기록 |
 
-배포 URL: 미생성. GitHub URL: 미생성. 면접 당일 접속 확인: 일정 미제공/미실행.
+배포 URL: 미생성. GitHub: [Meggigoatee/file-uploader-demo](https://github.com/Meggigoatee/file-uploader-demo). 면접 당일 접속 확인: 일정 미제공/미실행.
 
 ## 이번 문서 작업 확인
 
@@ -89,3 +134,59 @@ P0는 우선순위이며 과제 필수 여부나 상호 합의를 뜻하지 않�
 - 승인·설계 검토(P007) 반영 후 문서 점검: Markdown 16개, 로컬 링크 32개(앵커 포함), 깨진 링크 0개, `.docs` 밖 파일 0개. T 전후 정책 변경/결과 보존, 수동 재시도, 예산 동시 예약/미환급 검증 계획을 반영했다. 앱 테스트·CPU/메모리 실측은 미실행이다.
 - 기술 기준안·UI/UX 설계(P009) 반영 후 2026-10-21 22:59 KST 문서 점검: Markdown 19개, 코드 블록 제외 로컬 링크 45개(앵커 포함), 깨진 링크 0개, `.docs` 밖 파일 0개. UI 표는 필수 7행·핵심 11행·조건부 옵션 2행이며 PLAN의 합의 분류와 대응한다. V37~40은 계획으로 추가했다. 실제 UI 렌더링·앱 테스트·배포·성능/시간 실측은 미실행이다.
 - 오늘 설계 마무리·루트 문서(P010) 점검: Markdown 22개, 코드 블록 제외 로컬 링크 72개(앵커 포함), 깨진 링크 0개. `.docs` 밖 파일은 사용자가 요청한 README/AGENTS 2개만 존재한다. 일반 비밀키 패턴 후보와 이번 수정 문서의 비정상 문자 0개. 앱 코드·설정·SQL·설치·앱 테스트·배포 없음.
+- 2026-10-22 개발 의존성 준비(P011) 문서·범위 확인: Markdown 24개, 로컬 링크 105개(앵커 포함), 깨진 경로/앵커 0개. [검사 결과](./verification/ENV-20261022-docs.json). `git diff --check` 성공, .gitignore가 node_modules/로컬 DB·환경 변수·스토어·빌드/테스트 산출물을 제외하는지 확인. 원본 과제는 변경하지 않았다. 패키지/환경 점검과 관련 문서만 변경했으며 앱 코드·SQL·배포 설정은 생성하지 않았다.
+
+## 실제 앱 구현·회귀·배포 실행 원장 (2026-10-22)
+
+환경: Windows x64 / Node 24.16.0 / pnpm 11.5.1 / 기존 전역 store `D:\.pnpm-store\v11`. 기존 의존성 버전 유지. 실제 기능 루프의 명령·최초 실패·재실행·리팩토링은 [TDD_LOG](./TDD_LOG.md)를 따른다.
+
+| 실행 | 실제 결과 | 증거 |
+| --- | --- | --- |
+| S0~S5 기능 루프 | 최초 기능 실패와 최소 구현 후 통과. S2 초기 SQL fixture 오류/순서 보정, S4 HMR 오류, S5 통신 fixture 오류도 별도 기록 | [TDD_LOG](./TDD_LOG.md) |
+| S6 최초 전체 하네스 | 종료 2. pnpm.mjs 미인식 도구 오류. 수정 후 타입/빌드/단위42/Worker19/E2E9 통과 | [blocked](./verification/S6-final-check.log), [report](./verification/runs/CHECK-2026-10-22T13-41-41-313Z-78c64850/report.json) |
+| S6 경계 보강 | 타입/빌드/단위42/Worker21/E2E9 종료 0 | [report](./verification/runs/CHECK-2026-10-22T13-44-29-997Z-d6d491af/report.json) |
+| S8 실제 ID 연결 후 전체 회귀 | 타입/빌드/단위42/Worker21/E2E11 전부 종료 0. E2E에 실제 60초 XHR timeout 포함 | [최종 report](./verification/runs/CHECK-2026-10-22T13-52-13-374Z-f1e9d9d3/report.json), [stdout](./verification/S8-final-check.log) |
+| 동일 항목 서로 다른 값 마지막 커밋 보강 | 실제 동일 DB의 commit 순서를 await 경계로 제어. Worker 전체 **22/22 종료 0**. 제품 코드 변경 없음, 위 나머지 결과 재사용 | [22개 결과](./verification/S8-last-commit.log) |
+| 원격 리소스·배포 | D1/R2 전용 생성, migration 2개 적용, build/deploy 종료 0. r2.dev 비공개 | [D1](./verification/S8-d1-create.log), [R2](./verification/S8-r2-create.log), [migration](./verification/S8-migrate-remote.log), [배포](./verification/S8-deploy.log), [비공개](./verification/S8-r2-private.log) |
+| 공개 Chromium TC19/V25 | 정책 fixed/custom 저장·새로고침 유지, 차단 422, 허용 파일 완료, unknown API JSON404. **1/1 종료 0** | [실행](./verification/S8-remote-browser.log), [관찰 JSON](./verification/S8-remote-browser.json), [화면](./verification/S8-public-desktop.png) |
+| 원격 실제 저장 | R2에서 39바이트를 읽어 원본 SHA-256 일치, 원격 실제 schema/고정7행/예약39바이트·1회 확인 | [바이트](./verification/S8-r2-bytes.json), [원격 DB](./verification/S8-remote-db.json) |
+| 검증 데이터 정리 | 테스트 custom 삭제, fixed 이전 값 복구, 테스트 소유 원격 객체만 삭제. 누적 예산 환급 없음 | [cleanup](./verification/S8-cleanup.log) |
+
+현재 증거 합계: 단위 **42**, Worker 통합 **22**, 로컬 E2E **11**, 공개 원격 **1** 모두 통과. 같은 제품 코드의 타입/빌드 결과를 재사용한다. 마지막 커밋 검사는 테스트 증거만 추가했으므로 60초 E2E를 불필요하게 다시 반복하지 않았다.
+
+| 기준 V | 실제 검사 범위·관찰 |
+| --- | --- |
+| V01~07/24/37 | seed 보존·CHECK·원문/정규화 경계·CRUD·동일 DB 중복/200개 경쟁·삭제 후 재추가·JSON/type/origin/body/404. 화면 저장/새로고침/입력 보존 |
+| V08~16 | unchecked exe 허용, exe/EXE/embedded 토큰 차단·MIME 위조 무시, 실제 R2 바이트/객체 수, raw multipart 위험 이름, UTF-8 경계, 0/5 MiB/5 MiB+1, 실제 body 초과/길이 없음/거짓 header, 필드 형식 |
+| V17 | 실제 D1 fixed 누락 fixture로 앱503·R2 미저장. 제공자 장애를 mock하지 않음. UI 최초 통신 실패 잠금은 별도 E2E |
+| V18/19/20/34 | 실제 중복 요청과 저장 후 응답 유실/재조회, 동일 DB 병행 변경/마지막 실제 commit, 수신 중(T 전)/put 직전(T 후) 정책 변경, GET으로 과거 결과가 변하지 않음 |
+| V21/22/28/32/35/36/40 | 실제 저장 뒤 응답 보류/부분 손실/손상 JSON/60초 timeout, 서버 확인·완료 확인 실패·수동 재시도·다음 파일 중단·성공 보존. 실제 앱 budget의 bytes/puts 각각 경쟁/거절, seed·응답 유실에 따른 자동 환급 없음 |
+| V23/26/27/29/30/33/38/39 | 혼합 선택/파일 드롭/제거/10개 정확 경계·초과 묶음 전체 거절·같은 이름 별도 ID·빈 선택 보존, guide는 입력만 채움, fixed 등록/차단 구분, Enter/포커스/390px 긴 파일명·스크린샷 확인 |
+| V25 | 실제 공개 URL·원격 D1/R2 저장 확인. 로컬 대역을 원격 결과로 세지 않음 |
+| V31 | 옵션 필터·일괄 변경 미구현/미실행. 핵심/배포 우선 결정 |
+
+한계: 이 V 연결은 모든 가능한 입력 조합의 전수 검증을 뜻하지 않는다. 실제 OS 파일 선택 창의 취소는 빈 선택 이벤트로 확인했고, 다양한 브라우저/WebKit/Firefox·모바일 실기기·스크린리더 수동 검사는 미실행이다. Chromium 390px 렌더링/키보드와 접근 가능한 이름을 확인했다. Cloudflare 실제 운영 장애·계정 한도 응답 모방, 부하 성능, 계정 전체 사용량/비용 보장은 제외·미검증이다. 테스트 자체 오류와 제품 결함은 TDD_LOG에서 구분한다. Git 커밋/푸시는 수행하지 않았다.
+
+### 깨끗한 복사본 재현·정리 (23:03~23:07 KST)
+
+- 제품 코드는 바꾸지 않았다. 처음 C 드라이브 OS 임시 복사본에서 offline 설치를 시도했으나 C 드라이브의 별도 전역 스토어에 tarball이 없어 실패했다. 일반 frozen 설치/DB/타입/빌드는 통과했지만, 메타데이터의 storeDir가 D가 아니어서 이 결과를 요구된 D 스토어 재현으로 인정하지 않았다. 정리 guard가 중단한 것도 이 환경 차이이며 앱 기능 Red가 아니다.
+- 같은 D 드라이브의 새 복사본(의존성·로컬 DB 없음)에서 **frozen/offline 설치 → db:local → typecheck → build 전부 종료0**, storeDir `D:\.pnpm-store\v11`, 동일 lockfile 해시를 확인했다. 경로를 검증한 뒤 이번 작업에서 생성한 두 복사본만 삭제했다. 전역 스토어 자체는 삭제/이동하지 않았다.
+- [재현 결과](./verification/S8-clean-result.json), [D 설치](./verification/S8-clean-D-install.log), [D DB](./verification/S8-clean-D-db.log), [D 타입](./verification/S8-clean-D-typecheck.log), [D 빌드](./verification/S8-clean-D-build.log). C 실패/성공 stdout도 별도 이름으로 보존했다.
+- [문서/보존 검사](./verification/S8-docs-check.json): Markdown35·로컬 링크281 깨진 참조0, 원본 과제·lockfile 동일, 전역 D store/저장소 내부 store 없음. [소스/의존성 검사](./verification/S8-source-check.json): 직접13개 버전 동일, 일반 비밀값 패턴 후보0. 원격에서 읽은 dummy 파일 본문은 해시 확인 후 로컬에서 삭제했고 예산 환급 없이 테스트 객체를 정리했다.
+
+## UI-R01 — 후속 화면 변경 검증 (2026-10-22 23:30~23:43 KST)
+
+사용자1~4번을 반영했다. 상하/업로드 우선 배치, 독립 추가/등록 확인 입력, ‘정책 새로고침’, 행별 업로드·제거 좌우/동일 크기 및 상태별 비활성이다. 사용자5번은 의견 요청이므로 수동 성공 항목 비우기를 제안으로 남기고 미구현이다.
+
+| 실제 실행 | 결과 | 증거 |
+| --- | --- | --- |
+| 새 테스트 선행 | 2개 실패, 기존 좌우 배치·행 버튼 미구현 | [Red](./verification/UI-R01-red.log) |
+| 최소 구현 | 2/2 통과 | [Green](./verification/UI-R01-green.log) |
+| 리팩토링 후 누적 회귀 | 단위42/실제 Worker22/E2E13·타입/빌드 전부 종료0 | [최종 report](./verification/runs/CHECK-2026-10-22T14-38-44-656Z-6fa30f36/report.json), [stdout](./verification/UI-R01-final-check.log) |
+| 공개 재배포 | 종료0, 버전 1b382c8c-43b4-40a6-be43-560479d442f9 | [배포](./verification/UI-R01-deploy.log) |
+| 실제 공개 Chromium | 1/1 통과, 새 배치·독립 입력·행 업로드 및 정책 유지/차단 | [실행](./verification/UI-R01-remote-browser.log), [JSON](./verification/UI-R01-remote-browser.json), [화면](./verification/UI-R01-public-desktop.png) |
+| 실제 원격 저장 확인 | 39바이트 SHA-256 일치·테스트 소유 객체만 삭제·예산 환급 없음 | [바이트](./verification/UI-R01-r2-bytes.json), [정리](./verification/UI-R01-cleanup.log) |
+
+최신 합계는 **78개 통과(단위42/Worker22/로컬E2E13/원격1)**다. 이전 S8 76개 결과는 역사 기록이다. 실제 서버/DB/R2 규칙과 의존성 버전은 유지했다. 새 행 업로드는 최신 정책 GET1회·전송1회·다른 대기 보존을 검증했다. 전송 중 행/정책 잠금, 사전 차단/성공 업로드 비활성, 두 버튼의 실제 bounding box 크기/위치를 확인했다. 입력은 서로 값을 바꾸거나 추가 성공으로 조회 값을 지우지 않으며, 조회 Enter/대표 클릭은 무단 정책 등록을 하지 않는다.
+
+기존 결과 유지/완료 확인 실패·실제60초 timeout·실패만 수동 재시도 회귀도 전부 통과했다. 모바일390px 스크린샷을 열어 긴 이름과 행 버튼을 확인했다. Cloudflare 장애/계정 한도 모방·계정 전체 비용/성능 검증은 추가하지 않았다. 상세 실패·리팩토링은 TDD_LOG의 UI-R01을 따른다.

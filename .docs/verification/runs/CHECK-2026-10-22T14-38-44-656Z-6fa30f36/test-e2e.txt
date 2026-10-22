@@ -1,0 +1,33 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+
+Running 13 tests using 1 worker
+
+  ok  1 tests\e2e\errors.spec.ts:12:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (702ms)
+  ok  2 tests\e2e\errors.spec.ts:32:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (430ms)
+  ok  3 tests\e2e\errors.spec.ts:42:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (602ms)
+  ok  4 tests\e2e\errors.spec.ts:65:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (3.2s)
+  ok  5 tests\e2e\errors.spec.ts:79:1 › TC17: keyboard add, raw length preservation and narrow layout (542ms)
+  ok  6 tests\e2e\layout.spec.ts:9:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (681ms)
+  ok  7 tests\e2e\layout.spec.ts:40:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (579ms)
+  ok  8 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (819ms)
+  ok  9 tests\e2e\uploads.spec.ts:12:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (738ms)
+  ok 10 tests\e2e\uploads.spec.ts:40:1 › TC15: real save with malformed success JSON stays unconfirmed (488ms)
+  ok 11 tests\e2e\uploads.spec.ts:51:1 › TC15: actual XHR timeout after real storage stays unconfirmed and stops next request (1.0m)
+  ok 12 tests\e2e\uploads.spec.ts:68:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (836ms)
+  ok 13 tests\e2e\uploads.spec.ts:103:1 › TC16: failed fresh policy GET starts no upload and preserves queue (351ms)
+
+  13 passed (1.2m)
+$ node .docs/harness/e2e.mjs
+[WebServer] (node:27712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:32024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

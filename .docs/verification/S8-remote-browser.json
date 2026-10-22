@@ -1,0 +1,11 @@
+{
+  "time": "2026-10-22T13:49:23.445Z",
+  "url": "https://file-uploader-demo.meggigoatee.workers.dev/",
+  "id": "ba586862-1b58-48b3-99c2-f157d3aecba3",
+  "size": 39,
+  "content": "remote uploader verification 2026-10-22",
+  "blockedStatus": 422,
+  "unknownStatus": 404,
+  "fixedPersistence": true,
+  "customPersistence": true
+}

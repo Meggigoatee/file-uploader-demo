@@ -1,0 +1,106 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:30776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:30680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\errors.spec.ts:12:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (546ms)
+(node:30528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\e2e\errors.spec.ts:32:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (332ms)
+(node:20356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 tests\e2e\errors.spec.ts:42:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (541ms)
+  ok 4 tests\e2e\errors.spec.ts:65:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (2.4s)
+  ok 5 tests\e2e\errors.spec.ts:79:1 › TC17: keyboard add, raw length preservation and narrow layout (380ms)
+  ok 6 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (593ms)
+  ok 7 tests\e2e\uploads.spec.ts:12:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (596ms)
+  ok 8 tests\e2e\uploads.spec.ts:34:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (599ms)
+  ok 9 tests\e2e\uploads.spec.ts:69:1 › TC16: failed fresh policy GET starts no upload and preserves queue (326ms)
+
+
+  1) tests\e2e\errors.spec.ts:12:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator: getByRole('button', { name: '파일 선택', exact: true })
+    Expected: disabled
+    Error: strict mode violation: getByRole('button', { name: '파일 선택', exact: true }) resolved to 2 elements:
+        1) <button disabled type="button">파일 선택</button> aka getByText('파일 선택')
+        2) <input multiple disabled type="file" class="sr-only" aria-label="파일 선택"/> aka getByLabel('파일 선택')
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: '파일 선택', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '파일 선택', exact: true })
+
+
+      22 |   await expect(page.getByText('저장 결과를 확인하지 못했습니다. 설정을 다시 불러와 주세요.',{exact:true})).toBeVisible();
+      23 |   await expect(page.getByRole('checkbox',{name:'exe',exact:true})).not.toBeChecked();
+    > 24 |   await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeDisabled();
+         |                                                                    ^
+      25 |   await page.unroute('**/api/policies/fixed/exe');
+      26 |   await page.getByRole('button',{name:'설정 다시 불러오기'}).click();
+      27 |   await expect(page.getByRole('checkbox',{name:'exe',exact:true})).toBeChecked();
+        at D:\garage\file-uploader-demo\tests\e2e\errors.spec.ts:24:68
+
+    Error Context: test-results\errors-TC11-explicit-mutat-97a08-st-response-locks-until-GET\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\errors-TC11-explicit-mutat-97a08-st-response-locks-until-GET\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\errors-TC11-explicit-mutat-97a08-st-response-locks-until-GET\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\errors.spec.ts:32:1 › TC11: initial GET network failure stays locked, then recovery loads real policies 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator: getByRole('button', { name: '파일 선택', exact: true })
+    Expected: disabled
+    Error: strict mode violation: getByRole('button', { name: '파일 선택', exact: true }) resolved to 2 elements:
+        1) <button disabled type="button">파일 선택</button> aka getByText('파일 선택')
+        2) <input multiple disabled type="file" class="sr-only" aria-label="파일 선택"/> aka getByLabel('파일 선택')
+
+    Call log:
+      - Expect "toBeDisabled" getByRole('button', { name: '파일 선택', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '파일 선택', exact: true })
+
+
+      34 |   await page.goto('/');
+      35 |   await expect(page.getByText(/정책을 불러오지 못했습니다/)).toBeVisible();
+    > 36 |   await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeDisabled();
+         |                                                                    ^
+      37 |   await page.unroute('**/api/policies');
+      38 |   await page.getByRole('button',{name:'설정 다시 불러오기'}).click();
+      39 |   await expect(page.getByRole('checkbox',{name:'exe',exact:true})).toBeEnabled();
+        at D:\garage\file-uploader-demo\tests\e2e\errors.spec.ts:36:68
+
+    Error Context: test-results\errors-TC11-initial-GET-ne-0c91c-ecovery-loads-real-policies\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\errors-TC11-initial-GET-ne-0c91c-ecovery-loads-real-policies\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\errors-TC11-initial-GET-ne-0c91c-ecovery-loads-real-policies\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\e2e\errors.spec.ts:12:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET 
+    tests\e2e\errors.spec.ts:32:1 › TC11: initial GET network failure stays locked, then recovery loads real policies 
+  7 passed (9.8s)
+[ELIFECYCLE] Command failed with exit code 1.

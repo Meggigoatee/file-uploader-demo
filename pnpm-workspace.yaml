@@ -1,0 +1,9 @@
+# pnpm configuration for this single-package repository.
+# Keep the machine's default shared store; do not create a project-local store.
+saveExact: true
+preferOffline: true
+strictPeerDependencies: true
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: true

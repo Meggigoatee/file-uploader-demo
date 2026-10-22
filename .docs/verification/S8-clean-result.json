@@ -1,0 +1,15 @@
+{
+  "frozenOfflineInstall": "passed",
+  "firstOffline": "missing tarball in C store",
+  "firstCopyStore": "C:\\Users\\inhea\\AppData\\Local\\pnpm\\store\\v11",
+  "time": "2026-10-22T23:07:25.9114114+09:00",
+  "lockPreserved": true,
+  "taskCopiesRemoved": true,
+  "store": "D:\\.pnpm-store\\v11",
+  "firstCopyDrive": "C",
+  "correctedCopyDrive": "D",
+  "localMigrations": "passed",
+  "build": "passed",
+  "firstFrozenInstall": "passed",
+  "typecheck": "passed"
+}

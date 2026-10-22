@@ -1,0 +1,41 @@
+{
+  "name": "file-uploader-demo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": "^22.12.0 || >=24.0.0",
+    "pnpm": "11.5.1"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "typegen": "wrangler types",
+    "typecheck": "vue-tsc --noEmit",
+    "test:unit": "vitest run --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "node .docs/harness/e2e.mjs",
+    "db:local": "wrangler d1 migrations apply file-uploader-demo --local",
+    "check:env": "node .docs/harness/check.mjs environment",
+    "check:plan": "node .docs/harness/check.mjs --list",
+    "check": "node .docs/harness/check.mjs app"
+  },
+  "dependencies": {
+    "vue": "3.5.41"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.54.2",
+    "@cloudflare/vitest-plugin": "1.1.2",
+    "@playwright/test": "1.64.1",
+    "@types/node": "22.20.1",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vitest/runner": "4.1.10",
+    "@vitest/snapshot": "4.1.10",
+    "typescript": "5.6.3",
+    "vite": "6.4.3",
+    "vitest": "4.1.10",
+    "vue-tsc": "2.2.12",
+    "wrangler": "4.127.1"
+  }
+}

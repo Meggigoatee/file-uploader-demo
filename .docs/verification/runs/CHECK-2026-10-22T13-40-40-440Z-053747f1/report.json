@@ -1,0 +1,10 @@
+{
+  "runId": "CHECK-2026-10-22T13-40-40-440Z-053747f1",
+  "mode": "app",
+  "startedAt": "2026-10-22T13:40:40.441Z",
+  "node": "v24.16.0",
+  "result": "blocked",
+  "steps": [],
+  "reason": "Run through pnpm run check so the existing pnpm CLI can be reused.",
+  "finishedAt": "2026-10-22T13:40:40.441Z"
+}

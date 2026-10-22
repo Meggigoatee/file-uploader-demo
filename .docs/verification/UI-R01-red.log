@@ -1,0 +1,87 @@
+$ node .docs/harness/e2e.mjs "layout.spec.ts"
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:2168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:32584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:18780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\layout.spec.ts:9:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (515ms)
+(node:21032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\e2e\layout.spec.ts:40:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (5.6s)
+
+
+  1) tests\e2e\layout.spec.ts:9:1 › UI-R01: upload above policies; add and registration lookup have independent inputs 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 170.78125
+    Received:    795.65625
+
+      12 |   const upload=await page.getByRole('region',{name:'파일 업로드',exact:true}).boundingBox();
+      13 |   const policy=await page.getByRole('region',{name:'확장자 차단 정책',exact:true}).boundingBox();
+    > 14 |   expect(upload!.y+upload!.height).toBeLessThanOrEqual(policy!.y);
+         |                                    ^
+      15 |   expect(upload!.x).toBeCloseTo(policy!.x,0);
+      16 |   expect(upload!.width).toBeCloseTo(policy!.width,0);
+      17 |   await expect(page.getByRole('button',{name:'정책 새로고침',exact:true})).toBeVisible();
+        at D:\garage\file-uploader-demo\tests\e2e\layout.spec.ts:14:36
+
+    Error Context: test-results\layout-UI-R01-upload-above-3baae-kup-have-independent-inputs\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\layout-UI-R01-upload-above-3baae-kup-have-independent-inputs\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\layout-UI-R01-upload-above-3baae-kup-have-independent-inputs\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\layout.spec.ts:40:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely 
+
+    Error: expect(locator).toBeEnabled() failed
+
+    Locator: getByRole('button', { name: 'one.txt 업로드', exact: true })
+    Expected: enabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeEnabled" getByRole('button', { name: 'one.txt 업로드', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: 'one.txt 업로드', exact: true })
+
+
+      45 |   const send=page.getByRole('button',{name:'one.txt 업로드',exact:true});
+      46 |   const remove=page.getByRole('button',{name:'one.txt 목록에서 제거',exact:true});
+    > 47 |   await expect(send).toBeEnabled();
+         |                      ^
+      48 |   await expect(page.getByRole('button',{name:'blocked.exe 업로드',exact:true})).toBeDisabled();
+      49 |   const sendBox=await send.boundingBox(); const removeBox=await remove.boundingBox();
+      50 |   expect(sendBox!.x+sendBox!.width).toBeLessThanOrEqual(removeBox!.x);
+        at D:\garage\file-uploader-demo\tests\e2e\layout.spec.ts:47:22
+
+    Error Context: test-results\layout-UI-R01-per-file-upl-b5980-ds-one-row-and-locks-safely\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\layout-UI-R01-per-file-upl-b5980-ds-one-row-and-locks-safely\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\layout-UI-R01-per-file-upl-b5980-ds-one-row-and-locks-safely\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\e2e\layout.spec.ts:9:1 › UI-R01: upload above policies; add and registration lookup have independent inputs 
+    tests\e2e\layout.spec.ts:40:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely 
+[ELIFECYCLE] Command failed with exit code 1.

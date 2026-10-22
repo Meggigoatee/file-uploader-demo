@@ -1,0 +1,87 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+Migrations to be applied:
+┌──────────────────┐
+│ name             │
+├──────────────────┤
+│ 0001_initial.sql │
+├──────────────────┤
+│ 0002_budget.sql  │
+└──────────────────┘
+? About to apply 2 migration(s)
+Your database may not be available to serve requests during the migration, continue?
+🤖 Using fallback value in non-interactive context: yes
+🌀 Executing on local database file-uploader-demo (00000000-0000-0000-0000-000000000000) from .wrangler\e2e\v3\d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 3 commands executed successfully.
+┌──────────────────┬────────┐
+│ name             │ status │
+├──────────────────┼────────┤
+│ 0001_initial.sql │ ✅     │
+├──────────────────┼────────┤
+│ 0002_budget.sql  │ 🕒️    │
+└──────────────────┴────────┘
+🌀 Executing on local database file-uploader-demo (00000000-0000-0000-0000-000000000000) from .wrangler\e2e\v3\d1:
+🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+🚣 3 commands executed successfully.
+┌──────────────────┬────────┐
+│ name             │ status │
+├──────────────────┼────────┤
+│ 0001_initial.sql │ ✅     │
+├──────────────────┼────────┤
+│ 0002_budget.sql  │ ✅     │
+└──────────────────┴────────┘
+[WebServer] (node:25852) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:25524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (5.3s)
+
+
+  1) tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input 
+
+    Error: expect(locator).not.toBeChecked() failed
+
+    Locator: getByRole('checkbox', { name: 'exe', exact: true })
+    Expected: not checked
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "not toBeChecked" getByRole('checkbox', { name: 'exe', exact: true }) with timeout 5000ms
+      - waiting for getByRole('checkbox', { name: 'exe', exact: true })
+
+
+       9 | test('TC11/12: policy persistence, exact registration and guide only fills input', async ({ page, request }) => {
+      10 |   await page.goto('/');
+    > 11 |   await expect(page.getByRole('checkbox', {name:'exe',exact:true})).not.toBeChecked();
+         |                                                                         ^
+      12 |   await page.getByRole('checkbox', {name:'exe',exact:true}).check();
+      13 |   await expect(page.getByRole('status').filter({hasText:'정책을 저장했습니다.'})).toBeVisible();
+      14 |   await page.reload();
+        at D:\garage\file-uploader-demo\tests\e2e\policies.spec.ts:11:73
+
+    Error Context: test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input 
+[ELIFECYCLE] Command failed with exit code 1.

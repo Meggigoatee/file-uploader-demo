@@ -1,0 +1,43 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:31684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+[WebServer] [vite:css][postcss] Unable to find uri in '@import url('')'
+[WebServer] 1  |  @import url('');
+[WebServer]    |  ^^^^^^^^^^^^^^^^
+[WebServer] 2  |  :root{font-family:Inter,"Pretendard","Noto Sans KR",system-ui,sans-serif;color:#243b3a;background:#f2f5f3;font-synthesis:none;line-height:1.55;font-weight:400}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{border:1px solid transparent;border-radius:8px;background:#176f63;color:white;padding:9px 14px;cursor:pointer;font-weight:600}button:hover:enabled{background:#0e5c51}button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,input:focus-visible,.drop-zone:focus-visible{outline:3px solid #40a991;outline-offset:3px}input[type=text],input:not([type]){min-width:0;border:1px solid #c8d5ce;border-radius:8px;background:#fff;padding:10px 12px;width:100%}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(24px,3vw,32px);letter-spacing:-.04em;line-height:1.3;margin-bottom:10px}h2{font-size:21px;letter-spacing:-.025em;margin-bottom:8px}h3{font-size:14px;margin-bottom:10px;margin-top:20px}.shell{max-width:1240px;margin:auto;padding:44px 28px 60px}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}.eyebrow{font-size:11px;letter-spacing:.12em;font-weight:750;color:#48776a;margin-bottom:8px}.muted,.help{color:#60756d;font-size:13px}.help{margin-bottom:12px;overflow-wrap:anywhere}.muted{margin-bottom:0}.badge{border:1px solid #cbded3;border-radius:30px;padding:6px 12px;font-size:12px;white-space:nowrap;background:#e4eee8;color:#32604e}.columns{display:grid;grid-template-columns:1fr 1.1fr;gap:22px;align-items:start}.panel{background:#fff;border:1px solid #dde5df;border-radius:16px;padding:26px;box-shadow:0 6px 25px #284d3b05}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.subtle{background:#f1f5f2;border-color:#d8e2dc;color:#456456;font-size:12px;padding:7px 10px}.subtle:hover:enabled{background:#e3ede6}.notice{font-size:12px;color:#416354;background:#f1f6f2;border-radius:7px;padding:10px 12px;margin:16px 0;overflow-wrap:anywhere}.fixed-list{display:flex;flex-wrap:wrap;gap:8px}.fixed-item{display:flex;align-items:center;gap:7px;border:1px solid #d8e3db;border-radius:8px;padding:8px 10px;font-size:13px}.fixed-item:has(:checked){background:#edf6f1;border-color:#9cc8b5}.fixed-item input{accent-color:#176f63;width:15px;height:15px}.divider{height:1px;background:#e9eeea;margin:24px 0}.input-row{display:flex;gap:8px;align-items:center;position:relative}.input-row input{padding-right:58px!important}.counter{position:absolute;right:72px;color:#7b8e82;font-size:11px;pointer-events:none}.input-row+p{margin-top:8px;min-height:40px}.tag-list{display:flex;flex-wrap:wrap;gap:7px;max-height:250px;overflow:auto;align-content:start;min-height:42px}.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid #d7e4da;background:#f3f7f3;border-radius:6px;padding:2px 3px 2px 9px;font-size:12px}.tag button{background:transparent;color:#60756d;padding:2px 6px}.tag.highlight{border-color:#176f63;background:#dcefe3}.guide-row{display:grid;grid-template-columns:38px 1fr;align-items:start;gap:6px;font-size:12px;margin-top:10px;color:#6c7e73}.guide-row>span{padding-top:5px}.guide-row>div{display:flex;flex-wrap:wrap;gap:5px}.guide{background:#fff;color:#52685b;border-color:#dce5df;padding:4px 9px;font-size:12px;font-weight:500}.guide:hover:enabled{background:#edf5ef}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:900px){.columns{grid-template-columns:1fr}.shell{padding:26px 16px 40px}.panel{padding:21px}.page-header{gap:12px}.section-heading{flex-wrap:wrap}}@media(prefers-reduced-motion:no-preference){button{transition:background .12s ease}}
+[WebServer] 3  |  
+(node:408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (20.1s)
+
+
+  1) tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input 
+
+    Test timeout of 20000ms exceeded.
+
+    Error Context: test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\policies-TC11-12-policy-pe-ae2d6--and-guide-only-fills-input\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input 
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-22T13:04:47.690Z",
+  "scope": "Documentation review only",
+  "markdownFiles": 32,
+  "localLinks": 185,
+  "failures": [],
+  "providerOutageAndQuotaResponseSimulation": "excluded",
+  "changedTestScopes": [
+    "TC08",
+    "TC10",
+    "TC16",
+    "V17",
+    "V35",
+    "V40"
+  ],
+  "applicationBudgetBoundaryTests": "retained as planned",
+  "implementationApproval": "pending",
+  "applicationTddLoops": 0,
+  "protectedFilesUnchanged": {
+    "package.json": true,
+    "pnpm-lock.yaml": true,
+    "pnpm-workspace.yaml": true,
+    ".gitignore": true,
+    ".docs/harness/check.mjs": true,
+    ".docs/verification/check-environment.mjs": true,
+    ".agents/skills/uploader-worker-checks/SKILL.md": true,
+    ".agents/skills/uploader-ui-checks/SKILL.md": true,
+    ".docs/과제_파일업로드_AI개발.md": true
+  }
+}

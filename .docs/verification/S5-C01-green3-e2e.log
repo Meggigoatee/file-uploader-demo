@@ -1,0 +1,24 @@
+$ node .docs/harness/e2e.mjs
+
+ ⛅️ wrangler 4.127.1 (update available 4.151.3)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:9952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:28656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\policies.spec.ts:9:1 › TC11/12: policy persistence, exact registration and guide only fills input (686ms)
+  ok 2 tests\e2e\uploads.spec.ts:12:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (595ms)
+  ok 3 tests\e2e\uploads.spec.ts:34:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (562ms)
+  ok 4 tests\e2e\uploads.spec.ts:69:1 › TC16: failed fresh policy GET starts no upload and preserves queue (344ms)
+
+  4 passed (4.8s)
