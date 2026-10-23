@@ -1,5 +1,30 @@
 # 검증 계획과 결과
 
+## SUBMISSION-PUBLISH-20261023 — 최종 제출 자료 점검과 origin 반영
+
+사용자의 최신 요청에 따라 루트 제출 문서6개와 상세 기록·제출 검사 자료를 최종 점검해 커밋/origin 푸시한다. [요청/실행 결과](./conversations/2026-10-23-014.md). 기존 앱/운영 검증은 증거로 인용하며 앱 테스트·새 업로드·재배포는 수행하지 않는다. `schema.sql`은 제출용이며 기존 migration/앱 DB에는 적용하지 않는다.
+
+원본 과제3~5절과 README 실행 명령·현재 규칙/세션/정책/카테고리/저장 소스·기존 검증 결과를 대조했다. Git fetch 후 시작 이력은 main/origin/main fcb55a1·ahead/behind0/0이다. 통합 SQL/링크/보호 파일의 최종 검사 결과는 [검사 JSON](./verification/SUBMISSION-20261023-check.json)에 보존한다. 커밋 전 변경/스테이징 범위와 비밀값·로컬 데이터 제외도 확인한다.
+
+- 제출 검사 종료0: SQL 최종6테이블/7인덱스 동일·FK위반0·초기값 확인, 기록 링크 포함 Markdown60개/로컬 참조810개/앵커11개 누락0, 보호 파일9개 불변이다. 문서의 필수 항목/기존151개·운영 저장 증거 대응도 통과했다.
+- `git diff --check` 성공·제품/테스트/migration/실행 설정 diff0이다. 새 제출용 SQL과 문서 검사 스크립트는 앱 실행 경로에 연결하지 않았다. 범위/비밀값 점검 결과는 `SUBMISSION-20261023-publish-check.json`에 별도로 남긴다.
+- [커밋 전 범위 검사](./verification/SUBMISSION-20261023-publish-check.json) 통과: 변경15개·비밀값/로컬 데이터 경로/끝 공백/NUL 후보0이다. 자체 결과 JSON1개를 포함한 총16개가 제출 자료/기록 범위다.
+
+## SUBMISSION-20261023 — 루트 제출 자료 점검
+
+사용자 요청은 원본 과제3~5절에 맞춘 제출 항목 점검·문서/파일 준비다. [요청/진행](./conversations/2026-10-23-013.md), [제출 목록](../SUBMISSION.md). 루트에 README·SUBMISSION·CONSIDERATIONS·PROMPT_LOG·SCHEMA·schema.sql을 준비했고, 상세/역사 원장은 `.docs`에 보존한다. 이 루트 배치는 최신 사용자 지시의 예외로 AGENTS에 명시했다.
+
+| 실제 검사 | 결과 | 증거/구분 |
+| --- | --- | --- |
+| 원본3~5절·현재 구현/기존 증거 대조 | 필수4종과 README 실행·스키마 컬럼/타입/제약/인덱스, AI 입력/도구/회고를 대응 | 루트 제출 문서와 기존 상세 기록 연결 |
+| 익명 GitHub API·배포 HTML GET | 22:21 KST 공개 저장소/기본 main·사이트 HTML200 | [주소 확인](./verification/SUBMISSION-20261023-links.json). web 도구의 URL 읽기는 cache miss/미지원이어서 Node GET으로 확인. 새 세션/정책 변경/업로드 없음 |
+| `schema.sql`과 migration1~5 | 원본 SQL5개를 순서대로 합침. 서로 다른 메모리 SQLite DB에 통합본/개별 migration 실행 후 최종 테이블/인덱스 DDL 동일, 앱6테이블·FK위반0·초기값 확인 | [제출 자료 검사](./verification/SUBMISSION-20261023-check.json), [검사 스크립트](./verification/SUBMISSION-20261023-check.mjs). 로컬/원격 앱 DB 변경 없음 |
+| 루트 포함 Markdown 링크·앵커·요건/기존 결과 대응·보호 파일 | 검사 통과. 정확한 문서/링크 수와 보호 파일9개 결과는 JSON에 기록 | 동일 제출 자료 검사. 원본 과제/manifest/lockfile/workspace/migration1~5 불변 |
+
+기존151개 앱 회귀와 운영1시나리오·28바이트×2 저장 증거를 인용했으며 이번에 앱 테스트/업로드/배포를 다시 실행한 것으로 합산하지 않는다. 문서에 미구현 한계·제안 출처·최초 실패를 구분했고 제출 URL의 미래 가용성을 보장하지 않는다. 새 제출 문서의 원격 반영과 면접 당일 접속 확인은 체크리스트에 남긴다. 이번 요청에서는 커밋/푸시·외부 제출을 수행하지 않았다.
+
+최종 스키마 결과는 앱6테이블·PK/UNIQUE 포함 인덱스7개·FK위반0이다. 루트 제출 파일6개의 끝 공백/리터럴 비밀값 후보0·Git 공백 검사 성공, server/src/shared/tests/migrations와 제품 설정의 변경0도 확인했다. `open_in_codex`로 제출 목록 열기를 요청해 queued를 받았으며 실제 표시 완료로 보고하지 않는다.
+
 ## RELEASE-20261023 — 커밋·배포·최종 운영 검증
 
 사용자의 명시적 커밋/origin푸시·Cloudflare배포·운영검증 요청을 수행했다. [배포 원장](./RELEASE_20261023.md), [대화](./conversations/2026-10-23-012.md). 이전 절의 ‘배포하지 않음’은 당시 로컬 작업의 기록이다. 이번 공개 배포는 익명 세션 분리와 카테고리 변경을 모두 포함한다. 로컬151개 통과를 재사용했고 운영의 부하/대량 업로드·실패/계정쿼터 모방은 하지 않았다.

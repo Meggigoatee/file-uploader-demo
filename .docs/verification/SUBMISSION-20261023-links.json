@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-10-23T13:21:05.399Z",
+  "mode": "anonymous read-only submission link check",
+  "checks": [
+    {
+      "name": "repository",
+      "url": "https://api.github.com/repos/Meggigoatee/file-uploader-demo",
+      "status": 200,
+      "finalURL": "https://api.github.com/repos/Meggigoatee/file-uploader-demo",
+      "public": true,
+      "repository": "https://github.com/Meggigoatee/file-uploader-demo",
+      "defaultBranch": "main"
+    },
+    {
+      "name": "site",
+      "url": "https://file-uploader-demo.meggigoatee.workers.dev/",
+      "status": 200,
+      "finalURL": "https://file-uploader-demo.meggigoatee.workers.dev/",
+      "html": true
+    }
+  ],
+  "result": "passed"
+}

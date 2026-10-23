@@ -1,0 +1,186 @@
+{
+  "checkedAt": "2026-10-23T13:45:32.170Z",
+  "scope": "submission documents and in-memory SQL only; no app or operational test",
+  "result": "passed",
+  "required": [
+    "README.md",
+    "SUBMISSION.md",
+    "CONSIDERATIONS.md",
+    "PROMPT_LOG.md",
+    "SCHEMA.md",
+    "schema.sql"
+  ],
+  "checks": {
+    "sqlSyntaxAndFinalSchemaMatch": true,
+    "localLinksAndAnchors": true,
+    "requiredItemsAndExistingEvidence": true,
+    "originalDependenciesAndMigrationsUnchanged": true
+  },
+  "schema": {
+    "matchesMigrations": true,
+    "tables": [
+      "anonymous_sessions",
+      "category_extensions",
+      "custom_categories",
+      "extension_policies",
+      "session_extension_policies",
+      "upload_budget"
+    ],
+    "indexes": [
+      {
+        "table": "anonymous_sessions",
+        "name": "sqlite_autoindex_anonymous_sessions_1",
+        "unique": 1,
+        "origin": "pk",
+        "columns": [
+          "id"
+        ]
+      },
+      {
+        "table": "category_extensions",
+        "name": "sqlite_autoindex_category_extensions_1",
+        "unique": 1,
+        "origin": "pk",
+        "columns": [
+          "category_id",
+          "extension"
+        ]
+      },
+      {
+        "table": "custom_categories",
+        "name": "category_builtin_per_session",
+        "unique": 1,
+        "origin": "c",
+        "columns": [
+          "session_id",
+          "builtin_key"
+        ]
+      },
+      {
+        "table": "custom_categories",
+        "name": "sqlite_autoindex_custom_categories_2",
+        "unique": 1,
+        "origin": "u",
+        "columns": [
+          "session_id",
+          "name"
+        ]
+      },
+      {
+        "table": "custom_categories",
+        "name": "sqlite_autoindex_custom_categories_1",
+        "unique": 1,
+        "origin": "pk",
+        "columns": [
+          "id"
+        ]
+      },
+      {
+        "table": "extension_policies",
+        "name": "sqlite_autoindex_extension_policies_1",
+        "unique": 1,
+        "origin": "pk",
+        "columns": [
+          "extension"
+        ]
+      },
+      {
+        "table": "session_extension_policies",
+        "name": "sqlite_autoindex_session_extension_policies_1",
+        "unique": 1,
+        "origin": "pk",
+        "columns": [
+          "session_id",
+          "extension"
+        ]
+      }
+    ],
+    "foreignKeyViolations": 0,
+    "sqlSha256": "d6d92133c829803d38cc46e2386de25ed2ffad35cca4dbc1f2c949a352101959",
+    "sourceFiles": [
+      {
+        "file": "migrations/0001_initial.sql",
+        "sha256": "87205a2a45dbc6cf66023dfdfb7452ed0add3c047eaaddb69d02c3b2d85d5871"
+      },
+      {
+        "file": "migrations/0002_budget.sql",
+        "sha256": "cdd526b07fb865dcb896a55e08f0bef65fd9f2f4fe4ad502bd3fcf91e58a1ee1"
+      },
+      {
+        "file": "migrations/0003_sessions.sql",
+        "sha256": "30224f12de1a571754b76dfd33e159be5a9c58597535fe8f8c41d8b429f9da61"
+      },
+      {
+        "file": "migrations/0004_categories.sql",
+        "sha256": "a3d51187ef7ca02867c07a66650aa18d82ead0beb2d9cb7aeae22edaf41edaf8"
+      },
+      {
+        "file": "migrations/0005_editable_builtin_categories.sql",
+        "sha256": "455906a6573c0721e60428f9fa21bbebfbeaee17616c930754e22574328f843b"
+      }
+    ]
+  },
+  "links": {
+    "documents": 60,
+    "localLinks": 810,
+    "anchors": 11,
+    "broken": [],
+    "historicalRootReferences": [
+      {
+        "file": ".docs\\conversations\\2026-10-21-001.md",
+        "href": ".docs/과제_파일업로드_AI개발.md"
+      },
+      {
+        "file": ".docs\\conversations\\2026-10-21-001.md",
+        "href": ".docs/"
+      },
+      {
+        "file": ".docs\\conversations\\2026-10-22-001.md",
+        "href": ".docs/"
+      },
+      {
+        "file": ".docs\\conversations\\2026-10-23-013.md",
+        "href": ".docs/과제_파일업로드_AI개발.md"
+      }
+    ]
+  },
+  "protected": [
+    {
+      "file": ".docs/과제_파일업로드_AI개발.md",
+      "unchanged": true
+    },
+    {
+      "file": "package.json",
+      "unchanged": true
+    },
+    {
+      "file": "pnpm-lock.yaml",
+      "unchanged": true
+    },
+    {
+      "file": "pnpm-workspace.yaml",
+      "unchanged": true
+    },
+    {
+      "file": "migrations/0001_initial.sql",
+      "unchanged": true
+    },
+    {
+      "file": "migrations/0002_budget.sql",
+      "unchanged": true
+    },
+    {
+      "file": "migrations/0003_sessions.sql",
+      "unchanged": true
+    },
+    {
+      "file": "migrations/0004_categories.sql",
+      "unchanged": true
+    },
+    {
+      "file": "migrations/0005_editable_builtin_categories.sql",
+      "unchanged": true
+    }
+  ],
+  "finishedAt": "2026-10-23T13:45:32.660Z"
+}
