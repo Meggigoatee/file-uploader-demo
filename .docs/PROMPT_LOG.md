@@ -428,3 +428,6 @@
 - `git fetch origin` 성공, 시작 HEAD fcb55a1과 origin/main의 ahead/behind0/0을 확인했다. 강제 푸시나 사용자 변경 폐기 없이 문서/제출 검사 자료만 반영한다. 과거 P031의 당시 미커밋 기록은 보존한다. 앱 테스트·운영 업로드·재배포는 이번 범위에 추가하지 않는다.
 - 제출 검사 종료0: SQL5개와 통합본 구조 동등·6테이블/7인덱스/FK0·초기값, 기록 링크 포함 Markdown60개/참조810개/앵커11개 누락0·보호 파일9개 불변·기존 수치/필수 요건 대응을 확인했다. Git 공백 검사 성공·제품/테스트/설정 diff0이며 범위/비밀값 점검 뒤 스테이징한다.
 - 커밋 전 변경15개가 허용 범위에만 해당하고 비밀값/로컬 데이터 경로/끝 공백/NUL 후보0임을 확인했다. 이 결과 JSON을 포함한16개만 스테이징 대상으로 확정한다. [범위 검사](./verification/SUBMISSION-20261023-publish-check.json).
+- 스테이징16개 목록·cached 공백 검사·미스테이징 diff0을 확인하고 `58bdb7ef8678c0bf2a8c1572ad735c53f5e4dcc3`(`docs: prepare submission documents and schema reference`)로 커밋했다. `git push origin main` 종료0, `fcb55a1..58bdb7e main -> main`이다.
+- 22:46:37 KST 도구 확인에서 `git ls-remote origin refs/heads/main`이 같은 전체 해시를 반환했고, ahead/behind0/0·작업 폴더 깨끗함을 확인했다. 체크리스트/요약의 원격 반영 완료와 이번 실행 결과는 후속 문서 커밋으로 보존한다. 앱 테스트·새 운영 요청·재배포는 수행하지 않았다.
+- 완료 기록6개도 제출 검사 통과(60문서/810참조/11앵커·누락0)·비밀값/로컬 데이터 후보0·공백 검사 성공·fcb55a1 이후 제품/테스트/설정 diff0을 확인해 정상 커밋/푸시한다.
