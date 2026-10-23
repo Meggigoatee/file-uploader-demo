@@ -1,0 +1,50 @@
+{
+  "runId": "CHECK-2026-10-23T12-26-27-342Z-512a9a43",
+  "mode": "app",
+  "startedAt": "2026-10-23T12:26:27.343Z",
+  "node": "v24.16.0",
+  "result": "failed",
+  "steps": [
+    {
+      "name": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "typecheck"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "typecheck.txt"
+    },
+    {
+      "name": "build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "build"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "build.txt"
+    },
+    {
+      "name": "test:unit",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "test:unit"
+      ],
+      "result": "failed",
+      "exitCode": 1,
+      "signal": null,
+      "logFile": "test-unit.txt"
+    }
+  ],
+  "reason": "test:unit failed; see test-unit.txt",
+  "finishedAt": "2026-10-23T12:26:33.835Z"
+}

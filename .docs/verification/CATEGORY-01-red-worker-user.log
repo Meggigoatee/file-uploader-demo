@@ -1,0 +1,198 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+stdout | tests/integration/categories.test.ts > CATEGORY: returns four builtin guides with five extensions each and no policy writes
+{"time":"2026-10-23T11:07:21.789Z","requestId":"805d3613-b46e-4d0f-be9d-e00688d95b9e","operation":"session.initialize","method":"POST","status":200,"durationMs":4}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: returns four builtin guides with five extensions each and no policy writes
+{"time":"2026-10-23T11:07:21.818Z","requestId":"8d4b60dc-d103-4a49-98ac-37976dcc86eb","operation":"api.unknown","method":"GET","status":404,"durationMs":3,"code":"NOT_FOUND"}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: persists normalized editable membership and isolates names/ids by session
+{"time":"2026-10-23T11:07:21.856Z","requestId":"5f2178c1-3598-4526-875f-5d4fee6ceab1","operation":"session.initialize","method":"POST","status":200,"durationMs":3}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: persists normalized editable membership and isolates names/ids by session
+{"time":"2026-10-23T11:07:21.861Z","requestId":"c386a5a8-f424-4303-8d88-b55986800335","operation":"session.initialize","method":"POST","status":200,"durationMs":2}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: persists normalized editable membership and isolates names/ids by session
+{"time":"2026-10-23T11:07:21.864Z","requestId":"a8d195e8-122b-400d-a84c-154ad9b0ffd1","operation":"api.unknown","method":"POST","status":404,"durationMs":1,"code":"NOT_FOUND"}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: bulk block/allow updates fixed and custom policies without hidden category state
+{"time":"2026-10-23T11:07:21.896Z","requestId":"c7bf0c65-9f4e-4676-8b15-bea35f5540fe","operation":"session.initialize","method":"POST","status":200,"durationMs":2}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: bulk block/allow updates fixed and custom policies without hidden category state
+{"time":"2026-10-23T11:07:21.899Z","requestId":"b52bbb00-10ac-4883-a761-f65435376fad","operation":"api.unknown","method":"POST","status":404,"durationMs":1,"code":"NOT_FOUND"}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: reaching the 200 limit rejects the entire batch including fixed updates
+{"time":"2026-10-23T11:07:21.929Z","requestId":"a2e6b4b1-390b-444b-81b3-b67713fe1900","operation":"session.initialize","method":"POST","status":200,"durationMs":1}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: reaching the 200 limit rejects the entire batch including fixed updates
+{"time":"2026-10-23T11:07:21.933Z","requestId":"ef7af70d-d537-4e2c-99ac-b2e23af287b5","operation":"api.unknown","method":"POST","status":404,"durationMs":2,"code":"NOT_FOUND"}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: concurrent bulk requests share one DB limit and never partially apply
+{"time":"2026-10-23T11:07:21.967Z","requestId":"da1e1cf6-484a-4f34-bee7-5b14fd68d53b","operation":"session.initialize","method":"POST","status":200,"durationMs":3}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: concurrent bulk requests share one DB limit and never partially apply
+{"time":"2026-10-23T11:07:21.971Z","requestId":"f31604d7-5836-4e59-8cfa-90843b265166","operation":"api.unknown","method":"POST","status":404,"durationMs":2,"code":"NOT_FOUND"}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: deletion allows all members and transaction failure keeps group and policies intact
+{"time":"2026-10-23T11:07:22.001Z","requestId":"9988860c-8b61-4162-b0c9-b29290e26c2c","operation":"session.initialize","method":"POST","status":200,"durationMs":2}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: deletion allows all members and transaction failure keeps group and policies intact
+{"time":"2026-10-23T11:07:22.005Z","requestId":"aff4beb4-95ea-4a4b-b37c-00fd1331c5df","operation":"api.unknown","method":"POST","status":404,"durationMs":2,"code":"NOT_FOUND"}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: builtin batch actually blocks uploads and allow stores exact R2 bytes
+{"time":"2026-10-23T11:07:22.036Z","requestId":"bc3c6453-c76d-420f-b0c0-cb52941930b4","operation":"session.initialize","method":"POST","status":200,"durationMs":3}
+
+stdout | tests/integration/categories.test.ts > CATEGORY: builtin batch actually blocks uploads and allow stores exact R2 bytes
+{"time":"2026-10-23T11:07:22.040Z","requestId":"c451955a-939e-404c-9a41-9a84a907f5c8","operation":"api.unknown","method":"PATCH","status":404,"durationMs":2,"code":"NOT_FOUND"}
+
+ ❯ tests/integration/categories.test.ts (7 tests | 7 failed) 285ms
+   × CATEGORY: returns four builtin guides with five extensions each and no policy writes 65ms
+   × CATEGORY: persists normalized editable membership and isolates names/ids by session 44ms
+   × CATEGORY: bulk block/allow updates fixed and custom policies without hidden category state 34ms
+   × CATEGORY: reaching the 200 limit rejects the entire batch including fixed updates 34ms
+   × CATEGORY: concurrent bulk requests share one DB limit and never partially apply 38ms
+   × CATEGORY: deletion allows all members and transaction failure keeps group and policies intact 34ms
+   × CATEGORY: builtin batch actually blocks uploads and allow stores exact R2 bytes 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: returns four builtin guides with five extensions each and no policy writes
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/categories.test.ts:19:27
+     17|   const { cookie } = await createSession();
+     18|   const response = await api(cookie);
+     19|   expect(response.status).toBe(200);
+       |                           ^
+     20|   const { categories } = await response.json<any>();
+     21|   expect(categories).toHaveLength(4);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: persists normalized editable membership and isolates names/ids by session
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ create tests/integration/categories.test.ts:12:27
+     10| const create = async (cookie: string, name = '개발', extensions = ['exe'…
+     11|   const response = await api(cookie, '', 'POST', { name, extensions });
+     12|   expect(response.status).toBe(201);
+       |                           ^
+     13|   return response.json<any>();
+     14| };
+ ❯ tests/integration/categories.test.ts:27:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: bulk block/allow updates fixed and custom policies without hidden category state
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ create tests/integration/categories.test.ts:12:27
+     10| const create = async (cookie: string, name = '개발', extensions = ['exe'…
+     11|   const response = await api(cookie, '', 'POST', { name, extensions });
+     12|   expect(response.status).toBe(201);
+       |                           ^
+     13|   return response.json<any>();
+     14| };
+ ❯ tests/integration/categories.test.ts:42:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: reaching the 200 limit rejects the entire batch including fixed updates
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ create tests/integration/categories.test.ts:12:27
+     10| const create = async (cookie: string, name = '개발', extensions = ['exe'…
+     11|   const response = await api(cookie, '', 'POST', { name, extensions });
+     12|   expect(response.status).toBe(201);
+       |                           ^
+     13|   return response.json<any>();
+     14| };
+ ❯ tests/integration/categories.test.ts:57:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: concurrent bulk requests share one DB limit and never partially apply
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ create tests/integration/categories.test.ts:12:27
+     10| const create = async (cookie: string, name = '개발', extensions = ['exe'…
+     11|   const response = await api(cookie, '', 'POST', { name, extensions });
+     12|   expect(response.status).toBe(201);
+       |                           ^
+     13|   return response.json<any>();
+     14| };
+ ❯ tests/integration/categories.test.ts:70:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: deletion allows all members and transaction failure keeps group and policies intact
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ create tests/integration/categories.test.ts:12:27
+     10| const create = async (cookie: string, name = '개발', extensions = ['exe'…
+     11|   const response = await api(cookie, '', 'POST', { name, extensions });
+     12|   expect(response.status).toBe(201);
+       |                           ^
+     13|   return response.json<any>();
+     14| };
+ ❯ tests/integration/categories.test.ts:80:59
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/integration/categories.test.ts > CATEGORY: builtin batch actually blocks uploads and allow stores exact R2 bytes
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/integration/categories.test.ts:95:86
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  20:07:20
+   Duration  1.55s (transform 49ms, setup 0ms, import 80ms, tests 285ms, environment 0ms)
+

@@ -1,0 +1,24 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+ ❯ tests/unit/queue.test.ts (0 test)
+ ❯ tests/unit/rules.test.ts (0 test)
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  21:26:33
+   Duration  214ms (transform 0ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+[ELIFECYCLE] Command failed with exit code 1.
+$ vitest run --config vitest.config.ts
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/queue.test.ts [ tests/unit/queue.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\inhea\AppData\Local\Packages\sandbox.{e582a3fc-2d6d-422c-9e9b-bbf13c0c2d79}\AC\Temp\eLCtf1hjpD-brEiAApQ6i\ssr\.tmp-1792758393722-guuhb738zz6' -> 'C:\Users\inhea\AppData\Local\Packages\sandbox.{e582a3fc-2d6d-422c-9e9b-bbf13c0c2d79}\AC\Temp\eLCtf1hjpD-brEiAApQ6i\ssr\2c5cc6b57a05c72a45acc464ab154ef0b4aef37f'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unit/rules.test.ts [ tests/unit/rules.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\inhea\AppData\Local\Packages\sandbox.{e582a3fc-2d6d-422c-9e9b-bbf13c0c2d79}\AC\Temp\eLCtf1hjpD-brEiAApQ6i\ssr\.tmp-1792758393721-1dxskakhurm' -> 'C:\Users\inhea\AppData\Local\Packages\sandbox.{e582a3fc-2d6d-422c-9e9b-bbf13c0c2d79}\AC\Temp\eLCtf1hjpD-brEiAApQ6i\ssr\390acf94deca81e4daf2506bc0b368b260f6a97e'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

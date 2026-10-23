@@ -1,0 +1,61 @@
+$ node .docs/harness/check.mjs app
+Running typecheck
+$ vue-tsc --noEmit
+Running build
+vite v6.4.3 building SSR bundle for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+dist/file_uploader_demo/.vite/manifest.json   0.16 kB
+dist/file_uploader_demo/wrangler.json         1.56 kB
+dist/file_uploader_demo/index.js             23.10 kB
+✓ built in 126ms
+vite v6.4.3 building for production...
+transforming...
+✓ 25 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore               0.02 kB
+dist/client/index.html                  0.38 kB │ gzip:  0.31 kB
+dist/client/assets/index-lQT8KY4A.css   7.06 kB │ gzip:  2.25 kB
+dist/client/assets/index-ZdUGYlBE.js   95.22 kB │ gzip: 36.06 kB
+✓ built in 620ms
+$ vite build
+Running test:unit
+$ vitest run --config vitest.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  2 passed (2)
+      Tests  42 passed (42)
+   Start at  21:26:49
+   Duration  242ms (transform 64ms, setup 0ms, import 94ms, tests 13ms, environment 0ms)
+
+Running test:integration
+
+$ vitest run --config vitest.integration.config.ts
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  6 passed (6)
+      Tests  39 passed (39)
+   Start at  21:26:51
+   Duration  6.90s (transform 112ms, setup 0ms, import 262ms, tests 3.00s, environment 0ms)
+
+Running test:e2e
+
+$ node .docs/harness/e2e.mjs
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+Error: http://127.0.0.1:4173 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
+
+[ELIFECYCLE] Command failed with exit code 1.
+failed: .docs\verification\runs\CHECK-2026-10-23T12-26-44-956Z-091e6648\report.json
+test:e2e failed; see test-e2e.txt
+[ELIFECYCLE] Command failed with exit code 1.

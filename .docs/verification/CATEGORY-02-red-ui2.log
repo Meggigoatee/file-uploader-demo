@@ -1,0 +1,59 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/categories.spec.ts" "-g" "real saved response loss"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:28188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:6328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\categories.spec.ts:52:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh (5.5s)
+
+
+  1) tests\e2e\categories.spec.ts:52:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByText(/카테고리 저장 결과를 확인하지 못했습니다/) with timeout 5000ms
+      - waiting for getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      70 |     await expect(page.getByRole('button', { name: '파일 선택', exact: true })).toBeEnabled();
+      71 |     await expect(photos.getByRole('button', { name: '사진 5종 차단', exact: true })).toBeEnabled();
+    > 72 |     await expect(page.getByText(/카테고리 저장 결과를 확인하지 못했습니다/)).toHaveCount(0);
+         |                                                            ^
+      73 |   } finally { release(); }
+      74 | });
+      75 |
+        at D:\garage\file-uploader-demo\tests\e2e\categories.spec.ts:72:60
+
+    Error Context: test-results\categories-CATEGORY-real-s-2e28b-ploads-until-policy-refresh\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\categories-CATEGORY-real-s-2e28b-ploads-until-policy-refresh\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\categories-CATEGORY-real-s-2e28b-ploads-until-policy-refresh\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\categories.spec.ts:52:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh 
+[ELIFECYCLE] Command failed with exit code 1.

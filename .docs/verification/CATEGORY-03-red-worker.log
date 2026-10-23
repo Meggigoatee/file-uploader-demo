@@ -1,0 +1,88 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+stdout | tests/integration/category-members.test.ts > CATEGORY-03: editable builtin membership persists and bulk action uses every current member
+{"time":"2026-10-23T11:49:08.513Z","requestId":"9b6779be-fb9e-46df-a960-c7c1a1a34b2c","operation":"session.initialize","method":"POST","status":200,"durationMs":3}
+
+stdout | tests/integration/category-members.test.ts > CATEGORY-03: editable builtin membership persists and bulk action uses every current member
+{"time":"2026-10-23T11:49:08.542Z","requestId":"32fad315-bc27-4637-936a-3ca7a9d703f0","operation":"session.initialize","method":"POST","status":200,"durationMs":2}
+
+stdout | tests/integration/category-members.test.ts > CATEGORY-03: editable builtin membership persists and bulk action uses every current member
+{"time":"2026-10-23T11:49:08.548Z","requestId":"c7d02104-b000-4914-986b-61779f9f0840","operation":"api.unknown","method":"POST","status":400,"durationMs":3,"code":"INVALID_CATEGORY_ACTION"}
+
+stdout | tests/integration/category-members.test.ts > CATEGORY-03: name-only create/rename preserves membership and enforces scoped additions atomically
+{"time":"2026-10-23T11:49:08.593Z","requestId":"096bb211-3c25-474e-bdca-da6bcb8a548a","operation":"session.initialize","method":"POST","status":200,"durationMs":2}
+
+stdout | tests/integration/category-members.test.ts > CATEGORY-03: name-only create/rename preserves membership and enforces scoped additions atomically
+{"time":"2026-10-23T11:49:08.598Z","requestId":"62fceb53-28aa-4aa5-b241-8e79fc44c4dd","operation":"api.unknown","method":"POST","status":400,"durationMs":2,"code":"INVALID_CATEGORY"}
+
+ ❯ tests/integration/category-members.test.ts (3 tests | 3 failed) 224ms
+   × CATEGORY-03: editable builtin membership persists and bulk action uses every current member 76ms
+   × CATEGORY-03: name-only create/rename preserves membership and enforces scoped additions atomically 48ms
+   × CATEGORY-03: migration backfills builtin members for old sessions without changing custom groups or policies 98ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/category-members.test.ts > CATEGORY-03: editable builtin membership persists and bulk action uses every current member
+AssertionError: expected 400 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 400
+
+ ❯ tests/integration/category-members.test.ts:13:87
+     11| it('CATEGORY-03: editable builtin membership persists and bulk action …
+     12|   const a = (await createSession()).cookie, b = (await createSession()…
+     13|   expect((await api(a, '/photos/extensions', 'POST', { extension: '.HE…
+       |                                                                                       ^
+     14|   expect((await api(a, '/photos/extensions', 'POST', { extension: 'hei…
+     15|   expect((await api(a, '/photos/extensions/png', 'DELETE')).status).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/integration/category-members.test.ts > CATEGORY-03: name-only create/rename preserves membership and enforces scoped additions atomically
+AssertionError: expected 400 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 400
+
+ ❯ tests/integration/category-members.test.ts:30:89
+     28| it('CATEGORY-03: name-only create/rename preserves membership and enfo…
+     29|   const { cookie } = await createSession();
+     30|   const created = await api(cookie, '', 'POST', { name: '개발' }); expec…
+       |                                                                                         ^
+     31|   const group = await created.json<any>(); expect(group.extensions).to…
+     32|   expect((await api(cookie, '/' + group.id + '/extensions', 'POST', { …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/integration/category-members.test.ts > CATEGORY-03: migration backfills builtin members for old sessions without changing custom groups or policies
+AssertionError: expected 1 to be 5 // Object.is equality
+
+- Expected
++ Received
+
+- 5
++ 1
+
+ ❯ tests/integration/category-members.test.ts:57:118
+     55|   const after = Object.entries(all).filter(([file]) => file.includes('…
+     56|   if (after.length) await applyD1Migrations(env.DB, after.map(([name, …
+     57|   expect(await env.DB.prepare('SELECT count(*) AS n FROM custom_catego…
+       |                                                                                                                      ^
+     58|   expect(await env.DB.prepare("SELECT extension FROM category_extensio…
+     59|   expect(await env.DB.prepare('SELECT count(*) AS n FROM session_exten…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  20:49:06
+   Duration  1.96s (transform 124ms, setup 0ms, import 186ms, tests 224ms, environment 0ms)
+

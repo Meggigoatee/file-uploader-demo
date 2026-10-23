@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { writeFileSync } from 'node:fs';
 
-test('TC19: public browser policy persistence, actual upload and API denial', async ({page,request})=>{
+test('TC19: public browser policy persistence, actual upload and API denial', async ({page,context})=>{
+  const request=context.request;
+  expect((await request.post('/api/session')).status()).toBe(200);
   const suffix=Date.now().toString(36);
   const extension='verify'+suffix;
   const allowed='ok'+suffix;

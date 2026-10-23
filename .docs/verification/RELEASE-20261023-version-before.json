@@ -1,0 +1,57 @@
+{
+  "id": "1b382c8c-43b4-40a6-be43-560479d442f9",
+  "number": 2,
+  "metadata": {
+    "created_on": "2026-10-22T14:40:14.209313Z",
+    "source": "wrangler",
+    "author_id": "[REDACTED]",
+    "author_email": "[REDACTED]",
+    "has_preview": true
+  },
+  "annotations": {
+    "workers/triggered_by": "version_upload"
+  },
+  "resources": {
+    "script": {
+      "etag": "d8091cf9d8143bf523818dde061f7100071b1e7157d4266515ae0155e081d30e",
+      "handlers": [
+        "fetch"
+      ],
+      "last_deployed_from": "wrangler"
+    },
+    "script_runtime": {
+      "assets": {
+        "not_found_handling": "single-page-application",
+        "static_routing": {
+          "user_worker": [
+            "/api/*"
+          ]
+        },
+        "serve_directly": true,
+        "raw_run_worker_first": [
+          "/api/*"
+        ],
+        "base_path": "/"
+      },
+      "compatibility_date": "2026-08-28",
+      "usage_model": "standard"
+    },
+    "bindings": [
+      {
+        "name": "ASSETS",
+        "type": "assets"
+      },
+      {
+        "database_id": "a5987b22-0ad5-4813-9b4c-55132f580912",
+        "id": "a5987b22-0ad5-4813-9b4c-55132f580912",
+        "name": "DB",
+        "type": "d1"
+      },
+      {
+        "bucket_name": "file-uploader-demo",
+        "name": "UPLOADS",
+        "type": "r2_bucket"
+      }
+    ]
+  }
+}

@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref } from 'vue';
-import { LIMITS, normalizeExtension } from '../shared/rules';
-import type { Policy } from '../shared/types';
+import { FIXED, LIMITS, normalizeExtension } from '../shared/rules';
 import { usePolicies } from './policies';
 import UploadPanel from './UploadPanel.vue';
+import CategoryPanel from './CategoryPanel.vue';
+import ExtensionToggle from './ExtensionToggle.vue';
+import { BUILTIN_CATEGORIES, type Category } from '../shared/categories';
 import './style.css';
 
 const { data, ready, busy, message, refresh, save } = usePolicies();
 const uploading = ref(false);
+const categoryBusy = ref(false);
+const categories = ref<Category[]>(BUILTIN_CATEGORIES);
+const categoryFilter = ref('all');
+const visibleCustom = computed(() => {
+  const policies = data.value?.custom ?? [];
+  if (categoryFilter.value === 'all') return policies;
+  const members = new Set(categoryFilter.value === 'other' ? categories.value.flatMap(c => c.extensions) : categories.value.find(c => c.id === categoryFilter.value)?.extensions ?? []);
+  return policies.filter(p => categoryFilter.value === 'other' ? !members.has(p.extension) : members.has(p.extension));
+});
+function loadedCategories(value: Category[]) {
+  categories.value = value;
+  if (!['all', 'other'].includes(categoryFilter.value) && !value.some(c => c.id === categoryFilter.value)) categoryFilter.value = 'all';
+}
 const input = ref('');
 const lookupInput = ref('');
 const inputElement = ref<HTMLInputElement>();
@@ -16,7 +31,7 @@ const lookupNormalized = computed(() => normalizeExtension(lookupInput.value));
 const findPolicy = (extension: string | null) => [...(data.value?.fixed ?? []), ...(data.value?.custom ?? [])].find(p => p.extension === extension);
 const registered = computed(() => findPolicy(normalized.value));
 const lookupRegistered = computed(() => findPolicy(lookupNormalized.value));
-const locked = computed(() => !ready.value || busy.value || uploading.value);
+const locked = computed(() => !ready.value || busy.value || uploading.value || categoryBusy.value);
 const canAdd = computed(() => !locked.value && !!normalized.value && !registered.value && (data.value?.customCount ?? 0) < LIMITS.custom);
 const inputHint = computed(() => {
   if (!input.value) return '영문·숫자 확장자를 입력해 주세요. 예: .PDF → pdf';
@@ -33,16 +48,16 @@ const lookupHint = computed(() => {
   if (lookupRegistered.value?.kind === 'fixed') return `고정 확장자 · 현재 ${lookupRegistered.value.blocked ? '차단' : '해제'}`;
   return lookupRegistered.value ? '이미 커스텀 차단 목록에 등록되어 있습니다.' : '등록된 확장자가 없습니다.';
 });
-const groups = [
-  { name:'사진', extensions:['jpg','jpeg','png','webp'] }, { name:'영상', extensions:['mp4','webm'] },
-  { name:'음성', extensions:['mp3','wav'] }, { name:'문서', extensions:['pdf','txt','docx','xlsx','pptx'] },
-];
 
-async function changeFixed(policy: Policy, event: Event) {
-  const target = event.target as HTMLInputElement;
-  const result = await save('/fixed/' + policy.extension, 'PATCH', { blocked: target.checked });
-  if (result && typeof result !== 'boolean' && data.value) data.value.fixed = data.value.fixed.map(p => p.extension === policy.extension ? result : p);
-  target.checked = data.value?.fixed.find(p => p.extension === policy.extension)?.blocked ?? policy.blocked;
+async function changeExtension(extension: string, blocked: boolean) {
+  const fixed = (FIXED as readonly string[]).includes(extension);
+  const result = await save(fixed ? '/fixed/' + extension : blocked ? '/custom' : '/custom/' + extension, fixed ? 'PATCH' : blocked ? 'POST' : 'DELETE', fixed ? { blocked } : blocked ? { extension } : undefined);
+  if (!result || !data.value) return;
+  if (fixed && typeof result !== 'boolean') data.value.fixed = data.value.fixed.map(p => p.extension === extension ? result : p);
+  else if (!fixed) {
+    data.value.custom = blocked && typeof result !== 'boolean' ? [...data.value.custom, result].sort((a,b) => a.extension.localeCompare(b.extension)) : data.value.custom.filter(p => p.extension !== extension);
+    data.value.customCount = data.value.custom.length;
+  }
 }
 async function add() {
   if (!canAdd.value || !data.value) return;
@@ -56,39 +71,36 @@ async function add() {
 }
 async function remove(extension: string) {
   if (locked.value || !data.value) return;
-  if (await save('/custom/' + extension, 'DELETE')) {
-    data.value.custom = data.value.custom.filter(p => p.extension !== extension);
-    data.value.customCount = data.value.custom.length;
-  }
+  await changeExtension(extension, false);
   await nextTick(); inputElement.value?.focus();
 }
-function fill(extension: string) { input.value = extension; inputElement.value?.focus(); }
 onMounted(refresh);
 </script>
 
 <template>
   <main class="shell">
-    <header class="page-header"><div><p class="eyebrow">FILE UPLOAD DEMO</p><h1>파일 업로드 정책 관리</h1><p class="muted">변경한 정책은 모든 방문자에게 적용됩니다.</p></div><span class="badge">공유 데모</span></header>
+    <header class="page-header"><div><p class="eyebrow">FILE UPLOAD DEMO</p><h1>파일 업로드 정책 관리</h1><p class="muted">정책은 현재 브라우저 세션에 저장되며 새로고침해도 유지됩니다.</p></div><span class="badge">익명 세션 데모</span></header>
     <div class="sections">
       <UploadPanel :policies="data" :locked="locked" :refresh="refresh" @processing="uploading=$event" />
       <section class="panel" aria-labelledby="policy-title">
-        <div class="section-heading"><div><p class="eyebrow">02 · POLICY</p><h2 id="policy-title">확장자 차단 정책</h2></div><button class="subtle" :disabled="busy || uploading" @click="refresh">정책 새로고침</button></div>
+        <div class="section-heading"><div><p class="eyebrow">02 · POLICY</p><h2 id="policy-title">확장자 차단 정책</h2></div><button class="subtle" :disabled="busy || uploading || categoryBusy" @click="refresh">정책 새로고침</button></div>
         <p role="status" class="notice">{{ busy ? '정책 처리 중…' : message }}</p>
         <h3>고정 확장자</h3><p class="help">체크하면 즉시 차단 정책을 저장합니다.</p>
-        <div class="fixed-list"><label v-for="policy in data?.fixed" :key="policy.extension" class="fixed-item"><input type="checkbox" :checked="policy.blocked" :disabled="locked" @change="changeFixed(policy, $event)"><span>{{ policy.extension }}</span></label></div>
+        <div class="fixed-list"><ExtensionToggle v-for="policy in data?.fixed" :key="policy.extension" :extension="policy.extension" :blocked="policy.blocked" :disabled="locked" :change="value => changeExtension(policy.extension, value)" /></div>
         <div class="divider"></div>
         <h3>커스텀 추가</h3>
         <form @submit.prevent="add"><label class="sr-only" for="extension">커스텀 확장자</label><div class="input-row"><input id="extension" ref="inputElement" v-model="input" autocomplete="off" spellcheck="false" placeholder="예: pdf" aria-describedby="extension-hint extension-count" :aria-invalid="!!input && !normalized"><span id="extension-count" class="counter">{{ input.length }}/20</span><button type="submit" :disabled="!canAdd">추가</button></div><p id="extension-hint" class="help">{{ inputHint }}</p></form>
         <h3>커스텀 차단 {{ data?.customCount ?? '—' }}/200</h3>
-        <div class="tag-list"><span v-for="policy in data?.custom" :key="policy.extension" class="tag" :class="{highlight:lookupRegistered?.extension === policy.extension}">{{ policy.extension }}<button :aria-label="policy.extension + ' 차단 해제'" :disabled="locked" @click="remove(policy.extension)">×</button></span><p v-if="ready && !data?.customCount" class="help">등록된 커스텀 확장자가 없습니다.</p></div>
+        <div class="category-filter"><label for="category-filter">카테고리별 조회 필터</label><select id="category-filter" v-model="categoryFilter"><option value="all">전체</option><option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option><option value="other">기타</option></select></div>
+        <p class="help">표시 {{ visibleCustom.length }}개 · 전체 {{ data?.customCount ?? '—' }}/200</p>
+        <div class="tag-list"><span v-for="policy in visibleCustom" :key="policy.extension" class="tag fixed-item" :class="{highlight:lookupRegistered?.extension === policy.extension}"><span>{{ policy.extension }}</span><button class="member-remove" :aria-label="policy.extension + ' 차단 해제'" :disabled="locked" @click="remove(policy.extension)">×</button></span><p v-if="ready && !visibleCustom.length" class="help">{{ data?.customCount ? '이 카테고리에 차단된 확장자가 없습니다.' : '등록된 커스텀 확장자가 없습니다.' }}</p></div>
         <section aria-labelledby="lookup-title">
           <h3 id="lookup-title">등록 여부 확인</h3>
           <label class="sr-only" for="extension-lookup">등록 여부 확인할 확장자</label>
           <input id="extension-lookup" v-model="lookupInput" autocomplete="off" spellcheck="false" placeholder="확인할 확장자 입력" aria-describedby="lookup-hint" :aria-invalid="!!lookupInput && !lookupNormalized">
           <p id="lookup-hint" class="help">{{ lookupHint }}</p>
         </section>
-        <div class="divider"></div><h3>자주 쓰는 확장자 안내</h3><p class="help">선택하면 입력창에 채워집니다. 추가 버튼으로 차단을 등록하세요.</p>
-        <div v-for="group in groups" :key="group.name" class="guide-row"><span>{{ group.name }}</span><div><button v-for="extension in group.extensions" :key="extension" class="guide" @click="fill(extension)">{{ extension }}</button></div></div>
+        <CategoryPanel :policies="data" :locked="locked" :refresh="refresh" :toggle="changeExtension" @loaded="loadedCategories" @processing="categoryBusy=$event" @uncertain="ready=false" />
       </section>
     </div>
   </main>

@@ -1,0 +1,132 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+stdout | tests/integration/sessions.test.ts > SESSION: creates private unchecked defaults; cookie re-entry preserves DB state and old global data is ignored
+{"time":"2026-10-23T11:01:15.835Z","requestId":"6c1ad249-78a9-4ff3-a53e-e9779f6265c1","operation":"api.unknown","method":"POST","status":404,"durationMs":2,"code":"NOT_FOUND"}
+
+stdout | tests/integration/sessions.test.ts > SESSION: isolates all CRUD, duplicate checks and the atomic 200-custom limit
+{"time":"2026-10-23T11:01:15.891Z","requestId":"2e0177a4-b52a-4223-8872-3a2736847550","operation":"api.unknown","method":"POST","status":404,"durationMs":0,"code":"NOT_FOUND"}
+
+stdout | tests/integration/sessions.test.ts > SESSION: applies each cookie policy to real R2 storage and keeps the app budget global
+{"time":"2026-10-23T11:01:15.923Z","requestId":"6e2a116e-38f5-48fe-b49f-024a312a41b3","operation":"api.unknown","method":"POST","status":404,"durationMs":0,"code":"NOT_FOUND"}
+
+stdout | tests/integration/sessions.test.ts > SESSION: missing, malformed and unissued cookies cannot read, edit or upload
+{"time":"2026-10-23T11:01:15.954Z","requestId":"8785c505-b8fb-4f3d-bf33-5235ef47bee0","operation":"policy.read","method":"GET","status":200,"durationMs":2}
+
+stdout | tests/integration/sessions.test.ts > SESSION: new identity is not a fallback for broken policy rows and cross-origin creation is denied
+{"time":"2026-10-23T11:01:15.984Z","requestId":"dd04a66a-b998-430d-a2aa-7eaa0d416fa8","operation":"api.unknown","method":"POST","status":404,"durationMs":0,"code":"NOT_FOUND"}
+
+ ❯ tests/integration/sessions.test.ts (6 tests | 5 failed | 1 skipped) 180ms
+   × SESSION: creates private unchecked defaults; cookie re-entry preserves DB state and old global data is ignored 55ms
+   × SESSION: isolates all CRUD, duplicate checks and the atomic 200-custom limit 31ms
+   × SESSION: applies each cookie policy to real R2 storage and keeps the app budget global 31ms
+   × SESSION: missing, malformed and unissued cookies cannot read, edit or upload 31ms
+   × SESSION: new identity is not a fallback for broken policy rows and cross-origin creation is denied 30ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/sessions.test.ts > SESSION: creates private unchecked defaults; cookie re-entry preserves DB state and old global data is ignored
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ createSession tests/integration/fixtures.ts:12:27
+     10| export async function createSession(cookie?: string, origin = 'https:/…
+     11|   const response = await exports.default.fetch(origin + '/api/session'…
+     12|   expect(response.status).toBe(200);
+       |                           ^
+     13|   return { response, cookie: response.headers.get('set-cookie')?.split…
+     14| }
+ ❯ tests/integration/sessions.test.ts:13:32
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/integration/sessions.test.ts > SESSION: isolates all CRUD, duplicate checks and the atomic 200-custom limit
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ createSession tests/integration/fixtures.ts:12:27
+     10| export async function createSession(cookie?: string, origin = 'https:/…
+     11|   const response = await exports.default.fetch(origin + '/api/session'…
+     12|   expect(response.status).toBe(200);
+       |                           ^
+     13|   return { response, cookie: response.headers.get('set-cookie')?.split…
+     14| }
+ ❯ tests/integration/sessions.test.ts:32:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/integration/sessions.test.ts > SESSION: applies each cookie policy to real R2 storage and keeps the app budget global
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ createSession tests/integration/fixtures.ts:12:27
+     10| export async function createSession(cookie?: string, origin = 'https:/…
+     11|   const response = await exports.default.fetch(origin + '/api/session'…
+     12|   expect(response.status).toBe(200);
+       |                           ^
+     13|   return { response, cookie: response.headers.get('set-cookie')?.split…
+     14| }
+ ❯ tests/integration/sessions.test.ts:49:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/integration/sessions.test.ts > SESSION: missing, malformed and unissued cookies cannot read, edit or upload
+AssertionError: expected 200 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 200
+
+ ❯ tests/integration/sessions.test.ts:68:40
+     66| it('SESSION: missing, malformed and unissued cookies cannot read, edit…
+     67|   for (const cookie of ['', 'uploader_session=wrong', 'uploader_sessio…
+     68|     expect((await api(cookie)).status).toBe(401);
+       |                                        ^
+     69|     expect((await api(cookie, '/api/policies/fixed/exe', 'PATCH', { bl…
+     70|     expect((await api(cookie, '/api/uploads', 'POST')).status).toBe(40…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/integration/sessions.test.ts > SESSION: new identity is not a fallback for broken policy rows and cross-origin creation is denied
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ createSession tests/integration/fixtures.ts:12:27
+     10| export async function createSession(cookie?: string, origin = 'https:/…
+     11|   const response = await exports.default.fetch(origin + '/api/session'…
+     12|   expect(response.status).toBe(200);
+       |                           ^
+     13|   return { response, cookie: response.headers.get('set-cookie')?.split…
+     14| }
+ ❯ tests/integration/sessions.test.ts:79:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 skipped (6)
+   Start at  20:01:14
+   Duration  1.91s (transform 45ms, setup 0ms, import 77ms, tests 180ms, environment 1ms)
+

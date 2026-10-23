@@ -1,6 +1,22 @@
 # 개발 환경과 의존성
 
-확인일: 2026-10-22 (Asia/Seoul). 사용자 요청에 따른 **개발 의존성 설치·환경 스모크 확인 완료**. 애플리케이션 기능·Vite/Worker 앱 설정·SQL 마이그레이션·테스트 시나리오·배포는 구현 전이다.
+최신 확인일: 2026-10-23 (Asia/Seoul). 기능 개발·검증은 **로컬 데브 우선**, Cloudflare 배포는 **이후 사용자의 명시적 요청 시에만** 수행한다. 아래 의존성 설치·초기 환경 스모크는 2026-10-22 준비 당시 기록이며, 이후 앱 구현·검증·배포 결과는 [VALIDATION](./VALIDATION.md)에 보존한다.
+
+## 로컬 데브 운영
+
+프로젝트 루트의 PowerShell에서 실행한다. 기존 의존성이 준비된 이 PC에서는 설치를 반복할 필요가 없다. 새 체크아웃 또는 의존성 누락 시 고정 lockfile로 설치한다.
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm run db:local
+pnpm run dev
+```
+
+- 기본 URL은 `http://127.0.0.1:5173`이며 Vite가 출력한 실제 주소를 확인한다. 프런트엔드와 Worker API를 같은 서버에서 실행한다.
+- Vite Cloudflare 플러그인의 `remoteBindings: false`로 원격 바인딩 연결을 비활성화했다. Worker 실행과 D1/R2 저장은 로컬에서 처리한다. Cloudflare 로그인·API 토큰·추가 `.env`/`.dev.vars`는 필요하지 않다.
+- `db:local`은 `--local`로 migration을 적용한다. 개발 상태는 `.wrangler/state/v3`, E2E 상태는 `.wrangler/e2e/v3`에 분리해 보존하며 Git에서 제외한다. seed는 기존 정책·누적 예산을 덮어쓰지 않는다.
+- 필요한 Vue/Vite/Workers/D1/R2 개발 도구와 Chromium은 이미 설치되어 있다. D1/R2용 별도 서버·Docker·DB 드라이버를 추가하지 않는다. Chromium이 없는 PC에서 E2E를 실행하려면 `pnpm exec playwright install chromium`을 사용한다.
+- 로컬 검증 결과와 배포 여부를 구분해 기록한다. 원격 migration·리소스 생성·배포·원격 smoke는 로컬 준비 명령에 포함하지 않는다. 이번 확인 결과는 [LOCAL-20261023](./VALIDATION.md#local-20261023--로컬-데브-준비)에 기록한다.
 
 ## 기존 환경과 스토어
 

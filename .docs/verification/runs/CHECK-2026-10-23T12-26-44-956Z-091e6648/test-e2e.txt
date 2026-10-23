@@ -1,0 +1,12 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+Error: http://127.0.0.1:4173 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
+
+[ELIFECYCLE] Command failed with exit code 1.
+$ node .docs/harness/e2e.mjs

@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-10-23T10:44:04.465Z",
+  "baseURL": "http://127.0.0.1:5173",
+  "home": {
+    "status": 200,
+    "contentType": "text/html",
+    "viteClient": true
+  },
+  "policyAPI": {
+    "status": 200,
+    "contentType": "application/json"
+  },
+  "localWorkers": {
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "result": [
+      {
+        "isSelf": true,
+        "name": "file-uploader-demo",
+        "bindings": {
+          "kv": [],
+          "d1": [
+            {
+              "id": "a5987b22-0ad5-4813-9b4c-55132f580912",
+              "bindingName": "DB"
+            }
+          ],
+          "r2": [
+            {
+              "id": "file-uploader-demo",
+              "bindingName": "UPLOADS"
+            }
+          ],
+          "do": [
+            {
+              "id": "file-uploader-demo-__VITE_RUNNER_OBJECT__",
+              "bindingName": "__VITE_RUNNER_OBJECT__",
+              "className": "__VITE_RUNNER_OBJECT__",
+              "scriptName": "file-uploader-demo",
+              "useSqlite": false
+            }
+          ],
+          "workflows": [],
+          "sendEmail": []
+        }
+      }
+    ]
+  }
+}

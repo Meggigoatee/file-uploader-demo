@@ -1,0 +1,98 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+
+Running 19 tests using 1 worker
+
+  ok  1 tests\e2e\categories.spec.ts:3:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks (898ms)
+  ok  2 tests\e2e\categories.spec.ts:26:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members (966ms)
+  ok  3 tests\e2e\categories.spec.ts:52:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh (480ms)
+  ok  4 tests\e2e\categories.spec.ts:76:1 › CATEGORY: real app limit rejection keeps every policy and category input (639ms)
+  ok  5 tests\e2e\errors.spec.ts:10:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (551ms)
+  ok  6 tests\e2e\errors.spec.ts:30:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (303ms)
+  ok  7 tests\e2e\errors.spec.ts:40:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (595ms)
+  ok  8 tests\e2e\errors.spec.ts:64:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (2.7s)
+  ok  9 tests\e2e\errors.spec.ts:78:1 › TC17: keyboard add, raw length preservation and narrow layout (381ms)
+  ok 10 tests\e2e\layout.spec.ts:7:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (526ms)
+  ok 11 tests\e2e\layout.spec.ts:38:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (490ms)
+  ok 12 tests\e2e\policies.spec.ts:7:1 › TC11/12: policy persistence, exact registration and guide only fills input (688ms)
+  ok 13 tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie (950ms)
+  ok 14 tests\e2e\sessions.spec.ts:33:1 › SESSION: blocked cookies leave editing and uploads locked with a recoverable error (267ms)
+  ok 15 tests\e2e\uploads.spec.ts:10:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (687ms)
+  x  16 tests\e2e\uploads.spec.ts:38:1 › TC15: real save with malformed success JSON stays unconfirmed (5.2s)
+  ok 17 tests\e2e\uploads.spec.ts:49:1 › TC15: actual XHR timeout after real storage stays unconfirmed and stops next request (1.0m)
+  ok 18 tests\e2e\uploads.spec.ts:67:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (631ms)
+  x  19 tests\e2e\uploads.spec.ts:103:1 › TC16: failed fresh policy GET starts no upload and preserves queue (5.2s)
+
+
+  1) tests\e2e\uploads.spec.ts:38:1 › TC15: real save with malformed success JSON stays unconfirmed 
+
+    TimeoutError: locator.click: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '업로드 시작 (1)', exact: true })
+
+
+      43 |   await page.goto('/');
+      44 |   await page.getByLabel('파일 선택',{exact:true}).setInputFiles(file('malformed.txt'));
+    > 45 |   await page.getByRole('button',{name:'업로드 시작 (1)',exact:true}).click();
+         |                                                                 ^
+      46 |   await expect(row(page,'malformed.txt')).toContainText('완료 확인 실패');
+      47 | });
+      48 |
+        at D:\garage\file-uploader-demo\tests\e2e\uploads.spec.ts:45:65
+
+    Error Context: test-results\uploads-TC15-real-save-wit-cd997-cess-JSON-stays-unconfirmed\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\uploads-TC15-real-save-wit-cd997-cess-JSON-stays-unconfirmed\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\uploads-TC15-real-save-wit-cd997-cess-JSON-stays-unconfirmed\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\uploads.spec.ts:103:1 › TC16: failed fresh policy GET starts no upload and preserves queue 
+
+    TimeoutError: locator.click: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '업로드 시작 (1)', exact: true })
+
+
+      107 |   await page.getByLabel('파일 선택',{exact:true}).setInputFiles(file('waiting.txt'));
+      108 |   await page.route('**/api/policies',route=>route.abort('failed'));
+    > 109 |   await page.getByRole('button',{name:'업로드 시작 (1)',exact:true}).click();
+          |                                                                 ^
+      110 |   await expect(page.getByText(/정책을 불러오지 못했습니다/)).toBeVisible();
+      111 |   expect(count).toBe(0);
+      112 |   await expect(row(page,'waiting.txt')).toBeVisible();
+        at D:\garage\file-uploader-demo\tests\e2e\uploads.spec.ts:109:65
+
+    Error Context: test-results\uploads-TC16-failed-fresh--0c8e4--upload-and-preserves-queue\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\uploads-TC16-failed-fresh--0c8e4--upload-and-preserves-queue\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\uploads-TC16-failed-fresh--0c8e4--upload-and-preserves-queue\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\e2e\uploads.spec.ts:38:1 › TC15: real save with malformed success JSON stays unconfirmed ─
+    tests\e2e\uploads.spec.ts:103:1 › TC16: failed fresh policy GET starts no upload and preserves queue 
+  17 passed (1.5m)
+[ELIFECYCLE] Command failed with exit code 1.
+$ node .docs/harness/e2e.mjs
+[WebServer] (node:29492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:25176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:7332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

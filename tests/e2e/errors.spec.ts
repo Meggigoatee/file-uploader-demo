@@ -1,11 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 
-test.beforeEach(async ({request})=>{
-  const policies=await (await request.get('/api/policies')).json();
-  for(const p of policies.fixed) await request.patch('/api/policies/fixed/'+p.extension,{data:{blocked:false}});
-  for(const p of policies.custom) await request.delete('/api/policies/custom/'+p.extension);
+test.beforeEach(async ({request}) => {
+  expect((await request.post('/api/session')).status()).toBe(200);
 });
 const file=(name:string)=>({name,mimeType:'text/plain',buffer:Buffer.from('x')});
 
@@ -47,6 +45,7 @@ test('TC09/16: server policy rejection refreshes remaining queue and never chang
     await route.continue();
   });
   await page.goto('/');
+  await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeEnabled();
   await page.getByLabel('파일 선택',{exact:true}).setInputFiles([file('first.exe'),file('next.exe'),file('saved.txt')]);
   await page.getByRole('button',{name:'업로드 시작 (3)',exact:true}).click();
   const first=page.getByRole('listitem').filter({hasText:'first.exe'});
@@ -68,6 +67,7 @@ test('TC10/16: actual local app budget exhaustion stops next request and preserv
   try {
     let count=0; page.on('request',r=>{if(r.url().endsWith('/api/uploads')) count++;});
     await page.goto('/');
+    await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeEnabled();
     await page.getByLabel('파일 선택',{exact:true}).setInputFiles([file('quota.txt'),file('waiting.txt')]);
     await page.getByRole('button',{name:'업로드 시작 (2)',exact:true}).click();
     await expect(page.getByRole('listitem').filter({hasText:'quota.txt'})).toContainText('누적 저장 예산이 소진');
@@ -88,5 +88,5 @@ test('TC17: keyboard add, raw length preservation and narrow layout', async ({pa
   await expect(input).toBeFocused();
   await page.getByLabel('파일 선택',{exact:true}).setInputFiles(file('아주긴파일명'.repeat(12)+'.txt'));
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.screenshot({path:'.docs/verification/mobile.png',fullPage:true});
+  await page.screenshot({path:'.docs/verification/'+(process.env.UPLOADER_VERIFICATION_PREFIX ?? 'LOCAL')+'-mobile.png',fullPage:true});
 });

@@ -1,5 +1,76 @@
 # TDD 루프 기록
 
+## FINAL-LOCAL-01 — 최종 로컬 검증·누락 보강
+
+- 2026-10-23 21:25:47 KST 시작(도구 확인). 사용자 요청에 따라 완료 문서와 현재 구현/테스트를 대조하고 요구사항/기대값을 완화하지 않는다. 기존 미커밋 변경을 보존한다. 실제 실행·대조표는 VALIDATION/FINAL_LOCAL_REVIEW에 연결한다.
+- 기준선 `pnpm run check`는 샌드박스의 Wrangler 로그 쓰기/단위 수집 임시 rename EPERM으로 실패([환경](./verification/FINAL-LOCAL-01-baseline.log)). 사용자 환경 재실행은 타입/빌드·단위42/Worker39 통과 후 별도 CATEGORY-05 E2E가 같은4173 포트를 사용해 시작 전 중단([로그](./verification/FINAL-LOCAL-01-baseline-user.log)). 단독 E2E 재시도도 동일 포트 충돌([로그](./verification/FINAL-LOCAL-01-baseline-e2e.log)). 실제 프로세스를 읽기 확인하고 종료/재사용하지 않았다. 제품 Red나 E2E 실행 통과로 세지 않는다.
+- 구현을 바꾸기 전에 새 카테고리 단위23개와 실제 D1/R2 Worker14개를 작성했다. 첫 실행 **단위65/65·신규Worker14/14 통과**([단위](./verification/FINAL-LOCAL-01-unit-first.log), [Worker](./verification/FINAL-LOCAL-01-worker-first.log)). 기존에 동작하던 경계의 테스트 누락이며 인위적인 Red를 만들지 않았다.
+- Worker 보강은 이름30/31자·구성원50/51개·원문20/21자, 대소문자 이름/정규화 구성원 경합, 중복 rename rollback, 기존 custom200개에서 고정/기존 소속 일괄 변경, 단건/일괄 경합, 허용 batch 실제 trigger rollback, 전 액션 세션 격리와 HTTP 오류다. 저장은 실제 D1 예약 실패/커밋 후 결과 유실·put 예외/실제 저장 뒤 null·크기 불일치·예외와 예산 미환급/새 수동 시도 바이트를 확인했다. put 대역은 앱 실패 분기 검증이며 Cloudflare 장애의 정확한 재현이 아니다.
+- 신규UI7개 첫 실행 **6통과/1실패**([최초 로그](./verification/FINAL-LOCAL-01-ui-first.log), trace는 `.wrangler/final-local-playwright`에 보존). 실패 원인: 테스트가 두 카드에서 제거 모드를 동시에 유지한다고 가정했다. 구현/기존 UI는 한 카드씩 제거 모드(`removing` ID 하나)를 사용하므로 다른 카드로 이동 후 첫 카드의 ×가 없다. 테스트 흐름에서 첫 카드 체크박스 복귀를 확인하고 제거 모드로 명시적으로 재진입하도록 수정했다. 정책/소속/필터/삭제/요청 수 기대는 유지했다. 제품 결함 Red로 세지 않는다.
+- 추가 테스트 타입 검사 종료0([타입](./verification/FINAL-LOCAL-01-type-first.log)). UI 흐름 보정 후 **7/7 통과**([재검증](./verification/FINAL-LOCAL-01-ui-green.log)). 생성/차단 rollback·직접 SQL 제약·일괄 실행 직전 소속 변경·카테고리 정책T 전후4개를 추가했고 경계Worker12/12가 첫 실행 통과했다([추가 Worker](./verification/FINAL-LOCAL-01-worker-extra.log)).
+- 리팩토링 검토: 테스트 준비/HTTP 오류 확인은 작은 파일별 헬퍼로 공유했다. 기존 카테고리 E2E 캡처는 공통 `verificationPath`로 묶고 최종 실행 접두사를 붙여 과거 이미지 덮어쓰기를 방지했다. 제품 결함이나 제품 로직을 정리할 필요는 확인되지 않았고 서버/UI 동작을 바꾸지 않았다.
+- **최종 누적 회귀 완료 21:35:39~21:37:31 KST:** `UPLOADER_VERIFICATION_PREFIX=FINAL-LOCAL-01`로 `pnpm run check` **종료0, 단위65/Worker57/E2E29=151개·타입/빌드 전부 성공**([report](./verification/runs/CHECK-2026-10-23T12-35-39-480Z-ce4bb88e/report.json), [stdout](./verification/FINAL-LOCAL-01-final-check.log)). 신규48개는 단위23/Worker18/E2E7이며 기존103개도 모두 포함한다. 기존60초 timeout·응답 손실·T·예산·세션 회귀 실패 없음. 통과 후 같은 앱 검사 반복/앱 소스 변경은 없다.
+- [구현/요건/테스트 대조표](./FINAL_LOCAL_REVIEW.md)와 VALIDATION·대화/프롬프트 기록·문서 진입점을 갱신한다. 원문 과제·의존성·기존 미커밋 제품 변경을 보존했으며 원격 배포/새 의존성/커밋/푸시는 없다.
+- 종료 점검: 문서52개·로컬 참조649개·앵커11개 누락0·보호 파일6개 불변, Git 공백 검사 종료0·코드5개 검사 이슈0이다. 최초 rg의 종료1은 skip/only 등 검색 결과0개이며 테스트 실패가 아니다. 별도 Node 검사에서도 금지 패턴/끝 공백0을 확인했다. 검증/기록을 완료했다.
+
+## CATEGORY-05 — 커스텀 차단 칩 스타일 통일
+
+- 2026-10-23 21:24:52 KST 도구 확인. 사용자 첨부 두 이미지의 차이를 확인하고 기존 삭제 E2E에 같은 gif 칩/×의 실제 계산 스타일 비교를 먼저 추가했다.
+- **Red1실패**: 커스텀의 font12px/반경6px/작은 여백·배경이 카테고리의 font13px/반경8px/여백8px 10px·투명 배경과 달랐다([Red](./verification/CATEGORY-05-red-ui.log)).
+- 최소 수정·리팩토링: App의 커스텀 칩에 기존 fixed-item/member-remove를 공유하고 중복 tag/button CSS를 제거했다. tag-list의 세로 늘어남을 막아 실제 높이도 일치시켰다. 조회 강조용 tag.highlight와 차단 해제/잠금은 유지했다. 새 컴포넌트/API/DB/의존성은 없다.
+- **Green1/1**: 칩/× 계산 스타일과 기존 소속 제거·일반 모드 복귀/새로고침·390px 넘침 검사를 통과했다([Green](./verification/CATEGORY-05-green-ui.log)). [커스텀 칩](./verification/CATEGORY-05-custom-chips.png)·[카테고리 칩](./verification/CATEGORY-05-category-chips.png)을 view_image로 열어 확인했다.
+- 첫 `pnpm run check`: 타입/빌드·단위42/Worker39 통과, E2E21/22. 실제60초 timeout 본문 assertion 오류 없이 context 종료 시 trace/network/zip 파일 ENOENT로1개 실패했다([report](./verification/runs/CHECK-2026-10-23T12-25-53-222Z-2ee53b86/report.json), [stdout](./verification/CATEGORY-05-final-check.log)). 파일이 사라진 외부 원인은 확인하지 못했다. uploader-ui-checks와 기존 하네스를 확인했고 앱/검사를 바꾸지 않은 채 `--output .wrangler/category-05-playwright`로 증거 경로를 분리해 E2E만 다시 실행한다. 이미 통과한 타입/빌드/단위/Worker는 반복하지 않는다.
+- 출력 경로 분리 후 **E2E22/22·종료0**([stdout](./verification/CATEGORY-05-final-e2e.log)). 기존 실제60초 timeout도 통과했다. 최종 누적 **단위42/Worker39/E2E22=103개·타입/빌드 통과**이며 첫 check 실패를 삭제하지 않고 단계별 결과를 구분했다. 문서 링크/앵커 누락0·보호 파일 보존·공백 검사 종료0도 확인했다([문서](./verification/CATEGORY-05-docs.json)). 앱 변경 없이 기록만 마무리했다. 배포/커밋/푸시 없음.
+
+## CATEGORY-04 — 제거 모드 체크박스 숨김·칩 내부 ×
+
+- 2026-10-23 21:10:56 KST 시작(도구 확인). 사용자 요청은 제거 모드의 표시 수정이다. 기존 삭제 시나리오에 체크박스0개·텍스트 오른쪽의×가 같은 칩 내부에 있음·일반 모드 복귀 검사를 먼저 추가했다.
+- **Red 1실패**: 제거 모드의 체크박스 기대0개, 실제6개([Red](./verification/CATEGORY-04-red-ui.log)). API/환경 오류가 아닌 요청된 화면 상태 미구현이다.
+- 최소 수정: 제거 모드는 기존 fixed-item을 재사용한 이름/× 칩, 일반 모드는 기존 ExtensionToggle을 조건부 렌더한다. ×의 크기/간격만 조정했다. **Green1/1**([Green](./verification/CATEGORY-04-green-ui.log)).
+- 리팩토링 검토: 기존 공통 테두리/CSS와 소속 제거 경로를 재사용하고 모드별 렌더만 분리했다. 추가 컴포넌트/추상화는 필요하지 않다. API/SQL/의존성은 바꾸지 않았다.
+- 실제 [데스크톱](./verification/CATEGORY-04-removal-desktop.png)·[390px](./verification/CATEGORY-04-removal-mobile.png)을 열어 체크박스 없음·이름 바로 옆×·칩 내부 배치를 확인했다. 같은 검사에서 실제 소속 제거·일반 모드 체크박스 복귀·새로고침 유지도 통과했다.
+- 최종 `pnpm run check` **종료0·단위42/Worker39/E2E22=103개·타입/빌드 통과**([report](./verification/runs/CHECK-2026-10-23T12-13-43-096Z-fd6845db/report.json), [stdout](./verification/CATEGORY-04-final-check.log)). 기존 정책 T/저장·예산·실제60초 timeout도 포함한다. 문서 링크/앵커 누락0·보호 파일 보존·공백 검사 종료0을 확인했다. 통과 후 앱 변경이나 검사 반복 없이 기록만 마무리했다. 배포/커밋/푸시 없음.
+
+## CATEGORY-03 — 카테고리 공통 조작·팝업·체크박스
+
+- 2026-10-23 20:44:43 KST 시작(도구 확인). 사용자 수정1~4번과 일관된 UI 요청을 TDD_PLAN의 후속 범위로 기록했다. 기본 카테고리도 구성원 편집 가능, 단일 전체 차단/허용, 이름 옆 수량·우측+/×, 추가/이름/삭제 팝업, 공통 개별 체크박스다. 소속 제거는 정책 유지, 카테고리 자체 삭제는 이전 답변대로 소속 모두 허용을 유지한다.
+- 테스트 선행: 새 Worker3개는 **실제3실패**(기본 구성원 추가400, 이름만 생성400, 기존 세션 migration 전 그룹 수1≠5). [Worker Red](./verification/CATEGORY-03-red-worker.log). UI2개는 **실제2실패**(전체 버튼 미존재/이름 입력 없이 누를 수 없는 이전 생성 버튼). [UI Red](./verification/CATEGORY-03-red-ui.log). 환경/수집 오류를 기능 Red로 대체하지 않았다.
+- 최소 서버: migration5로 기본 분류도 세션별 DB 소속으로 저장하고 기존 세션을 보강했다. 신규 세션 seed batch와 현재 DB 소속 전체 대상 SQL, 이름만 생성/변경, 소속 POST/DELETE를 추가했다. 원자적 구성원50개 상한/중복/다른 세션 보호를 유지한다. **Worker3/3 Green**([결과](./verification/CATEGORY-03-green-worker.log)).
+- 최소 UI: ExtensionToggle/ModalDialog를 고정/카테고리와 네 종류 팝업에서 공유한다. 기본/사용자 카드 +/×·제거 모드, 현재 정책에서 계산한 단일 전체 버튼, 이름 팝업·삭제 확인을 연결했다. **UI2/2·타입 검사 통과**([UI Green](./verification/CATEGORY-03-green-ui.log), [타입](./verification/CATEGORY-03-typecheck.log)).
+- 응답 유실 보강: 실제 member 저장201 뒤 응답을 잃고 팝업을 닫으면 복구 안내가 사라지는 **1실패**를 먼저 확인했다([Red](./verification/CATEGORY-03-recovery-red.log)). 닫아도 오류 안내를 유지하고 재조회 성공 후 지우도록 최소 수정했다. 서버 폴리시/R2는 모방하지 않았다.
+- 리팩토링: 개별 custom 제거도 공통 changeExtension을 사용하게 했고, 구성원 상수50을 공유하고 미사용 guide/category-kind CSS를 정리했다. 기본/사용자 일괄 SQL을 한 경로로 통합했다. 범용 폼/서비스 계층·새 라이브러리는 추가하지 않았다.
+- 기존 검사 반영: 사전 클릭-입력 채움/인라인 구성원 입력/고정 ‘5종’ 버튼 기대는 최신 사용자 지시로 대체했다. 별도 입력값 독립·정책 영속성/중복·일괄 한도·응답 손실 assertions는 유지했다. 삭제 뒤 orphan 검사는 이제 존재하는 기본 소속20행을 잘못 세지 않고 삭제한 그룹의 소속0행을 확인한다.
+- 첫 전체 회귀: 타입/빌드·단위42·Worker39 통과, **E2E19통과/3실패**([stdout](./verification/CATEGORY-03-final-check.log)). 닫힌 native dialog의 slot에도 같은 오류 문구가 렌더돼 strict locator가2개를 찾았다. 선택자를 느슨하게 만들지 않고 열린 팝업의 form만 렌더하도록 수정했다. 카테고리 관련 UI 전체 **7/7 Green**([결과](./verification/CATEGORY-03-green-ui2.log)).
+- 추가 보강: 변경된 기본 소속이 실제 R2의 heic 거절/기존 png 허용과 정확한 저장 바이트에 적용됨, 기존 세션 migration 보존·다른 세션 불변, 동일 DB 50개 경합, 기존 정책 등록 안내·포커스/모바일/헤더 수량 위치를 확인했다. [모바일](./verification/CATEGORY-03-mobile.png)·[팝업](./verification/CATEGORY-03-popup.png)을 직접 열어 확인했다. 일반 dev migration5도 종료0([DB](./verification/CATEGORY-03-dev-db.log)).
+- 최종 전체 회귀 **단위42/Worker39/E2E22=103개·타입/빌드 전부 종료0**([report](./verification/runs/CHECK-2026-10-23T12-03-16-839Z-e7989aee/report.json), [stdout](./verification/CATEGORY-03-final-check2.log)). 실제60초 timeout·기존 T/예산·저장/응답 유실·수동 재시도·세션 격리도 통과했다. 일반dev5173 HTML/세션/카테고리200·초기4분류 각5개도 확인했다([HTTP](./verification/CATEGORY-03-dev-http.json)). 통과 후 앱 소스 변경/같은 검사 반복은 없고 문서만 마무리했다. 배포/커밋/푸시 없음.
+
+## CATEGORY-01 — 카테고리 필터·일괄 정책·사용자 카테고리
+
+- 2026-10-23 20:02 KST 시작. 사용자 요청으로 USER-04a/04b·기본4분류 각5개·사용자 카테고리 CRUD/일괄 차단·허용을 추가했다. 삭제 시 소속 차단도 해제하라는 답변을 반영했다. [테스트 선행 계획](./CATEGORY_PLAN.md).
+- Worker7개·E2E2개를 먼저 작성했다. 샌드박스의 workerd 모듈 기동/localhost fetch 실패는 미수집 환경 오류다([Worker 환경](./verification/CATEGORY-01-red-worker.log), [UI 환경](./verification/CATEGORY-01-red-ui.log)). 사용자 환경의 같은 로컬 검사에서 **Worker7실패(기대200/201, 실제404)·UI2실패(카테고리 영역/입력 미존재)**로 실제 Red를 확인했다([Worker Red](./verification/CATEGORY-01-red-worker-user.log), [UI Red](./verification/CATEGORY-01-red-ui-user.log)).
+- 최소 구현: shared 사전/정규화, migration4의 세션별 카테고리·FK 구성원, 작은 categories API, 단일 INSERT/UPSERT의 custom200개 조건, 허용/편집/삭제의 D1 batch, CategoryPanel과 조회 필터. **Worker7/7·UI2/2 Green**([Worker](./verification/CATEGORY-01-green-worker.log), [UI](./verification/CATEGORY-01-green-ui.log)).
+- 보강: 실제 D1 제약 실패의 편집/삭제 rollback, 겹친 그룹/세션 격리, 실제 R2 차단 미저장/허용 바이트, UI응답 유실 잠금·200개 초과 입력/정책 보존. 기존 구현에서 통과했고 새 Red를 꾸미지 않았다.
+- 첫 누적 회귀 **단위42/Worker36/E2E19=97개·타입/빌드 종료0**([report](./verification/runs/CHECK-2026-10-23T11-12-16-594Z-8ac35921/report.json), [stdout](./verification/CATEGORY-01-regression.log)). SESSION-01과 기존 T/예산/실제60초 timeout/수동 재시도를 포함한다. [데스크톱](./verification/CATEGORY-01-desktop.png)·[390px](./verification/CATEGORY-01-mobile.png)을 직접 열어 버튼/줄바꿈을 확인했다.
+
+## CATEGORY-02 — 재조회 복구 안내·리팩토링/최종 회귀
+
+- 복구 후 오래된 오류 안내가 남는 경로를 발견해 assertion을 먼저 추가했다. 첫 검사는 로딩 중 오류가 잠깐 숨겨진 시점에 통과했다([첫 검사](./verification/CATEGORY-02-red-ui.log)). 카테고리 버튼 활성화까지 기다리도록 보정한 뒤 **1실패: 오류 문구 기대0, 실제1**을 확인했다([실제 Red](./verification/CATEGORY-02-red-ui2.log)).
+- 최소 수정: 성공한 수동 재조회에서 과거 메시지를 지운다. 리팩토링: shared 사전/규칙을 유지하고 중첩 조건·미사용 guide-row CSS를 제거했다. 범용 계층/새 라이브러리는 추가하지 않았다.
+- 전체 시도1: 타입/빌드·단위42·Worker36 통과, E2E16통과/3실패([stdout](./verification/CATEGORY-02-final-regression.log)). 기존 테스트가 정책 준비 전에 disabled file input에 파일을 주입해 빈 목록에서 업로드 버튼을 기다린 선행조건 문제였다. 실제 파일 선택 버튼의 활성화를 기다리도록 보정했다.
+- 시도2: 같은 정적/단위/Worker 통과, E2E17통과/2실패([stdout](./verification/CATEGORY-02-final-regression2.log)). 같은 준비 상태 누락이 남아 있던 malformed JSON/전송 직전 GET 실패 검사도 보정하고 quota 입력도 같은 상태를 기다렸다. 제품의 준비 전 잠금과 기존 오류/60초 timeout·요청 수·결과 assertions는 유지했다. 자동 retry로 실패를 감추지 않았다.
+- 최종 시도3: **타입/빌드·단위42·Worker36·E2E19 전부 종료0, 로컬97개 통과**([report](./verification/runs/CHECK-2026-10-23T11-23-01-521Z-1fd008d8/report.json), [stdout](./verification/CATEGORY-02-final-regression3.log)). CATEGORY-02의 복구 메시지와 기존 실제60초 timeout·파싱/응답 유실·수동 재시도·세션 격리까지 회귀 실패 없음. 통과 후 새 앱 변경 없이 같은 검사는 반복하지 않았다. 일반 dev migration4도 종료0([결과](./verification/CATEGORY-01-dev-db.log)). 원격 배포/원격 바인딩·의존성 변경·커밋/푸시는 없다.
+
+## SESSION-01 — 익명 세션 정책 분리 (2026-10-23 후속 승인)
+
+- 범위: 사용자 지정 익명 쿠키+D1·새 세션 fixed7 unchecked/custom0·새로고침 유지. 원본20자/200개/중복/삭제/서버 적용 유지. 로컬 TDD만 수행하고 배포하지 않는다. 브라우저 수명 외 TTL·reset UI·스케줄은 추가하지 않는다.
+- **Red, 20:01 KST**: 새 Worker5개 실패. POST `/api/session`404 및 무쿠키 GET200이 기대200/401과 다름. [Worker Red](./verification/SESSION-01-red-worker.log). 롤백1개는 테이블 부재를 제품 Red로 세지 않도록 이 실행 필터에서 제외. 새 E2E1개는 A가 체크한 exe가 B에 나타나 기대 체크0/실제1로 실패했다. [브라우저 Red](./verification/SESSION-01-red-ui.log).
+- 최소 구현: 새 session/정책 테이블·복합 PK/FK/CHECK, 서버 난수 토큰/해시·HttpOnly 쿠키·batch seed. CRUD/count·T 판정을 쿠키의 session_id로 제한. UI는 세션 POST 후 GET, 무쿠키401이면 잠금. 전역 예산 유지·이전 정책 미복사.
+- **Green, 20:03 KST**: Worker전체28/28([결과](./verification/SESSION-01-green-worker.log)), 신규E2E2/2([결과](./verification/SESSION-01-green-ui.log)). 실제 D1 trigger가 seed를 거부하면 세션/정책 모두 rollback·쿠키 미발급. A/B 같은 custom 등록·한쪽200개에서 다른쪽 추가 가능, A차단 미저장/B허용 R2바이트 일치, 새 세션도 글로벌 예산 우회 불가.
+- 리팩토링: migration/session 준비를 fixture로 모으고 APIRequest도 같은 context.request로 수정했다. 기존 경계/T/동시성/바이트 assertion 유지·unused import 제거·중복 쿠키 경계 보강. 추가 서비스 계층은 필요하지 않았다.
+- **누적 회귀, 20:04~20:05 KST**: `pnpm run check` 종료0, 타입/빌드·단위42·Worker28·E2E15=**로컬85개 통과**. [report](./verification/runs/CHECK-2026-10-23T11-04-16-943Z-a7c2e320/report.json), [stdout](./verification/SESSION-01-final-check.log). 기존 실제60초 timeout·응답 유실·성공 보존·수동 재시도·글로벌 예산·T 전후 변경 회귀 유지. 첫 Green 후 전체 통과했다.
+- 일반 dev migration3 적용·5173 초기 화면 확인. 데스크톱/390px 이미지를 열어 확인했다. 기존 증거를 덮어쓴 screenshot은 SESSION-01 이름으로 보관하고 원본 복구, 이후 캡처 경로에 prefix를 적용해 수집만 확인한다. 제품 동작 변화 없는80초 회귀는 반복하지 않는다.
+- 종료: 로컬 기능/회귀·일반 개발 준비 완료. 배포/원격 검증·커밋/푸시 없음. 명령·증거/한계는 VALIDATION의 SESSION-01을 따른다.
+
 상태: **S0~S6 완료 / S7 옵션 생략 / S8 배포·원격 검증 완료 / 후속 UI-R01 완료**. 초기 기능 루프 8개와 후속 UI 루프 1개, 총 9개 및 환경 보정·최종 검증을 기록했다. 환경 스모크와 기능 검사를 구분한다. 실행 규칙은 [TDD_PLAN](./TDD_PLAN.md)을 따른다.
 
 ## 원장
@@ -150,3 +221,10 @@ Refactor
 - 기존 공개 데모 배포 종료0, 버전 `1b382c8c-43b4-40a6-be43-560479d442f9` ([배포](verification/UI-R01-deploy.log)). 원격 Chromium **1/1 종료0**, 새 배치·별도 입력·실제 행별 업로드와 기존 정책 유지/차단/API404 확인 ([원격](verification/UI-R01-remote-browser.log), [결과](verification/UI-R01-remote-browser.json), [공개 화면](verification/UI-R01-public-desktop.png)). 원격 산출물 prefix를 분리해 S8 증거를 덮어쓰지 않았다.
 - 실제 R2 39바이트를 읽어 원본 해시 일치, 이 테스트 소유 객체/정책만 정리. 기존 방문자 custom 목록은 유지하고 fixed는 테스트 전 값으로 복구했다. 추가 예약은 환급하지 않았다 ([바이트/정리](verification/UI-R01-r2-bytes.json), [삭제](verification/UI-R01-cleanup.log)).
 - 종료: **로컬77 + 원격1 = 최신78개 통과**, 타입/빌드 성공. 서버 코드/SQL/설치 버전/전역 pnpm 스토어 변경 없음. 사용자5번의 수동 성공 항목 비우기는 제안만 유지한다. Git 커밋/푸시 없음.
+
+### LOCAL-20261023 — 후속 로컬 개발 환경 설정
+
+- 2026-10-23 19:40~19:45 KST. 기능 개발을 로컬 우선으로 하고 Cloudflare 배포는 이후 명시적 요청 때만 수행하라는 사용자 지시를 지침·결정·실행 안내에 반영했다. 앱 기능 추가 루프와 구분한다.
+- 기존 의존성 13개와 Chromium이 준비되어 추가 설치가 없었다. 기본 샌드박스의 pnpm SQLite 인덱스 오류는 실제 사용자 환경에서 기존 D 전역 스토어로 확인해 해결했으며 제품 Red로 세지 않았다.
+- Vite `remoteBindings: false` 한 설정을 추가했다. 기존 `--local` migration 2개 적용, 환경 스모크·타입/빌드 종료0, 개발 서버 HTML/API200·초기 Chromium 렌더/오류0을 확인했다. 설정 변경으로 새 기능 Red를 만들지 않았고 추가 리팩토링은 필요하지 않았다.
+- 검증 범위는 로컬 개발 환경 준비다. 전체 앱 회귀나 원격 검증을 새로 실행했다고 표시하지 않는다. 원격 배포·커밋/푸시 없음. [실제 명령·증거](./VALIDATION.md#local-20261023--로컬-데브-준비).

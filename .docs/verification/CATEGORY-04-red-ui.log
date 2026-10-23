@@ -1,0 +1,59 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/category-interactions.spec.ts" "-g" "shared checkbox UI"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:31268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (5.8s)
+
+
+  1) tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('checkbox')
+    Expected: 0
+    Received: 6
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('checkbox') with timeout 5000ms
+      - waiting for getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('checkbox')
+        14 × locator resolved to 6 elements
+           - unexpected value "6"
+
+
+      28 |   await photos.getByRole('checkbox', { name: 'png', exact: true }).uncheck();
+      29 |   await photos.getByRole('button', { name: '사진 확장자 제거', exact: true }).click();
+    > 30 |   await expect(photos.getByRole('checkbox')).toHaveCount(0);
+         |                                              ^
+      31 |   const remove = photos.getByRole('button', { name: '사진에서 png 제외', exact: true });
+      32 |   const chip = remove.locator('..');
+      33 |   const chipBox = await chip.boundingBox();
+        at D:\garage\file-uploader-demo\tests\e2e\category-interactions.spec.ts:30:46
+
+    Error Context: test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members 
+[ELIFECYCLE] Command failed with exit code 1.

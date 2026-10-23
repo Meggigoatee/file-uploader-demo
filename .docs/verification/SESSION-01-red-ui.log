@@ -1,0 +1,59 @@
+$ node .docs/harness/e2e.mjs "sessions.spec.ts" "-g" "fresh browser"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:23712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:10124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie (5.7s)
+
+
+  1) tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('checkbox', { checked: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('checkbox', { checked: true }) with timeout 5000ms
+      - waiting for getByRole('checkbox', { checked: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      18 |     await second.goto('http://127.0.0.1:4173');
+      19 |     await expect(second.getByRole('checkbox', { name: 'exe', exact: true })).toBeEnabled();
+    > 20 |     await expect(second.getByRole('checkbox', { checked: true })).toHaveCount(0);
+         |                                                                   ^
+      21 |     await expect(second.getByText('커스텀 차단 0/200', { exact: true })).toBeVisible();
+      22 |     const tab = await a.newPage(); await tab.goto('http://127.0.0.1:4173');
+      23 |     await expect(tab.getByRole('checkbox', { name: 'exe', exact: true })).toBeChecked();
+        at D:\garage\file-uploader-demo\tests\e2e\sessions.spec.ts:20:67
+
+    Error Context: test-results\sessions-SESSION-fresh-bro-0fc84-s-and-tabs-share-the-cookie\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\sessions-SESSION-fresh-bro-0fc84-s-and-tabs-share-the-cookie\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\sessions-SESSION-fresh-bro-0fc84-s-and-tabs-share-the-cookie\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie 
+[ELIFECYCLE] Command failed with exit code 1.

@@ -1,0 +1,57 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/category-interactions.spec.ts" "-g" "popup distinguishes"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:2784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:7380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:24508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance (5.7s)
+
+
+  1) tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText(/카테고리 저장 결과를 확인하지 못했습니다/) with timeout 5000ms
+      - waiting for getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+
+
+      85 |   await expect(dialog.getByRole('textbox')).toHaveValue('.ZIP');
+      86 |   await dialog.getByRole('button', { name: '취소', exact: true }).click();
+    > 87 |   await expect(page.getByText(/카테고리 저장 결과를 확인하지 못했습니다/)).toBeVisible();
+         |                                                          ^
+      88 |   await expect(page.getByRole('button', { name: '파일 선택', exact: true })).toBeDisabled();
+      89 |   await page.unroute('**/api/policies/categories/photos/extensions');
+      90 |   await page.getByRole('button', { name: '정책 새로고침', exact: true }).click();
+        at D:\garage\file-uploader-demo\tests\e2e\category-interactions.spec.ts:87:58
+
+    Error Context: test-results\category-interactions-CATE-5a10a-ave-keeps-recovery-guidance\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\category-interactions-CATE-5a10a-ave-keeps-recovery-guidance\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\category-interactions-CATE-5a10a-ave-keeps-recovery-guidance\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance 
+[ELIFECYCLE] Command failed with exit code 1.

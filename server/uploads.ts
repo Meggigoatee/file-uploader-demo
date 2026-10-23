@@ -2,7 +2,7 @@ import { blockedToken, filenameTokens, LIMITS } from '../shared/rules';
 import { failure, HttpError, json, readBounded } from './http';
 import { readPolicies } from './policies';
 
-export async function upload(request: Request, env: Env, requestId: string): Promise<Response> {
+export async function upload(request: Request, env: Env, requestId: string, sessionId: string): Promise<Response> {
   try {
     if (!/^multipart\/form-data\s*;/i.test(request.headers.get('content-type') ?? '')) throw new HttpError(415, 'UNSUPPORTED_MEDIA_TYPE', 'multipart 파일 전송이 필요합니다.');
     const bytes = await readBounded(request, LIMITS.body);
@@ -17,7 +17,7 @@ export async function upload(request: Request, env: Env, requestId: string): Pro
     if (!filenameTokens(file.name)) throw new HttpError(422, 'INVALID_FILENAME', '파일명과 확장자를 확인해 주세요.');
 
     // T: a single DB snapshot after receiving/validating the file, before reservation/storage.
-    const policies = await readPolicies(env.DB);
+    const policies = await readPolicies(env.DB, sessionId);
     const blocked = new Set([...policies.fixed, ...policies.custom].filter(p => p.blocked).map(p => p.extension));
     const token = blockedToken(file.name, blocked);
     if (token) throw new HttpError(422, 'BLOCKED_EXTENSION', `차단된 확장자(${token})가 포함된 파일입니다.`);

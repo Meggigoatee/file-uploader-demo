@@ -1,0 +1,69 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/category-interactions.spec.ts" "-g" "shared checkbox UI"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:3220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:25856) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (767ms)
+
+
+  1) tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 8
+    + Received  + 8
+
+      Object {
+    -   "backgroundColor": "rgba(0, 0, 0, 0)",
+    -   "borderColor": "rgb(216, 227, 219)",
+    -   "borderRadius": "8px",
+    -   "fontSize": "13px",
+    -   "gap": "7px",
+    -   "height": "38.1406px",
+    -   "padding": "8px 10px",
+    -   "width": "62.1406px",
+    +   "backgroundColor": "rgb(243, 247, 243)",
+    +   "borderColor": "rgb(215, 228, 218)",
+    +   "borderRadius": "6px",
+    +   "fontSize": "12px",
+    +   "gap": "4px",
+    +   "height": "30.5938px",
+    +   "padding": "2px 3px 2px 9px",
+    +   "width": "57.9688px",
+      }
+
+      35 |     return Object.fromEntries(['fontSize', 'padding', 'borderRadius', 'borderColor', 'backgroundColor', 'gap', 'height', 'width'].map(key => [key, styles[key as keyof CSSStyleDeclaration]]));
+      36 |   };
+    > 37 |   expect(await customGif.locator('..').evaluate(chipStyles)).toEqual(await categoryGif.locator('..').evaluate(chipStyles));
+         |                                                              ^
+      38 |   expect(await customGif.evaluate(chipStyles)).toEqual(await categoryGif.evaluate(chipStyles));
+      39 |   await page.locator('.tag-list').screenshot({ path: '.docs/verification/CATEGORY-05-custom-chips.png' });
+      40 |   await photos.screenshot({ path: '.docs/verification/CATEGORY-05-category-chips.png' });
+        at D:\garage\file-uploader-demo\tests\e2e\category-interactions.spec.ts:37:62
+
+    Error Context: test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members 
+[ELIFECYCLE] Command failed with exit code 1.

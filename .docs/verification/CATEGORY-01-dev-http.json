@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-23T11:27:17.297Z",
+  "url": "http://127.0.0.1:5173",
+  "htmlStatus": 200,
+  "sessionStatus": 200,
+  "categoriesStatus": 200,
+  "groups": [
+    {
+      "name": "사진",
+      "count": 5
+    },
+    {
+      "name": "영상",
+      "count": 5
+    },
+    {
+      "name": "음성",
+      "count": 5
+    },
+    {
+      "name": "문서",
+      "count": 5
+    }
+  ],
+  "fixedCount": 7,
+  "customCount": 0
+}

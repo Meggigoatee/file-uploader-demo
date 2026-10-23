@@ -1,0 +1,42 @@
+vite v6.4.3 building SSR bundle for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+dist/file_uploader_demo/.vite/manifest.json   0.16 kB
+dist/file_uploader_demo/wrangler.json         1.56 kB
+dist/file_uploader_demo/index.js             23.10 kB
+✓ built in 130ms
+vite v6.4.3 building for production...
+transforming...
+✓ 25 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore               0.02 kB
+dist/client/index.html                  0.38 kB │ gzip:  0.31 kB
+dist/client/assets/index-lQT8KY4A.css   7.06 kB │ gzip:  2.25 kB
+dist/client/assets/index-ZdUGYlBE.js   95.22 kB │ gzip: 36.06 kB
+✓ built in 533ms
+$ vite build
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mFailed to write to log file Error: EPERM: operation not permitted, open 'C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_12-26-31_186.log'[0m
+
+      at async open (node:internal/fs/promises:640:25)
+      at async writeFile (node:internal/fs/promises:1257:14)
+      at async D:\garage\file-uploader-demo\node_modules\.pnpm\wrangler@4.127.1\node_modules\wrangler\wrangler-dist\cli.js:61531:7
+      at async Mutex.runWith (D:\garage\file-uploader-demo\node_modules\.pnpm\miniflare@5.20260828.0-alpha\node_modules\miniflare\dist\src\index.js:85795:48)
+      at async appendToDebugLogFile (D:\garage\file-uploader-demo\node_modules\.pnpm\wrangler@4.127.1\node_modules\wrangler\wrangler-dist\cli.js:61528:3) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'open',
+    path: 'C:\\Users\\inhea\\AppData\\Roaming\\xdg.config\\.wrangler\\logs\\wrangler-2026-10-23_12-26-31_186.log'
+  }
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mWould have written: [0m
+
+  --- 2026-10-23T12:26:31.946Z debug
+  🪵  Writing logs to "C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_12-26-31_186.log"
+  ---
+  
+
+
+🪵  Logs were written to "C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_12-26-31_186.log"

@@ -1,0 +1,89 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/categories.spec.ts"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:27208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:26556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\categories.spec.ts:3:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks (5.2s)
+(node:29496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\e2e\categories.spec.ts:25:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members (5.2s)
+
+
+  1) tests\e2e\categories.spec.ts:3:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('button', { name: /확장자 / })
+    Expected: 5
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('button', { name: /확장자 / }) with timeout 5000ms
+      - waiting for getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('button', { name: /확장자 / })
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      4 |   await page.goto('/');
+      5 |   const photos = page.getByRole('region', { name: '사진 카테고리', exact: true });
+    > 6 |   await expect(photos.getByRole('button', { name: /확장자 / })).toHaveCount(5);
+        |                                                              ^
+      7 |   await page.getByLabel('파일 선택', { exact: true }).setInputFiles({ name: 'photo.png', mimeType: 'image/png', buffer: Buffer.from('x') });
+      8 |   await photos.getByRole('button', { name: '사진 5종 차단', exact: true }).click();
+      9 |   await expect(page.getByRole('listitem').filter({ hasText: 'photo.png' })).toContainText('사전 차단');
+        at D:\garage\file-uploader-demo\tests\e2e\categories.spec.ts:6:62
+
+    Error Context: test-results\categories-CATEGORY-five-i-9299f-lock-allow-update-prechecks\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\categories-CATEGORY-five-i-9299f-lock-allow-update-prechecks\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\categories-CATEGORY-five-i-9299f-lock-allow-update-prechecks\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\categories.spec.ts:25:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members 
+
+    TimeoutError: locator.fill: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for getByRole('textbox', { name: '카테고리 이름', exact: true })
+
+
+      25 | test('CATEGORY: custom membership persists, edits without implicit writes, delete also allows members', async ({ page }) => {
+      26 |   await page.goto('/');
+    > 27 |   await page.getByRole('textbox', { name: '카테고리 이름', exact: true }).fill('개발');
+         |                                                                     ^
+      28 |   await page.getByRole('textbox', { name: '카테고리 확장자', exact: true }).fill('exe, .PDF, pdf');
+      29 |   await page.getByRole('button', { name: '카테고리 생성', exact: true }).click();
+      30 |   let group = page.getByRole('region', { name: '개발 카테고리', exact: true });
+        at D:\garage\file-uploader-demo\tests\e2e\categories.spec.ts:27:69
+
+    Error Context: test-results\categories-CATEGORY-custom-d247f--delete-also-allows-members\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\categories-CATEGORY-custom-d247f--delete-also-allows-members\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\categories-CATEGORY-custom-d247f--delete-also-allows-members\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\e2e\categories.spec.ts:3:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks 
+    tests\e2e\categories.spec.ts:25:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members 
+[ELIFECYCLE] Command failed with exit code 1.

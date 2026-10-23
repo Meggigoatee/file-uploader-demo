@@ -1,0 +1,42 @@
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+Getting User settings...
+👋 You are logged in with an OAuth Token, associated with the email [REDACTED_EMAIL].
+🔐 Credentials are stored in: C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\config\default.toml
+┌─────────────────────────────────┬──────────────────────────────────┐
+│ Account Name                    │ Account ID                       │
+├─────────────────────────────────┼──────────────────────────────────┤
+│ [REDACTED_EMAIL]'s Account │ 5cd9966caca3fc4c8b7ff5b5b95d69a6 │
+└─────────────────────────────────┴──────────────────────────────────┘
+🔓 Token Permissions:
+Scope (Access)
+- user (read)
+- offline_access 
+- account (read)
+- workers (write)
+- workers_kv (write)
+- workers_routes (write)
+- workers_scripts (write)
+- workers_tail (read)
+- d1 (write)
+- pages (write)
+- zone (read)
+- ssl_certs (write)
+- ai (write)
+- ai-search (write)
+- ai-search (run)
+- websearch.run 
+- agent-memory (write)
+- queues (write)
+- pipelines (write)
+- secrets_store (write)
+- artifacts (write)
+- flagship (write)
+- containers (write)
+- cloudchamber (write)
+- connectivity (admin)
+- email_routing (write)
+- email_sending (write)
+- browser (write)
+- challenge-widgets.write 

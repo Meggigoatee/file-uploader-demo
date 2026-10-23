@@ -1,5 +1,115 @@
 # 검증 계획과 결과
 
+## FINAL-LOCAL-01 — 최종 로컬 테스트 (2026-10-23)
+
+사용자 요청에 따라 완료 기록까지 현재 구현/테스트와 대조했다. [요건·구현·테스트 대응표와 누락 목록](./FINAL_LOCAL_REVIEW.md), [실패/리팩토링 기록](./TDD_LOG.md), [대화](./conversations/2026-10-23-011.md). 기존103개에서 검증이 부족했던 경계48개를 추가했고 이번 요청의 제품 코드 변경은 없다. 기대값/요건 완화·자동 retry·skip은 추가하지 않았다.
+
+환경: 기존 Windows/Node24.16.0/pnpm11.5.1·Vitest4.1.10·동일 Cloudflare 플러그인/Playwright Chromium. Worker는 격리된 실제 로컬 D1/R2, E2E는 `.wrangler/e2e`·Vite4173이다. 일반dev5173와 원격 바인딩은 변경하지 않았다.
+
+| 명령·실행 | 실제 결과 | 증거 |
+| --- | --- | --- |
+| 최초 `pnpm run check` | 수집 전 EPERM(사용자 Wrangler 로그·Vitest 임시 rename). 환경 실패 | [환경 로그](./verification/FINAL-LOCAL-01-baseline.log) |
+| 사용자 환경 `pnpm run check`, 이후 `pnpm run test:e2e` | 타입/빌드·단위42/Worker39 통과, E2E는 별도 CATEGORY-05가4173을 사용해 시작 전 중단. 다른 프로세스 종료/재사용 없음 | [기준선](./verification/FINAL-LOCAL-01-baseline-user.log), [포트 충돌 재시도](./verification/FINAL-LOCAL-01-baseline-e2e.log) |
+| 새 입력 경계 보강 후 `pnpm run test:unit` | 65/65 통과(신규23). 기존 동작의 검증 보강이며 인위적인 Red 없음 | [단위 최초](./verification/FINAL-LOCAL-01-unit-first.log) |
+| `pnpm exec vitest run --config vitest.integration.config.ts tests/integration/category-boundaries.test.ts tests/integration/upload-failures.test.ts` | 새14/14 통과 | [Worker 최초](./verification/FINAL-LOCAL-01-worker-first.log) |
+| `pnpm run test:e2e -- tests/e2e/final-boundaries.spec.ts --output .wrangler/final-local-playwright` | 신규6통과/1실패. 두 카드가 제거 모드를 동시에 유지한다고 가정한 테스트 순서 오류. 첫 카드 모드에 다시 진입하도록 수정 | [UI 최초](./verification/FINAL-LOCAL-01-ui-first.log). 최초 trace는 해당 output 아래 보존 |
+| `pnpm run test:e2e -- tests/e2e/final-boundaries.spec.ts --output .wrangler/final-local-playwright-green` | 7/7 종료0, 데이터/정책/필터/삭제/요청 수 기대 유지 | [UI 재검증](./verification/FINAL-LOCAL-01-ui-green.log) |
+| 추가 rollback/직접SQL/현재소속/T 검사 후 `pnpm exec vitest run --config vitest.integration.config.ts tests/integration/category-boundaries.test.ts` | 카테고리 경계12/12 통과. 첫 실행8개에4개 보강 | [Worker 추가](./verification/FINAL-LOCAL-01-worker-extra.log) |
+| `$env:UPLOADER_VERIFICATION_PREFIX='FINAL-LOCAL-01'; pnpm run check` | **종료0, 타입/빌드·단위65/Worker57/E2E29=151개 통과**. 21:35:39~21:37:31 KST | [최종 report](./verification/runs/CHECK-2026-10-23T12-35-39-480Z-ce4bb88e/report.json), [stdout](./verification/FINAL-LOCAL-01-final-check.log) |
+
+실제 D1/R2 증거: 이름/구성원 정규화 중복 경합의201/409·행1개, member50·custom200 정확한 경계/해제 후 추가·같은DB 단건/일괄 경합, 생성/차단/허용/교체/삭제의 실제 trigger rollback, 세션별 모든 변경 액션 격리·기본 보호를 확인했다. 일괄 실행 전 소속 교체와 정책 T 전/후 변경은 await 경계로 제어했다. 차단 업로드의 객체 미증가와 허용/저장 뒤 결과 실패의 정확한 R2 바이트를 다시 읽었다.
+
+저장 실패 대역은 앱 계약에 한정했다. 실제 예약 trigger 실패는 put0회/예산0, 실제 커밋 후 결과 전달 실패는 put0회/예산 유지, put거부는 객체0/예산 유지, 실제 저장 후 null/잘못된 크기/예외는 앱503/객체1/바이트 일치/예산 유지다. 수동 새 시도는 예약과 put을 각각1회 더 사용한다. UI에서도 실제 로컬 예약 SQL 실패로 첫 행 실패·다음 전송 중단·목록 보존·수동 재시도만 새 요청을 확인했다. Cloudflare 실제 장애/쿼터의 정확한 응답을 검증했다고 해석하지 않는다.
+
+기존 실제60초 timeout·저장 후 응답 손실·성공 결과 유지·수동 재시도·파일/본문/UTF-8 경계·세션 분리도 전체 회귀에 포함했다. 공통 `verificationPath`로 최종 이미지에 접두사를 적용해 과거 증거를 보존했다. [390px 전체 화면](./verification/FINAL-LOCAL-01-CATEGORY-03-mobile.png)을 view_image로 확인했다. 문서 점검 결과는 [FINAL-LOCAL-01-docs](./verification/FINAL-LOCAL-01-docs.json)에 기록한다. 통과 후 제품/테스트 변경이나 같은 앱 검사 반복은 없다. 원격 배포·원격 smoke·새 의존성·커밋/푸시는 수행하지 않았다.
+
+문서 마무리: Markdown52개·로컬 참조649개·앵커11개에서 누락0, 보호 파일6개(원본 과제·manifest/lockfile/workspace 설정·기존migration1/2) 보존을 확인했다. `git -c core.safecrlf=false diff --check` 종료0, 추가/보강 코드5개의 끝 공백·skip/only/todo·고정 sleep 검사 이슈0이다. 새 테스트4개는 Git에 무시되지 않는 미추적 파일임을 확인했다. 이 점검을 앱 테스트 통과 수에 합산하지 않는다.
+
+## CATEGORY-05 — 커스텀·카테고리 칩 스타일 (2026-10-23)
+
+[사용자 요청](./conversations/2026-10-23-010.md)은 스타일 통일이다. 기존 로컬 Worker/Chromium으로 기존 삭제 시나리오의 같은 gif 칩/× 계산 스타일을 비교했다. `pnpm run test:e2e -- tests/e2e/category-interactions.spec.ts -g 'shared checkbox UI'`에서 실제1실패([Red](./verification/CATEGORY-05-red-ui.log)) 후 공통 CSS 재사용으로1개 통과([Green](./verification/CATEGORY-05-green-ui.log)). 글자 크기·여백·반경·테두리·배경·간격·높이/너비가 일치하고 기존 제거/복귀·새로고침·390px 가로넘침 검사도 통과했다. [커스텀](./verification/CATEGORY-05-custom-chips.png)과 [카테고리](./verification/CATEGORY-05-category-chips.png) 렌더를 직접 확인했다. 새 API/DB/의존성·배포는 없다.
+
+첫 `pnpm run check`는 타입/빌드·단위42/Worker39 통과, E2E21/22다([report](./verification/runs/CHECK-2026-10-23T12-25-53-222Z-2ee53b86/report.json), [stdout](./verification/CATEGORY-05-final-check.log)). 실제60초 timeout 본문 assertion 오류 없이 context 종료 시 trace/network/zip 파일 ENOENT로 실패했다. 파일 누락의 외부 원인은 확인하지 못했다. uploader-ui-checks로 기존 진단 경로를 확인하고 앱/테스트를 바꾸지 않은 채 `pnpm run test:e2e -- --output .wrangler/category-05-playwright`로 출력 경로를 분리해 **E2E22개 통과·종료0**을 확인했다([최종 E2E](./verification/CATEGORY-05-final-e2e.log)). 이미 통과한 타입/빌드/단위/Worker는 반복하지 않았다. 최종 누적은 **단위42/Worker39/E2E22=103개·타입/빌드 통과**이며 단일 check 종료0으로 기록하지 않는다. 문서 링크/앵커 누락0·보호 파일 보존·공백 검사 종료0도 확인했다([문서](./verification/CATEGORY-05-docs.json)).
+
+## CATEGORY-04 — 제거 모드 확장자 칩 (2026-10-23)
+
+사용자 표시 수정([대화009](./conversations/2026-10-23-009.md))을 uploader-ui-checks로 확인했다. 기존 버전/실제 로컬 Worker/Chromium을 사용하며 앱 API·DB는 변경하지 않았다.
+
+| 실제 명령·검사 | 결과 | 증거 |
+| --- | --- | --- |
+| `pnpm run test:e2e -- tests/e2e/category-interactions.spec.ts -g 'shared checkbox UI'` | 먼저 실제1실패(제거 모드 체크박스 기대0/실제6), 최소 구현 뒤1개 통과 | [Red](./verification/CATEGORY-04-red-ui.log), [Green](./verification/CATEGORY-04-green-ui.log) |
+| 실제 bounding box·제거/복귀·화면 확인 | ×가 텍스트 오른쪽이면서 같은 칩 내부, 세로 중앙 정렬. 데스크톱/390px 체크박스 숨김·가로넘침 없음. 소속 제거 후 일반 모드 체크박스 복귀/재접속 유지. view_image로 이미지도 확인 | [desktop](./verification/CATEGORY-04-removal-desktop.png), [mobile](./verification/CATEGORY-04-removal-mobile.png) |
+
+최종 `pnpm run check`는 **종료0·단위42/Worker39/E2E22=103개·타입/빌드 통과**다([report](./verification/runs/CHECK-2026-10-23T12-13-43-096Z-fd6845db/report.json), [stdout](./verification/CATEGORY-04-final-check.log)). 기존 정책 T/저장·예산·실제60초 timeout을 포함한다. 기존 기능의 동작/저장 의미는 유지하고 새 기능·의존성·원격 배포/검증은 추가하지 않았다. 문서 링크/앵커 누락0·보호 파일 보존·Git 공백 검사 종료0도 확인했다([문서 점검](./verification/CATEGORY-04-docs.json)).
+
+## CATEGORY-03 — 공통 카테고리 조작 로컬 검증 (2026-10-23)
+
+사용자 수정1~4번의 실제 범위·판단·도구는 [대화008](./conversations/2026-10-23-008.md), 테스트 선행 계획은 TDD_PLAN CATEGORY-03을 따른다. 기존 의존성/전역 pnpm 스토어와 실제 로컬 D1/R2·Chromium을 사용했다. 배포/원격 검증은 수행하지 않았다.
+
+| 실제 명령·검사 | 결과 | 증거 |
+| --- | --- | --- |
+| `pnpm exec vitest run --config vitest.integration.config.ts tests/integration/category-members.test.ts` | 신규3개 실제 실패→최소 구현 후3개 통과 | [Red](./verification/CATEGORY-03-red-worker.log), [Green](./verification/CATEGORY-03-green-worker.log) |
+| `pnpm run test:e2e -- tests/e2e/category-interactions.spec.ts` | 새2개 실제 실패→최소 구현 후2개 통과 | [Red](./verification/CATEGORY-03-red-ui.log), [Green](./verification/CATEGORY-03-green-ui.log) |
+| `pnpm run typecheck` | 종료0 | [타입](./verification/CATEGORY-03-typecheck.log) |
+| 실제 member 저장 후 응답 유실·팝업 취소 | 입력/잠금 유지, 닫은 뒤 복구 안내 누락1개 실제 실패 | [보강 Red](./verification/CATEGORY-03-recovery-red.log) |
+| 리팩토링 후 `pnpm run check` | 타입/빌드·단위42·Worker39 통과, E2E19/22. 닫힌 팝업의 중복 status DOM으로3개 strict locator 실패 | [첫 전체](./verification/CATEGORY-03-final-check.log) |
+| 열린 팝업만 form 렌더 후 `pnpm run test:e2e -- tests/e2e/category-interactions.spec.ts tests/e2e/categories.spec.ts` | 카테고리 UI7/7 통과. 검사 조건을 낮추지 않고 중복 DOM 제거 | [UI7개](./verification/CATEGORY-03-green-ui2.log) |
+| 일반 개발 `pnpm run db:local` | 종료0, migration5로 기존 세션의 기본 소속 보강, 사용자 정책/분류 보존 | [DB](./verification/CATEGORY-03-dev-db.log) |
+| native dialog·키보드·레이아웃·view_image | 추가 input 포커스/Enter/Escape·포커스 복귀, 이름/삭제 팝업 취소/확인, 이름 오른쪽 수량 위치, 390px 가로넘침 없음. 모바일/팝업 이미지를 직접 확인 | [모바일](./verification/CATEGORY-03-mobile.png), [팝업](./verification/CATEGORY-03-popup.png), [전체 화면](./verification/CATEGORY-03-desktop.png) |
+
+Worker는 기본 구성원 수정/재접속 보존·다른 세션 불변, 기본값 복원 없음·단일 전체 동적 대상, 이름만 변경 시 소속 유지, 정규화/중복·50개 동일DB 경합, 이전 세션 migration 보존을 확인했다. 변경된 heic 정책은 실제 업로드422/R2 객체0, 제외된 png는201/저장 바이트 일치를 확인했다. UI는 popup의 동일 카테고리 중복 차단과 기존 정책/다른 카테고리 등록 안내, 개별 체크로 소속 유지, 전체 버튼 전환, 제거 모드·사용자 이름/삭제 확인·응답 유실 복구를 확인했다.
+
+최종 `pnpm run check`는 **종료0, 단위42/Worker39/E2E22=로컬103개와 타입/빌드 통과**다([report](./verification/runs/CHECK-2026-10-23T12-03-16-839Z-e7989aee/report.json), [stdout](./verification/CATEGORY-03-final-check2.log)). 기존 T/누적 예산·200개·저장/응답 손실·실제60초 timeout 회귀를 유지한다. 일반dev5173 HTML/새 세션/카테고리200·기본4분류 각5개도 확인했다([HTTP](./verification/CATEGORY-03-dev-http.json)). 실기기/전체 브라우저/스크린리더·부하·제공자 장애 모방·원격 배포 동작은 이번에 검증하지 않았다.
+
+문서 마무리는 기존 Node 링크/앵커/보호 파일 검사에 출력 경로 인자를 추가해 과거 CATEGORY-01 증거를 덮어쓰지 않고 수행했다([CATEGORY-03 문서 결과](./verification/CATEGORY-03-docs.json)). 문서48개·로컬 참조507개·앵커11개 누락0, 원본 과제/의존성/이전 migration1·2 보존, Git 공백 검사 종료0·새 코드7개 끝 공백0이다. 과거 사용자 원문의 루트 기준 링크3개는 원문과 원래 문맥을 보존했다. 이 점검을 앱 테스트 추가 통과로 합산하지 않는다.
+
+## CATEGORY-01/02 — 카테고리 후속 로컬 TDD (2026-10-23)
+
+사용자 명시적 구현 요청으로 기존 V31/TC18 미구현 옵션 상태를 후속 구현으로 대체했다. 이전 날짜의 미구현 기록은 당시 결과다. 범위/AI 설계값은 [CATEGORY_PLAN](./CATEGORY_PLAN.md), 사용자 원문·선택 답변은 [004](./conversations/2026-10-23-004.md)·[005](./conversations/2026-10-23-005.md)를 따른다.
+
+환경: 기존 Windows/Node24.16.0/pnpm11.5.1·D 전역 스토어·동일 의존성, 실제 로컬 D1/R2·Chromium. 일반dev는 `.wrangler/state/v3`, E2E는 `.wrangler/e2e`, Worker 통합은 격리된 실제 바인딩이다. 원격 배포/원격 smoke는 수행하지 않았다.
+
+| 명령·확인 | 실제 결과 | 증거 |
+| --- | --- | --- |
+| `pnpm exec vitest run --config vitest.integration.config.ts tests/integration/categories.test.ts` | 샌드박스는런타임 미기동/미수집. 사용자 환경은 API404로 신규7개 실제 실패 | [환경](./verification/CATEGORY-01-red-worker.log), [Red](./verification/CATEGORY-01-red-worker-user.log) |
+| `pnpm run test:e2e -- tests/e2e/categories.spec.ts` | 샌드박스는 localhost/log 오류. 사용자 환경은 화면/입력 미존재로2개 실제 실패 | [환경](./verification/CATEGORY-01-red-ui.log), [Red](./verification/CATEGORY-01-red-ui-user.log) |
+| 최소 구현 후 동일 대상 실행 | Worker7/7·UI2/2 통과 | [Worker](./verification/CATEGORY-01-green-worker.log), [UI](./verification/CATEGORY-01-green-ui.log) |
+| rollback·겹친 분류·UI응답 손실/한도 검사 보강 후 `pnpm run check` | 타입/빌드·단위42/Worker36/E2E19=97개 통과 | [첫 전체 report](./verification/runs/CHECK-2026-10-23T11-12-16-594Z-8ac35921/report.json), [stdout](./verification/CATEGORY-01-regression.log) |
+| `pnpm run test:e2e -- tests/e2e/categories.spec.ts -g 'real saved response loss'` | 첫 통과는 대기 부족. 재조회 완료까지 기다린 검사에서 과거 오류 안내 잔존으로1실패 | [첫 검사](./verification/CATEGORY-02-red-ui.log), [실제 Red](./verification/CATEGORY-02-red-ui2.log) |
+| 복구 안내 수정·리팩토링 후 전체 check 시도1/2 | 정적/단위/Worker 통과. E2E 각각16/19·17/19. 준비 전에 파일을 주입하던 기존 검사 선행조건을 보정 | [시도1](./verification/CATEGORY-02-final-regression.log), [시도2](./verification/CATEGORY-02-final-regression2.log) |
+| 일반 로컬 `pnpm run db:local` | 종료0, migration4 적용. 기존 정책 초기화 없음 | [dev DB](./verification/CATEGORY-01-dev-db.log) |
+| view_image로 실제 desktop/390px 열기 | 카드·필터·입력·버튼 줄바꿈 확인, Playwright 가로넘침 검사 통과 | [desktop](./verification/CATEGORY-01-desktop.png), [mobile](./verification/CATEGORY-01-mobile.png) |
+
+실제 새 범위: 기본4분류 각5개/조회 무변경, 이름·구성원 정규화/세션 격리/새로고침, 고정+custom 일괄 차단·허용, 199/200개 경계·동일 DB 경합의 전체 성공/취소, 실제 로컬 제약 실패의 편집/삭제 rollback, 겹친 분류와 삭제의 차단 해제, 정책/업로드 잠금·응답 유실 재조회, 사전 검사와 실제 R2 바이트를 확인했다. 기존 T/앱 예산/성공 결과/실제60초 timeout 회귀도 포함한다. D1 trigger fixture의 앱 rollback을 Cloudflare 실제 장애 모방으로 기록하지 않는다.
+
+최종 `pnpm run check` 시도3은 **종료0, 단위42/Worker36/E2E19=로컬97개·타입/빌드 통과**다([최종 report](./verification/runs/CHECK-2026-10-23T11-23-01-521Z-1fd008d8/report.json), [stdout](./verification/CATEGORY-02-final-regression3.log)). 복구 안내/카테고리8개 Worker·4개 UI와 기존 기능 전체가 포함된다. 통과 뒤 앱 소스는 바꾸지 않았다. 일반 개발5173의 HTML/새 세션/카테고리 GET200, 기본4분류 각5개·고정7/custom0도 확인했다([HTTP](./verification/CATEGORY-01-dev-http.json)). 문서 링크/앵커·원본/의존성 보존은 [점검 스크립트](./verification/CATEGORY-01-check-docs.mjs)와 [결과](./verification/CATEGORY-01-docs.json)를 따른다. 최초 단순 상대경로 검사에서 사용자 원문 내 저장소 루트 기준 참조3개를 확인해 원문을 보존하고 원래 문맥으로 검사했다. 모바일 실기기/파일 내용 검사/부하/무료 요금 보장/카테고리 원격 동작은 검증하지 않았다.
+
+## SESSION-01 — 익명 세션 정책 로컬 TDD (2026-10-23)
+
+환경은 기존 Windows/Node24.16.0/pnpm11.5.1, 실제 로컬 D1/R2와 Chromium이다. 의존성/lockfile 변경 없음. 원본 과제의 기본값·DB 저장/새로고침 유지·20자/200개/중복/삭제·실제 서버 업로드 판정을 세션별로 유지한다. 공개 데모는 이전 버전이며 이번 코드를 배포하지 않았다.
+
+| 실제 명령·절차 | 결과 | 증거 |
+| --- | --- | --- |
+| `pnpm exec vitest run --config vitest.integration.config.ts tests/integration/sessions.test.ts -t 'SESSION: (creates\|isolates\|applies\|missing\|new identity)'` | 종료1, 신규5개 기능 실패. 초기화404·무쿠키 조회200. rollback1개는 이 Red 필터에서 제외 | [Worker Red](./verification/SESSION-01-red-worker.log) |
+| `pnpm run test:e2e -- sessions.spec.ts -g 'fresh browser'` | 종료1, 별도 B context에 A의 체크1개가 보임 | [UI Red](./verification/SESSION-01-red-ui.log) |
+| 최소 구현 후 `pnpm run test:integration` | 종료0, 신규6+기존22=28개 | [Worker Green](./verification/SESSION-01-green-worker.log) |
+| `pnpm run test:e2e -- sessions.spec.ts` | 종료0, 신규2개 | [UI Green](./verification/SESSION-01-green-ui.log) |
+| 리팩토링 후 `pnpm run check` | 종료0, typecheck/build·단위42·Worker28·E2E15=**로컬85개 통과** | [report](./verification/runs/CHECK-2026-10-23T11-04-16-943Z-a7c2e320/report.json), [stdout](./verification/SESSION-01-final-check.log) |
+| `pnpm run db:local` | 종료0, 일반dev의 migration3 적용 | [dev DB](./verification/SESSION-01-dev-db.log) |
+| Chromium으로 기존5173 dev 초기 화면 확인·캡처, view_image로 desktop/390px 열기 | 새 익명 세션 fixed7 unchecked/custom0·세션 안내·page 오류0. 새 UI의 줄바꿈/기존 행 버튼 확인 | [dev JSON](./verification/SESSION-01-dev-browser.json), [dev desktop](./verification/SESSION-01-local-desktop.png), [390px](./verification/SESSION-01-mobile.png), [정책](./verification/SESSION-01-policy-desktop.png), [레이아웃](./verification/SESSION-01-layout-desktop.png) |
+
+실제 DB/R2 증거: 서버 세션 토큰 해시만 저장, 기존 전역 체크값을 새 세션에 복사하지 않음, 세션 batch 롤백은 실제 D1 trigger의 seed 거절로 확인했다. 같은 DB에 A/B 정책을 만들고 CRUD/같은 custom/세션별200개·같은 세션 원자적 경쟁을 검증했다. A차단은 객체0, B허용은 R2에서 원문 바이트를 다시 읽어 일치, 새 C세션도 앱 전체 예산을 우회하지 못했다. 무쿠키·형식 오류·미발급/중복 쿠키는 조회/편집/업로드401, 새 세션 초기화만 새 토큰을 발급한다. 로그와 JSON 본문에 토큰을 노출하지 않는다.
+
+UI 증거: 서로 다른 browser context는 초기값 독립, A의 새로고침과 같은 context의 새 탭은 변경값 유지. 쿠키 미전달 상황은 session bootstrap 응답만 좁게 제어하고 실제 정책 GET401·편집/업로드 잠금·복구를 확인했다. 이전13개 E2E도 실제60초 timeout·응답 손실·성공 보존·수동 재시도·T 정책 거절·글로벌 예산 거절까지 전부 통과했다. 기존 assertion을 약화하지 않고 APIRequest를 브라우저와 같은 쿠키 저장소로 맞췄다.
+
+전체 검사 후 바뀐 테스트 파일은 screenshot 출력 경로뿐이다. 과거 이미지3개는 이번 이미지를 SESSION-01로 복사한 뒤 기존 Git 원본으로 복구했고, 향후 캡처는 실행 prefix를 사용한다. 제품/검증 조건 변화가 없어 전체 검사를 반복하지 않으며 `playwright test --list`로 수집을 확인한다. 원격 smoke는 이후 호환성을 위해 같은 context 쿠키를 쓰도록 수정했지만 실행하지 않았다.
+
+최종 수집에서 별도 채팅이 추가한 카테고리4개를 포함해 E2E19개가 수집됨을 확인했다([수집](./verification/SESSION-01-collection.log)). 이 외부 변경은 보존하고, 그 작업의 완결된 [전체 report](./verification/runs/CHECK-2026-10-23T11-12-16-594Z-8ac35921/report.json)/[stdout](./verification/CATEGORY-01-regression.log)을 읽어 타입/빌드·단위42/Worker36/E2E19=97 통과와 세션 검사 유지도 확인했다. 이는 해당 채팅이 실행한 결과이며 세션 작업의85개 실행과 중복 합산하지 않는다. 세션/카테고리 대화 파일 번호 충돌은 원본 채팅의 fileChange 기록으로 복구·분리했다.
+
+20:16 KST 최종 문서 검사: Markdown22개·로컬 참조352개 누락0, Git 공백 검사0, 원본 과제·package/lockfile·migration1/2 보존 확인([결과](./verification/SESSION-01-docs.json)). 동시 변경 후 일반dev의 migration도 확인해 더 적용할 것이 없었다([결과](./verification/SESSION-01-current-dev-db.log)).
+
+한계: 같은 브라우저 쿠키를 공유하는 탭/사람은 같은 정책이다. Expires/Max-Age 없는 쿠키가 브라우저 복원으로 유지될 수 있다. 별도 서버 TTL·DB 자동 정리·세션 발급 제한·초기화 UI는 구현하지 않아 익명 세션 행이 누적된다. 앱 전체 자원 예산은 공유로 유지한다. 원격 migration/배포/원격검증·커밋/푸시 없음. [TDD 상세](./TDD_LOG.md), [사용자 원문·응답](./conversations/2026-10-23-007-session-implementation.md).
+
 상태: **로컬 앱 검증·실제 공개 배포/원격 저장 검증 완료** (2026-10-22). 아래 V 표는 기준 명세이며 실제 수행/한계는 실행 원장을 따른다. 환경 스모크와 앱 결과를 구분한다. 조건부 V31 옵션은 미구현이다.
 
 ## 검증 방식
@@ -190,3 +300,35 @@ P0는 우선순위이며 과제 필수 여부나 상호 합의를 뜻하지 않�
 최신 합계는 **78개 통과(단위42/Worker22/로컬E2E13/원격1)**다. 이전 S8 76개 결과는 역사 기록이다. 실제 서버/DB/R2 규칙과 의존성 버전은 유지했다. 새 행 업로드는 최신 정책 GET1회·전송1회·다른 대기 보존을 검증했다. 전송 중 행/정책 잠금, 사전 차단/성공 업로드 비활성, 두 버튼의 실제 bounding box 크기/위치를 확인했다. 입력은 서로 값을 바꾸거나 추가 성공으로 조회 값을 지우지 않으며, 조회 Enter/대표 클릭은 무단 정책 등록을 하지 않는다.
 
 기존 결과 유지/완료 확인 실패·실제60초 timeout·실패만 수동 재시도 회귀도 전부 통과했다. 모바일390px 스크린샷을 열어 긴 이름과 행 버튼을 확인했다. Cloudflare 장애/계정 한도 모방·계정 전체 비용/성능 검증은 추가하지 않았다. 상세 실패·리팩토링은 TDD_LOG의 UI-R01을 따른다.
+
+## LOCAL-20261023 — 로컬 데브 준비
+
+2026-10-23 19:40~19:45 KST(도구 확인 시각). 사용자 지시에 따라 이후 기능 개발은 로컬 우선, Cloudflare 배포는 이후 명시적 요청 시에만 진행한다. 기존 Node 24.16.0 / pnpm 11.5.1 / 직접 의존성 13개 / PC 전역 스토어 `D:\.pnpm-store\v11`을 유지했다. 필요한 패키지·Chromium이 이미 설치되어 있어 추가 설치나 버전 변경은 하지 않았다.
+
+| 실제 명령·절차 | 결과 | 증거·한계 |
+| --- | --- | --- |
+| `pnpm store path`, `pnpm list --depth=0` | 실제 PC 사용자 환경에서 기존 D 스토어·고정 버전 13개 확인 | 최초 기본 샌드박스 조회는 별도 계정 스토어/SQLite 인덱스 열기 오류. 앱 기능 실패가 아님. 환경 report에 실제 storeDir·버전 보존 |
+| `pnpm run db:local` | 종료0, 기존 migration 2개를 로컬 개발 DB에 적용 | [migration](./verification/LOCAL-20261023-db.log). `--local`, `.wrangler/state/v3/d1` 사용 |
+| Vite 설정 `remoteBindings: false` | 원격 바인딩 연결 비활성화, 기존 개발/E2E 영속 경로 유지 | 설치된 1.54.2 플러그인 타입·분기 확인. 제품 API/정책/업로드 코드 변경 없음 |
+| `pnpm run check:env` | 종료0, 고정 패키지·Vue/TS 메모리 빌드·임시 로컬 Worker/D1/R2·Chromium 기동 성공 | [report](./verification/runs/CHECK-2026-10-23T10-43-32-683Z-5d1e4370/report.json), [환경 JSON](./verification/runs/CHECK-2026-10-23T10-43-32-683Z-5d1e4370/environment.json), [stdout](./verification/LOCAL-20261023-environment.log). 앱 기능 회귀가 아님 |
+| `pnpm run typecheck`, `pnpm run build` | 각각 종료0 | [타입](./verification/LOCAL-20261023-typecheck.log), [빌드](./verification/LOCAL-20261023-build.log). 배포 실행 없음 |
+| `pnpm run dev` 및 HTTP 읽기 | `http://127.0.0.1:5173/` 기동, HTML/정책 API 각각200, Local Explorer에 DB/UPLOADS 바인딩 확인 | [HTTP](./verification/LOCAL-20261023-http.json). Vite 개발 클라이언트 포함. 서버는 확인 후 계속 실행 |
+| 설치된 Playwright Chromium으로 로컬 페이지 열기 | 종료0, 초기 화면 렌더·정책 GET200, console/page 오류 및 요청 실패0 | [브라우저](./verification/LOCAL-20261023-browser.json). 정책 변경·파일 업로드 조작 없음 |
+
+환경 설정 변경이므로 새 기능 Red를 만들지 않았다. 설정 타입·빌드와 실제 개발 서버 기동을 검증했으며 단위/Worker 통합/핵심 E2E 전체 회귀를 이번에 재실행한 것으로 표시하지 않는다. 기존 UI-R01의 78개 증거는 당시 결과로 보존한다. 새 리팩토링 항목은 없었다. Cloudflare 로그인·원격 리소스 생성·원격 migration·배포·원격 smoke·Git 커밋/푸시는 수행하지 않았다. 문서 링크·설정 일관성·원본/의존성 보존 확인은 [최종 점검](./verification/LOCAL-20261023-docs.json)에 기록한다.
+
+### 접속 세션 공유 범위 질의 확인
+
+2026-10-23 19:50 KST, 코드·설계 조회로 전역 정책/예산과 탭별 Vue 상태, 수동/업로드 전 정책 재조회, 로컬/원격 분리를 확인했다. 제품 수정·정책 변경·업로드·새 앱 테스트는 실행하지 않았다. [확인 파일·응답](./conversations/2026-10-23-002.md). 이번 기록의 링크 대상 존재와 Git 공백 검사를 확인한다.
+
+### 필수·핵심 추가 기능의 구현 현황 대조
+
+2026-10-23 19:54:40 KST 최초 도구 확인. 원본 과제·PLAN/DECISIONS의 합의 범위를 shared/server/src/migrations의 구현과 기존 테스트·UI-R01 실행 증거에 대조했다. 필수 A1~A4/B1~B3와 사용자 핵심 USER-01/02/03/05/06, 합의한 AI-01/02/03/05/06/08의 구현 경로를 확인했다. 조건부 USER-04a/04b는 미구현, 완료 목록 일괄 정리는 미합의 제안으로 구분했다. 시그니처·상태 조회·중복 방지·빈도 제한·해시는 생략/보류 대안이다. [상세 표·대화·도구 결과](./conversations/2026-10-23-003.md).
+
+uploader-worker-checks/uploader-ui-checks를 기존 증거의 해석 기준으로 읽었다. 새 앱 테스트·실제 정책 변경·업로드·배포는 수행하지 않았다. 기존 UI-R01의 78개 통과와 타입/빌드 성공을 당시 결과로 인용했으며 2026-10-23 환경 확인을 전체 회귀로 합산하지 않았다. Node 내장 fs/path로 변경 문서3개의 로컬 링크110개를 확인해 깨진 대상0개였고, 필수/합의 범위의 표 대응과 Git 공백 검사에서 오류가 없었다. LF→CRLF 안내만 출력됐다. 코드 확인을 새로운 실행 통과로 표시하지 않는다.
+
+### 익명 세션 분리 검토 문서 확인
+
+2026-10-23, 사용자 요청 범위는 검토다. 기존 전역 정책/보존 seed·API/XHR과 MDN/Cloudflare 공식 문서를 근거로 [익명 쿠키/탭 토큰 비교·설계·로컬 TDD 후보](./SESSION_POLICY_REVIEW.md)를 작성했다. 신규 세션별 정책이 실제로 동작한다고 검증한 결과는 아니다. 제품 코드·migration·로컬/원격 데이터·배포는 변경하지 않았다. 이번 추가 문서 링크와 Git 공백 검사만 수행하며 앱 테스트 통과로 표시하지 않는다. [대화 기록](./conversations/2026-10-23-006-session-review.md).
+
+실제 문서 점검: Node 내장 기능으로 관련 Markdown7개·로컬 경로167개를 확인해 누락0, `git diff --check` 종료0. `git diff --exit-code -- server src migrations package.json pnpm-lock.yaml` 종료0으로 제품 소스·SQL·의존성 불변을 확인했다. 앱 테스트는 미실행이다.

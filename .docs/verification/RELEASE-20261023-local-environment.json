@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-23T12:53:33.213Z",
+  "result": "passed",
+  "stage": "local-rehearsal",
+  "baseURL": "http://127.0.0.1:4173",
+  "baseline": "CHECK-2026-10-23T12-35-39-480Z-ce4bb88e"
+}

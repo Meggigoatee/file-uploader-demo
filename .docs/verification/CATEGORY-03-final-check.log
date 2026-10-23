@@ -1,0 +1,205 @@
+$ node .docs/harness/check.mjs app
+Running typecheck
+$ vue-tsc --noEmit
+Running build
+$ vite build
+vite v6.4.3 building SSR bundle for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+dist/file_uploader_demo/.vite/manifest.json   0.16 kB
+dist/file_uploader_demo/wrangler.json         1.56 kB
+dist/file_uploader_demo/index.js             23.10 kB
+✓ built in 131ms
+vite v6.4.3 building for production...
+transforming...
+✓ 25 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore               0.02 kB
+dist/client/index.html                  0.38 kB │ gzip:  0.31 kB
+dist/client/assets/index-CFKzU3c0.css   7.15 kB │ gzip:  2.28 kB
+dist/client/assets/index-b5PnuTh6.js   95.10 kB │ gzip: 36.04 kB
+✓ built in 492ms
+Running test:unit
+$ vitest run --config vitest.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  2 passed (2)
+      Tests  42 passed (42)
+   Start at  20:58:56
+   Duration  256ms (transform 100ms, setup 0ms, import 138ms, tests 14ms, environment 0ms)
+
+Running test:integration
+$ vitest run --config vitest.integration.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  6 passed (6)
+      Tests  39 passed (39)
+   Start at  20:58:57
+   Duration  6.26s (transform 80ms, setup 0ms, import 215ms, tests 2.84s, environment 2ms)
+
+Running test:e2e
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+
+Running 22 tests using 1 worker
+
+  ok  1 tests\e2e\categories.spec.ts:11:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks (738ms)
+  ok  2 tests\e2e\categories.spec.ts:34:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members (1.3s)
+  x   3 tests\e2e\categories.spec.ts:62:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh (497ms)
+  x   4 tests\e2e\categories.spec.ts:86:1 › CATEGORY: real app limit rejection keeps every policy and category input (891ms)
+  ok  5 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (825ms)
+  ok  6 tests\e2e\category-interactions.spec.ts:39:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation (723ms)
+  x   7 tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance (511ms)
+  ok  8 tests\e2e\errors.spec.ts:10:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (582ms)
+  ok  9 tests\e2e\errors.spec.ts:30:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (293ms)
+  ok 10 tests\e2e\errors.spec.ts:40:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (535ms)
+  ok 11 tests\e2e\errors.spec.ts:64:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (2.4s)
+  ok 12 tests\e2e\errors.spec.ts:79:1 › TC17: keyboard add, raw length preservation and narrow layout (353ms)
+  ok 13 tests\e2e\layout.spec.ts:7:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (457ms)
+  ok 14 tests\e2e\layout.spec.ts:37:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (472ms)
+  ok 15 tests\e2e\policies.spec.ts:7:1 › TC11/12: policy persistence, exact registration and guide only fills input (643ms)
+  ok 16 tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie (869ms)
+  ok 17 tests\e2e\sessions.spec.ts:33:1 › SESSION: blocked cookies leave editing and uploads locked with a recoverable error (291ms)
+  ok 18 tests\e2e\uploads.spec.ts:10:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (649ms)
+  ok 19 tests\e2e\uploads.spec.ts:38:1 › TC15: real save with malformed success JSON stays unconfirmed (357ms)
+  ok 20 tests\e2e\uploads.spec.ts:50:1 › TC15: actual XHR timeout after real storage stays unconfirmed and stops next request (1.0m)
+  ok 21 tests\e2e\uploads.spec.ts:68:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (584ms)
+  ok 22 tests\e2e\uploads.spec.ts:104:1 › TC16: failed fresh policy GET starts no upload and preserves queue (298ms)
+
+
+  1) tests\e2e\categories.spec.ts:62:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+    Expected: visible
+    Error: strict mode violation: getByText(/카테고리 저장 결과를 확인하지 못했습니다/) resolved to 2 elements:
+        1) <p role="status" class="notice">카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요.</p> aka getByRole('status').filter({ hasText: '카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요' })
+        2) <p role="status" class="notice">카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요.</p> aka getByLabel('카테고리 생성').getByText('카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요')
+
+    Call log:
+      - Expect "toBeVisible" getByText(/카테고리 저장 결과를 확인하지 못했습니다/) with timeout 5000ms
+      - waiting for getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+
+
+      73 |     await expect(page.getByRole('checkbox', { name: 'exe', exact: true })).toBeDisabled();
+      74 |     release();
+    > 75 |     await expect(page.getByText(/카테고리 저장 결과를 확인하지 못했습니다/)).toBeVisible();
+         |                                                            ^
+      76 |     await expect(page.getByRole('button', { name: '파일 선택', exact: true })).toBeDisabled();
+      77 |     await page.unroute('**/api/policies/categories/photos/state');
+      78 |     await page.getByRole('button', { name: '정책 새로고침', exact: true }).click();
+        at D:\garage\file-uploader-demo\tests\e2e\categories.spec.ts:75:60
+
+    Error Context: test-results\categories-CATEGORY-real-s-2e28b-ploads-until-policy-refresh\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\categories-CATEGORY-real-s-2e28b-ploads-until-policy-refresh\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\categories-CATEGORY-real-s-2e28b-ploads-until-policy-refresh\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\categories.spec.ts:86:1 › CATEGORY: real app limit rejection keeps every policy and category input 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByText('커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.', { exact: true }) resolved to 2 elements:
+        1) <p role="status" class="notice">커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.</p> aka getByRole('status').filter({ hasText: '커스텀 확장자 200' })
+        2) <p role="status" class="notice">커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.</p> aka getByLabel('카테고리 생성').getByText('커스텀 확장자 200')
+
+    Call log:
+      - Expect "toBeVisible" getByText('커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.', { exact: true }) with timeout 5000ms
+      - waiting for getByText('커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.', { exact: true })
+
+
+       95 |   await expect(photos.getByRole('button', { name: '사진 전체 차단', exact: true })).toBeEnabled();
+       96 |   await photos.getByRole('button', { name: '사진 전체 차단', exact: true }).click();
+    >  97 |   await expect(page.getByText('커스텀 확장자 200개 제한으로 전체 변경을 취소했습니다.', { exact: true })).toBeVisible();
+          |                                                                                     ^
+       98 |   await expect(photos).toContainText('5종 중 0종 차단');
+       99 |   expect((await (await request.get('/api/policies')).json()).customCount).toBe(199);
+      100 | });
+        at D:\garage\file-uploader-demo\tests\e2e\categories.spec.ts:97:85
+
+    Error Context: test-results\categories-CATEGORY-real-a-d2516-y-policy-and-category-input\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\categories-CATEGORY-real-a-d2516-y-policy-and-category-input\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\categories-CATEGORY-real-a-d2516-y-policy-and-category-input\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+    Expected: visible
+    Error: strict mode violation: getByText(/카테고리 저장 결과를 확인하지 못했습니다/) resolved to 2 elements:
+        1) <p role="status" class="notice">카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요.</p> aka getByRole('status').filter({ hasText: '카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요' })
+        2) <p role="status" class="notice">카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요.</p> aka getByLabel('카테고리 생성').getByText('카테고리 저장 결과를 확인하지 못했습니다. 정책 새로고침으로 현재 상태를 확인해 주세요')
+
+    Call log:
+      - Expect "toBeVisible" getByText(/카테고리 저장 결과를 확인하지 못했습니다/) with timeout 5000ms
+      - waiting for getByText(/카테고리 저장 결과를 확인하지 못했습니다/)
+
+
+      85 |   await expect(dialog.getByRole('textbox')).toHaveValue('.ZIP');
+      86 |   await dialog.getByRole('button', { name: '취소', exact: true }).click();
+    > 87 |   await expect(page.getByText(/카테고리 저장 결과를 확인하지 못했습니다/)).toBeVisible();
+         |                                                          ^
+      88 |   await expect(page.getByRole('button', { name: '파일 선택', exact: true })).toBeDisabled();
+      89 |   await page.unroute('**/api/policies/categories/photos/extensions');
+      90 |   await page.getByRole('button', { name: '정책 새로고침', exact: true }).click();
+        at D:\garage\file-uploader-demo\tests\e2e\category-interactions.spec.ts:87:58
+
+    Error Context: test-results\category-interactions-CATE-5a10a-ave-keeps-recovery-guidance\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\category-interactions-CATE-5a10a-ave-keeps-recovery-guidance\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\category-interactions-CATE-5a10a-ave-keeps-recovery-guidance\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests\e2e\categories.spec.ts:62:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh 
+    tests\e2e\categories.spec.ts:86:1 › CATEGORY: real app limit rejection keeps every policy and category input 
+    tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance 
+  19 passed (1.3m)
+[ELIFECYCLE] Command failed with exit code 1.
+$ node .docs/harness/e2e.mjs
+[WebServer] (node:31916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:29528) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30796) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+failed: .docs\verification\runs\CHECK-2026-10-23T11-58-51-335Z-5407b95b\report.json
+test:e2e failed; see test-e2e.txt
+[ELIFECYCLE] Command failed with exit code 1.

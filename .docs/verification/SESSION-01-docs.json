@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-23T11:16:36.470Z",
+  "documents": 22,
+  "localLinks": 352,
+  "broken": [],
+  "whitespace": "passed",
+  "protectedUnchanged": [
+    ".docs/과제_파일업로드_AI개발.md",
+    "package.json",
+    "pnpm-lock.yaml",
+    "migrations/0001_initial.sql",
+    "migrations/0002_budget.sql"
+  ],
+  "sessionCheck": "CHECK-2026-10-23T11-04-16-943Z-a7c2e320",
+  "concurrentCheck": "CHECK-2026-10-23T11-12-16-594Z-8ac35921",
+  "scope": "Session implementation; concurrent category work preserved; no deployment."
+}

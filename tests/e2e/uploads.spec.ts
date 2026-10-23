@@ -1,10 +1,8 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from './fixtures';
 import { startProxy } from './proxy';
 
-test.beforeEach(async ({ request }) => {
-  const data = await (await request.get('/api/policies')).json();
-  for (const p of data.fixed) await request.patch('/api/policies/fixed/'+p.extension,{data:{blocked:false}});
-  for (const p of data.custom) await request.delete('/api/policies/custom/'+p.extension);
+test.beforeEach(async ({request}) => {
+  expect((await request.post('/api/session')).status()).toBe(200);
 });
 const file = (name: string, text='hello') => ({name,mimeType:'text/plain',buffer:Buffer.from(text)});
 const row = (page: Page, name: string) => page.getByRole('listitem').filter({hasText:name});
@@ -43,6 +41,7 @@ test('TC15: real save with malformed success JSON stays unconfirmed', async ({pa
     await route.fulfill({status:201,contentType:'application/json',body:'{broken'});
   });
   await page.goto('/');
+  await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeEnabled();
   await page.getByLabel('파일 선택',{exact:true}).setInputFiles(file('malformed.txt'));
   await page.getByRole('button',{name:'업로드 시작 (1)',exact:true}).click();
   await expect(row(page,'malformed.txt')).toContainText('완료 확인 실패');
@@ -56,6 +55,7 @@ test('TC15: actual XHR timeout after real storage stays unconfirmed and stops ne
   const proxy=await startProxy(async response=>{count++; expect(response.status).toBe(201); await held; return 'send';});
   try {
     await page.goto(proxy.url);
+    await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeEnabled();
     await page.getByLabel('파일 선택',{exact:true}).setInputFiles([file('timeout.txt'),file('not-sent.txt')]);
     await page.getByRole('button',{name:'업로드 시작 (2)',exact:true}).click();
     await expect(row(page,'timeout.txt')).toContainText('서버 확인 중');
@@ -81,6 +81,7 @@ test('TC14/15: real write then withheld/lost response; manual retry sends failur
   });
   try {
   await page.goto(proxy.url);
+  await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeEnabled();
   await page.getByLabel('파일 선택',{exact:true}).setInputFiles([file('first.txt'),file('lost.txt'),file('remaining.txt')]);
   await page.getByRole('button',{name:'업로드 시작 (3)',exact:true}).click();
   await confirmedStored;
@@ -104,6 +105,7 @@ test('TC16: failed fresh policy GET starts no upload and preserves queue', async
   let count=0;
   page.on('request',r=>{if(r.url().endsWith('/api/uploads')) count++;});
   await page.goto('/');
+  await expect(page.getByRole('button',{name:'파일 선택',exact:true})).toBeEnabled();
   await page.getByLabel('파일 선택',{exact:true}).setInputFiles(file('waiting.txt'));
   await page.route('**/api/policies',route=>route.abort('failed'));
   await page.getByRole('button',{name:'업로드 시작 (1)',exact:true}).click();

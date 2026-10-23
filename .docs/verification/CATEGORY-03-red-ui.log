@@ -1,0 +1,104 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/category-interactions.spec.ts"
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:31336) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:28320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:20928) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (5.3s)
+(node:10784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 tests\e2e\category-interactions.spec.ts:35:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation (5.2s)
+
+
+  1) tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members 
+
+    Error: expect(locator).toBeEnabled() failed
+
+    Locator: getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('button', { name: '사진 전체 차단', exact: true })
+    Expected: enabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeEnabled" getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('button', { name: '사진 전체 차단', exact: true }) with timeout 5000ms
+      - waiting for getByRole('region', { name: '사진 카테고리', exact: true }).getByRole('button', { name: '사진 전체 차단', exact: true })
+
+
+       5 |   const photos = page.getByRole('region', { name: '사진 카테고리', exact: true });
+       6 |   const master = photos.getByRole('button', { name: '사진 전체 차단', exact: true });
+    >  7 |   await expect(master).toBeEnabled();
+         |                        ^
+       8 |   await expect(photos.getByRole('checkbox')).toHaveCount(5);
+       9 |   await photos.getByRole('button', { name: '사진 확장자 추가', exact: true }).click();
+      10 |   const dialog = page.getByRole('dialog', { name: '사진 확장자 추가', exact: true });
+        at D:\garage\file-uploader-demo\tests\e2e\category-interactions.spec.ts:7:24
+
+    Error Context: test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\category-interactions-CATE-8d5b1-nd-editable-builtin-members\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests\e2e\category-interactions.spec.ts:35:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation 
+
+    TimeoutError: locator.click: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '카테고리 생성', exact: true })
+        - locator resolved to <button disabled type="submit">카테고리 생성</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is not stable
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is not enabled
+      - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 100ms
+        9 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 500ms
+
+
+      35 | test('CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation', async ({ page }) => {
+      36 |   await page.goto('/');
+    > 37 |   await page.getByRole('button', { name: '카테고리 생성', exact: true }).click();
+         |                                                                    ^
+      38 |   let dialog = page.getByRole('dialog', { name: '카테고리 생성', exact: true });
+      39 |   await dialog.getByRole('textbox', { name: '카테고리 이름', exact: true }).fill('개발');
+      40 |   await dialog.getByRole('button', { name: '생성', exact: true }).click();
+        at D:\garage\file-uploader-demo\tests\e2e\category-interactions.spec.ts:37:68
+
+    Error Context: test-results\category-interactions-CATE-bd92a-p-pattern-with-cancellation\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\category-interactions-CATE-bd92a-p-pattern-with-cancellation\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\category-interactions-CATE-bd92a-p-pattern-with-cancellation\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members 
+    tests\e2e\category-interactions.spec.ts:35:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation 
+[ELIFECYCLE] Command failed with exit code 1.

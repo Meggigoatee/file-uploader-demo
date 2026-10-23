@@ -1,0 +1,28 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/final-boundaries.spec.ts" "--output" ".wrangler/final-local-playwright-green"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:33060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:33476) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:33236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\final-boundaries.spec.ts:12:1 › FINAL UI: raw name/extension limits and normalized duplicate are blocked without mutation or truncation (909ms)
+  ok 2 tests\e2e\final-boundaries.spec.ts:36:1 › FINAL UI: a real concurrent duplicate name keeps draft and existing data; corrected name saves (701ms)
+  ok 3 tests\e2e\final-boundaries.spec.ts:54:1 › FINAL UI: exact 50-member limit rejects addition, removal frees one slot and membership stays independent of blocking (1.4s)
+  ok 4 tests\e2e\final-boundaries.spec.ts:78:1 › FINAL UI: shared members/other filter update after removal and deleting the selected category resets filter (1.6s)
+  ok 5 tests\e2e\final-boundaries.spec.ts:106:1 › FINAL UI: duplicate individual block restores checkbox and failed category read recovers through refresh (1.2s)
+  ok 6 tests\e2e\final-boundaries.spec.ts:122:1 › FINAL UI: bulk saved but follow-up policy read fails locks upload until successful refresh (928ms)
+[WebServer] {"time":"2026-10-23T12:34:13.527Z","requestId":"c377bcd0-91f0-455d-aaad-beae573118a6","operation":"upload","status":503,"code":"STORAGE_UNAVAILABLE"}
+  ok 7 tests\e2e\final-boundaries.spec.ts:137:1 › FINAL UI: actual local reservation failure stops group, keeps queue and only manual retry starts a new request (5.5s)
+
+  7 passed (17.3s)

@@ -1,0 +1,76 @@
+{
+  "runId": "CHECK-2026-10-23T11-16-10-858Z-81a9b688",
+  "mode": "app",
+  "startedAt": "2026-10-23T11:16:10.860Z",
+  "node": "v24.16.0",
+  "result": "failed",
+  "steps": [
+    {
+      "name": "typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "typecheck"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "typecheck.txt"
+    },
+    {
+      "name": "build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "build"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "build.txt"
+    },
+    {
+      "name": "test:unit",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "test:unit"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "test-unit.txt"
+    },
+    {
+      "name": "test:integration",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "test:integration"
+      ],
+      "result": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "logFile": "test-integration.txt"
+    },
+    {
+      "name": "test:e2e",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "C:\\Users\\inhea\\AppData\\Roaming\\npm\\node_modules\\pnpm\\bin\\pnpm.mjs",
+        "run",
+        "test:e2e"
+      ],
+      "result": "failed",
+      "exitCode": 1,
+      "signal": null,
+      "logFile": "test-e2e.txt"
+    }
+  ],
+  "reason": "test:e2e failed; see test-e2e.txt",
+  "finishedAt": "2026-10-23T11:16:57.525Z"
+}

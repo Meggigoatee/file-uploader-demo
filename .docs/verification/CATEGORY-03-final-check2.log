@@ -1,0 +1,89 @@
+$ node .docs/harness/check.mjs app
+Running typecheck
+$ vue-tsc --noEmit
+Running build
+$ vite build
+vite v6.4.3 building SSR bundle for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+dist/file_uploader_demo/.vite/manifest.json   0.16 kB
+dist/file_uploader_demo/wrangler.json         1.56 kB
+dist/file_uploader_demo/index.js             23.10 kB
+✓ built in 128ms
+vite v6.4.3 building for production...
+transforming...
+✓ 25 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore               0.02 kB
+dist/client/index.html                  0.38 kB │ gzip:  0.31 kB
+dist/client/assets/index-CFKzU3c0.css   7.15 kB │ gzip:  2.28 kB
+dist/client/assets/index-CGziBuLo.js   95.13 kB │ gzip: 36.04 kB
+✓ built in 490ms
+Running test:unit
+$ vitest run --config vitest.config.ts
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  2 passed (2)
+      Tests  42 passed (42)
+   Start at  21:03:22
+   Duration  181ms (transform 38ms, setup 0ms, import 71ms, tests 12ms, environment 0ms)
+
+Running test:integration
+
+$ vitest run --config vitest.integration.config.ts
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  6 passed (6)
+      Tests  39 passed (39)
+   Start at  21:03:23
+   Duration  6.88s (transform 89ms, setup 0ms, import 243ms, tests 3.00s, environment 0ms)
+
+Running test:e2e
+$ node .docs/harness/e2e.mjs
+[WebServer] (node:29768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:1584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+
+Running 22 tests using 1 worker
+
+  ok  1 tests\e2e\categories.spec.ts:11:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks (815ms)
+  ok  2 tests\e2e\categories.spec.ts:34:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members (1.4s)
+  ok  3 tests\e2e\categories.spec.ts:62:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh (391ms)
+  ok  4 tests\e2e\categories.spec.ts:86:1 › CATEGORY: real app limit rejection keeps every policy and category input (611ms)
+  ok  5 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (930ms)
+  ok  6 tests\e2e\category-interactions.spec.ts:39:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation (851ms)
+  ok  7 tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance (662ms)
+  ok  8 tests\e2e\errors.spec.ts:10:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (510ms)
+  ok  9 tests\e2e\errors.spec.ts:30:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (286ms)
+  ok 10 tests\e2e\errors.spec.ts:40:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (736ms)
+  ok 11 tests\e2e\errors.spec.ts:64:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (2.6s)
+  ok 12 tests\e2e\errors.spec.ts:79:1 › TC17: keyboard add, raw length preservation and narrow layout (400ms)
+  ok 13 tests\e2e\layout.spec.ts:7:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (511ms)
+  ok 14 tests\e2e\layout.spec.ts:37:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (508ms)
+  ok 15 tests\e2e\policies.spec.ts:7:1 › TC11/12: policy persistence, exact registration and guide only fills input (676ms)
+  ok 16 tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie (946ms)
+  ok 17 tests\e2e\sessions.spec.ts:33:1 › SESSION: blocked cookies leave editing and uploads locked with a recoverable error (289ms)
+  ok 18 tests\e2e\uploads.spec.ts:10:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (707ms)
+  ok 19 tests\e2e\uploads.spec.ts:38:1 › TC15: real save with malformed success JSON stays unconfirmed (392ms)
+  ok 20 tests\e2e\uploads.spec.ts:50:1 › TC15: actual XHR timeout after real storage stays unconfirmed and stops next request (1.0m)
+  ok 21 tests\e2e\uploads.spec.ts:68:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (678ms)
+  ok 22 tests\e2e\uploads.spec.ts:104:1 › TC16: failed fresh policy GET starts no upload and preserves queue (347ms)
+
+  22 passed (1.3m)
+passed: .docs\verification\runs\CHECK-2026-10-23T12-03-16-839Z-e7989aee\report.json

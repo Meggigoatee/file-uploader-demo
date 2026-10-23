@@ -1,20 +1,21 @@
 import { env } from 'cloudflare:workers';
-import { applyD1Migrations, reset } from 'cloudflare:test';
+import { applyD1Migrations } from 'cloudflare:test';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import policies from '../../migrations/0001_initial.sql?raw';
 import budget from '../../migrations/0002_budget.sql?raw';
 import { upload } from '../../server/uploads';
 import { LIMITS } from '../../shared/rules';
+import { migrate, createSession, sessionId } from './fixtures';
+let session: string;
 
 beforeEach(async () => {
-  await reset();
-  await applyD1Migrations(env.DB, [policies,budget].map((sql,i) => ({ name: String(i), queries: sql.split(';').map(s => s.trim()).filter(Boolean) })));
+  await migrate();
+  session = await sessionId((await createSession()).cookie);
 });
 afterEach(() => vi.restoreAllMocks());
 const send = (name='문서.txt', bytes: Uint8Array | string = 'hello', type='text/plain') => {
   const form = new FormData();
   form.set('file', new File([bytes], name, {type}));
-  return upload(new Request('https://example.test/api/uploads',{method:'POST',body:form}), env, 'test-request');
+  return upload(new Request('https://example.test/api/uploads',{method:'POST',body:form}), env, 'test-request', session);
 };
 const objectCount = async () => (await env.UPLOADS.list()).objects.length;
 describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
@@ -34,7 +35,7 @@ describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
   });
   it('allows unchecked exe but rejects checked and embedded dot tokens without storing', async () => {
     expect((await send('a.exe')).status).toBe(201);
-    await env.DB.prepare("UPDATE extension_policies SET blocked=1 WHERE extension='exe'").run();
+    await env.DB.prepare("UPDATE session_extension_policies SET blocked=1 WHERE extension='exe'").run();
     for (const name of ['a.EXE', 'a.exe.txt']) {
       const response = await send(name,'x','image/png');
       expect(response.status).toBe(422);
@@ -43,7 +44,7 @@ describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
     expect(await objectCount()).toBe(1);
   });
   it('rejects missing fixed policy using actual DB fixture and never writes', async () => {
-    await env.DB.prepare("DELETE FROM extension_policies WHERE extension='exe'").run();
+    await env.DB.prepare("DELETE FROM session_extension_policies WHERE extension='exe'").run();
     expect((await send()).status).toBe(503);
     expect(await objectCount()).toBe(0);
   });
@@ -55,10 +56,10 @@ describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
   });
   it('validates actual streamed body length even with false Content-Length', async () => {
     const request = new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':'multipart/form-data; boundary=x','content-length':'1'},body:new ReadableStream({start(c){c.enqueue(new Uint8Array(LIMITS.body)); c.enqueue(new Uint8Array(1)); c.close();}})});
-    expect((await upload(request,env,'size')).status).toBe(413);
+    expect((await upload(request,env,'size',session)).status).toBe(413);
     expect(await objectCount()).toBe(0);
     const withoutLength=new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':'multipart/form-data; boundary=x'},body:new ReadableStream({start(c){c.enqueue(new Uint8Array(LIMITS.body+1));c.close();}})});
-    expect((await upload(withoutLength,env,'no-length')).status).toBe(413);
+    expect((await upload(withoutLength,env,'no-length',session)).status).toBe(413);
   });
   it('enforces UTF-8 filename bytes at the server boundary', async () => {
     expect((await send('가'.repeat(83)+'aa.txt')).status).toBe(201);
@@ -71,16 +72,16 @@ describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
       if (mode !== 'none') form.append('file',mode === 'string' ? 'x' : new File(['x'],'a.txt'));
       if (mode === 'extra') form.append('other','x');
       if (mode === 'multiple') form.append('file',new File(['x'],'b.txt'));
-      expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',body:form}),env,'form')).status).toBe(400);
+      expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',body:form}),env,'form',session)).status).toBe(400);
     }
-    expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',body:'x'}),env,'type')).status).toBe(415);
-    expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':'multipart/form-data; boundary=x'},body:'invalid'}),env,'parse')).status).toBe(400);
+    expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',body:'x'}),env,'type',session)).status).toBe(415);
+    expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':'multipart/form-data; boundary=x'},body:'invalid'}),env,'parse',session)).status).toBe(400);
     expect(await objectCount()).toBe(0);
   });
   it('rejects dangerous raw multipart filenames without URL decoding', async () => {
     for (const name of ['../a.txt','a/b.txt','c:a.txt','.env','a..txt','a.txt ']) {
       const body = `--raw\r\nContent-Disposition: form-data; name="file"; filename="${name}"\r\nContent-Type: text/plain\r\n\r\nx\r\n--raw--\r\n`;
-      expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':'multipart/form-data; boundary=raw'},body}),env,'raw')).status, name).toBe(422);
+      expect((await upload(new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':'multipart/form-data; boundary=raw'},body}),env,'raw',session)).status, name).toBe(422);
     }
     expect(await objectCount()).toBe(0);
   });
@@ -107,8 +108,8 @@ describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
     let release!:()=>void;
     const held=new Promise<void>(resolve=>release=resolve);
     const body=new ReadableStream<Uint8Array>({start(controller){controller.enqueue(bytes.slice(0,10)); void held.then(()=>{controller.enqueue(bytes.slice(10));controller.close();});}});
-    const receiving=upload(new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':serialized.headers.get('content-type')!},body}),env,'before');
-    await env.DB.prepare("UPDATE extension_policies SET blocked=1 WHERE extension='exe'").run();
+    const receiving=upload(new Request('https://example.test/api/uploads',{method:'POST',headers:{'content-type':serialized.headers.get('content-type')!},body}),env,'before',session);
+    await env.DB.prepare("UPDATE session_extension_policies SET blocked=1 WHERE extension='exe'").run();
     release();
     expect((await receiving).status).toBe(422);
     expect(await objectCount()).toBe(0);
@@ -116,7 +117,7 @@ describe('TC06-10: bounded receive, T, real D1 budget and R2 bytes', () => {
   it('T snapshot stays accepted when policy changes after check, while next request is blocked', async () => {
     const original = env.UPLOADS.put.bind(env.UPLOADS);
     const spy = vi.spyOn(env.UPLOADS,'put').mockImplementationOnce(async (...args: Parameters<R2Bucket['put']>) => {
-      await env.DB.prepare("UPDATE extension_policies SET blocked=1 WHERE extension='exe'").run();
+      await env.DB.prepare("UPDATE session_extension_policies SET blocked=1 WHERE extension='exe'").run();
       return original(...args);
     });
     expect((await send('first.exe')).status).toBe(201);

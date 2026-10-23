@@ -4,7 +4,9 @@
 
 ## 문서 안내
 
-이번 커밋 대상은 개발 환경/전역 pnpm 설정, 프로젝트 스킬·CLI 하네스, Vue/Workers/D1/비공개 R2 구현, TDD 기록과 실제 배포·후속 화면 수정이다. 최신 검증은 단위42·Worker22·로컬 E2E13·원격1(총78개)과 타입/빌드 성공이다. 조건부 필터·일괄 정책 변경은 생략했고, 완료 항목 일괄 비우기는 AI 권고/사용자 선택 대기로 유지한다. 2026-10-22 사용자가 이 작업의 커밋과 origin 푸시를 명시적으로 승인했다.
+최신 FINAL-LOCAL-01 최종 로컬 검증은 **단위65/Worker57/E2E29=151개·타입/빌드 통과**다. 카테고리/저장 실패 검증 누락48개를 보강하고 [구현·테스트 대조표](./FINAL_LOCAL_REVIEW.md)를 남겼다. CATEGORY-03은 카테고리 전체 버튼·소속+/×·공통 팝업·개별 체크박스를 통일하고 기본 분류 구성도 세션별 편집/유지한다. 새 세션에서만 기본 각5개이며 사용자 수정 뒤에는 고정 개수가 아니다. 일반 dev migration5를 적용했고 배포하지 않았다.
+
+SESSION-01은 익명 쿠키+D1 세션별 정책 분리(당시 로컬85개 통과)다. 이후 사용자 요청으로 CATEGORY-01/02의 카테고리 필터·일괄 차단/허용·분류별5개·사용자 카테고리를 로컬 구현했다. [후속 계획](./CATEGORY_PLAN.md), 실제 최신 회귀는 VALIDATION/TDD_LOG를 따른다. 카테고리 삭제는 소속 차단도 해제한다. 완료 항목 일괄 비우기는 미합의다. 이번 변경은 배포·커밋/푸시하지 않았으며 공개 데모는 이전 UI-R01 공유 정책 버전이다.
 
 | 문서 | 용도 |
 | --- | --- |
@@ -16,10 +18,12 @@
 | [DEVELOPMENT.md](./DEVELOPMENT.md) | 설치 버전, PC 전역 pnpm 스토어, 재설치·환경 스모크 확인 |
 | [HARNESS.md](./HARNESS.md) | 프로젝트 스킬의 출처·선정/제외 이유, CLI 하네스와 실행 결과 |
 | [DESIGN.md](./DESIGN.md) | 기술 선택, API, 정책 규칙, 테이블 스키마, 저장 흐름 |
+| [SESSION_POLICY_REVIEW.md](./SESSION_POLICY_REVIEW.md) | 최초 비교·제안 기록 및 SESSION-01 채택/제외 범위. 실제 스키마·결과는 DESIGN/VALIDATION |
 | [UI_UX.md](./UI_UX.md) | 필수/핵심/시간 여유 옵션의 화면 구성, 와이어프레임, 조작·상태·오류 흐름 |
 | [DECISIONS.md](./DECISIONS.md) | 최신 기능 합의, 즉시 정책 저장, 업로드 판정 시점, 보수적 실패 처리, 무료 티어·자원 한도 |
 | [CONSIDERATIONS.md](./CONSIDERATIONS.md) | 보안·데이터·UX·운영 고려사항과 포함/제외 근거 |
 | [VALIDATION.md](./VALIDATION.md) | 요구사항별 검증 계획과 실행 결과 기록 위치 |
+| [FINAL_LOCAL_REVIEW.md](./FINAL_LOCAL_REVIEW.md) | 최종 로컬 검증의 구현/요건/테스트 대조표, 누락 보강·경계·실패 검증의 증거와 한계 |
 | [FEATURE_BRAINSTORM.md](./FEATURE_BRAINSTORM.md) | 사용자/AI 제안 구분, 업로드·정책 관리 UX 비교, 대안 및 상호 합의 상태 |
 | [PROMPT_LOG.md](./PROMPT_LOG.md) | 시간순 AI 입력의 의도, 도구 사용, 채택·수정·폐기 및 회고 |
 | [conversations/2026-10-21-001.md](./conversations/2026-10-21-001.md) | 첫 요청과 응답, 작업 결과를 기록한 별도 대화 파일 |
@@ -39,6 +43,8 @@
 | [conversations/2026-10-22-005.md](./conversations/2026-10-22-005.md) | 수정 계획 승인과 실제 S0~S8 구현·TDD 기록 |
 | [conversations/2026-10-22-006.md](./conversations/2026-10-22-006.md) | Cloudflare 로그인 시작 요청 |
 | [conversations/2026-10-22-007.md](./conversations/2026-10-22-007.md) | R2 사용자 활성화 후 배포 계속 |
+| [conversations/2026-10-23-001.md](./conversations/2026-10-23-001.md) | 로컬 데브 우선·명시적 요청 시에만 배포, 기존 로컬 환경 확인 |
+| [conversations/2026-10-23-007-session-implementation.md](./conversations/2026-10-23-007-session-implementation.md) | 익명 세션 쿠키+D1 최소 구현 승인·로컬 TDD 결과·배포 금지 |
 
 ## 범위 용어
 
@@ -55,12 +61,14 @@
 - 로컬 Node.js `v24.16.0`과 pnpm `11.5.1`을 기존 설치 그대로 사용한다. PC 계정의 pnpm 스토어는 `D:\.pnpm-store\v11`이다.
 - 최소 패키지 설정·lockfile을 작성하고 의존성 13개를 직접 등록했다. 캐시 버전을 재사용하고 누락 패키지만 다운로드했다. Playwright Chromium 설치, 도구 CLI, 메모리 내 Vue 빌드·임시 로컬 Workers/D1/R2·브라우저 기동을 확인했다.
 - 앱·테스트·설정·실제 SQL을 작성했고 로컬 D1/R2/Chromium에서 회귀를 수행했다. 상세 증거는 VALIDATION/TDD_LOG에 있다.
-- 정책 관리·실제 단건 저장·대기 목록·다중 UX·수동 재시도를 로컬 구현했다. 조건부 필터·일괄 변경은 생략했다.
+- 정책 관리·실제 단건 저장·대기 목록·다중 UX·수동 재시도에 이어 세션별 카테고리 필터·일괄 변경·사용자 카테고리·공통 팝업/체크박스 조작을 로컬 구현했다. 최신 전체 회귀는 단위42/Worker39/E2E22=103개·타입/빌드 통과다. 현재 카테고리 변경은 배포하지 않았다.
 - 사용자 로그인/R2 활성화 후 프로젝트 전용 D1/R2를 생성하고 실제 배포했다. 공개 브라우저 1개와 원격 R2 바이트/DB를 확인했다. 후속 UI-R01 기준 로컬 단위42·Worker22·E2E13 및 타입/빌드가 최종 통과했다.
 
 ## 로컬 실행
 
-최신 화면은 업로드 위/정책 아래의 한 열이다. 추가와 등록 확인은 독립 입력이며, 각 대기 파일의 ‘업로드’로 한 파일만 전송할 수 있다. 사전 차단/진행/완료는 업로드 비활성이고 실패는 수동 재시도한다. 완료 목록의 자동/일괄 정리는 아직 의견 단계다. 최신 UI-R01 검증은 로컬77+원격1=78개 통과다.
+2026-10-23 사용자 지시에 따라 기능 개발·검증은 이 로컬 환경을 우선 사용한다. Cloudflare 배포는 이후 사용자의 명시적 배포 요청이 있을 때만 수행한다. 필요한 로컬 의존성 설치·설정은 진행하되 기존 버전과 PC 전역 pnpm 스토어를 유지한다.
+
+최신 화면은 업로드 위/정책 아래의 한 열이다. 추가와 등록 확인은 독립 입력이며, 각 대기 파일의 ‘업로드’로 한 파일만 전송할 수 있다. 사전 차단/진행/완료는 업로드 비활성이고 실패는 수동 재시도한다. 완료 목록의 자동/일괄 정리는 아직 의견 단계다. 최신 SESSION-01은 익명 쿠키별 정책을 적용하며 로컬85개가 통과했다. 새 세션은 fixed7 unchecked/custom0이며 새로고침은 유지된다. 쿠키를 차단하면 편집/업로드를 중단한다. 같은 브라우저 탭은 공유하고 서버의 세션 DB 자동 정리는 하지 않는다.
 
 기존 Node 24.16.0 / pnpm 11.5.1과 PC 전역 스토어를 사용했다. 처음 받은 체크아웃에서는 다음 순서로 실행한다. 전역 도구를 업데이트하거나 저장소 전용 pnpm 스토어를 만들지 않는다.
 
@@ -70,7 +78,7 @@ pnpm run db:local
 pnpm run dev
 ```
 
-Vite가 표시하는 로컬 URL을 연다. 기본은 `http://127.0.0.1:5173`이다. 로컬 D1/R2는 `.wrangler`에 보존된다. 이 디렉터리는 Git에서 제외한다. `db:local`의 seed는 기존 정책/누적 예산 값을 덮어쓰지 않는다. 계정 로그인 없이도 로컬 실행할 수 있다.
+Vite가 표시하는 로컬 URL을 연다. 기본은 `http://127.0.0.1:5173`이다. Vite의 `remoteBindings: false`로 원격 바인딩을 비활성화하며 로컬 Worker와 D1/R2를 사용한다. 개발 상태는 `.wrangler/state/v3`에 보존되며 Git에서 제외한다. `db:local`의 seed는 기존 정책/누적 예산 값을 덮어쓰지 않는다. Cloudflare 로그인·API 토큰·추가 환경 변수 파일 없이 로컬 실행할 수 있다. 상세 구성은 [DEVELOPMENT](./DEVELOPMENT.md#로컬-데브-운영)를 따른다.
 
 ```powershell
 pnpm run typecheck
@@ -88,10 +96,12 @@ pnpm run check
 - `src/App.vue`, `src/policies.ts`: 정책 화면과 확정/불확실 상태. `src/UploadPanel.vue`, `src/queue.ts`, `src/upload.ts`: 목록·순차 전송·실제 XHR 진행률과 저장 응답 구분.
 - `shared/rules.ts`: 원문/정규화·파일명·차단 토큰·제한 상수. 서버가 독립적으로 다시 검사한다.
 - `server/index.ts`, `http.ts`, `policies.ts`, `uploads.ts`: 표준 Workers API. 작은 함수 외 ORM/Service/Repository/DI는 없다.
-- [정책 migration](../migrations/0001_initial.sql): PK/CHECK, 고정 7개 보존 seed. [예산 migration](../migrations/0002_budget.sql): singleton 누적 예약. 실제 SQL과 DESIGN을 함께 참조한다.
+- [이전 정책 migration](../migrations/0001_initial.sql): 이전 데이터 보존. [예산 migration](../migrations/0002_budget.sql): singleton 누적 예약. [세션 migration](../migrations/0003_sessions.sql): 세션/세션별 정책·복합 PK/FK/CHECK. 실제 SQL과 DESIGN을 함께 참조한다.
 - 파일은 `uploads/<UUID>` 비공개 키와 `application/octet-stream`으로 저장한다. 공개 URL/다운로드 API는 없다. 요청/원본 파일명을 앱 로그에 남기지 않는다.
 
 ## 원격 배포
+
+이 절은 명시적 배포 요청을 받은 경우의 절차다. 기능 개발이나 로컬 환경 준비 요청만으로 실행하지 않는다.
 
 배포 URL은 `https://file-uploader-demo.meggigoatee.workers.dev`, 최신 UI-R01 배포 버전은 `1b382c8c-43b4-40a6-be43-560479d442f9`이다. 이전 S8 배포 기록은 VALIDATION에 보존한다. 전용 D1 `file-uploader-demo`와 비공개 R2 `file-uploader-demo`가 연결되어 있다. 버킷 r2.dev 공개 접근은 꺼져 있다. 원격 39바이트 테스트 객체를 읽어 원본과 비교한 뒤 삭제했다. 정책은 이전 값으로 복구했고 누적 예산 39바이트/1회는 환급하지 않았다.
 

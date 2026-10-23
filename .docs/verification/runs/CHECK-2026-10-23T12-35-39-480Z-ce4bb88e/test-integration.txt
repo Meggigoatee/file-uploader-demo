@@ -1,0 +1,10 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  8 passed (8)
+      Tests  57 passed (57)
+   Start at  21:35:46
+   Duration  10.10s (transform 109ms, setup 0ms, import 321ms, tests 4.61s, environment 0ms)
+
+$ vitest run --config vitest.integration.config.ts

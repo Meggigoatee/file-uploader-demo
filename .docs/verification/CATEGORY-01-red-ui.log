@@ -1,0 +1,48 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/categories.spec.ts"
+X [ERROR] Failed to write to log file Error: EPERM: operation not permitted, open 'C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_11-06-49_926.log'
+
+      at async open (node:internal/fs/promises:640:25)
+      at async writeFile (node:internal/fs/promises:1257:14)
+      at async D:\garage\file-uploader-demo\node_modules\.pnpm\wrangler@4.127.1\node_modules\wrangler\wrangler-dist\cli.js:61531:7
+      at async Mutex.runWith (D:\garage\file-uploader-demo\node_modules\.pnpm\miniflare@5.20260828.0-alpha\node_modules\miniflare\dist\src\index.js:85795:48)
+      at async appendToDebugLogFile (D:\garage\file-uploader-demo\node_modules\.pnpm\wrangler@4.127.1\node_modules\wrangler\wrangler-dist\cli.js:61528:3) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'open',
+    path: 'C:\\Users\\inhea\\AppData\\Roaming\\xdg.config\\.wrangler\\logs\\wrangler-2026-10-23_11-06-49_926.log'
+  }
+
+
+X [ERROR] Would have written: 
+
+  --- 2026-10-23T11:06:50.206Z debug
+  🪵  Writing logs to "C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_11-06-49_926.log"
+  ---
+  
+
+
+
+ ⛅️ wrangler 4.127.1
+────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+
+▲ [WARNING] A fetch request failed, likely due to a connectivity issue.
+
+  
+  Common causes:
+    - No internet connection or network connectivity problems
+    - Firewall or VPN blocking the request
+    - Network proxy configuration issues
+  
+  Please check your network connection and try again.
+
+
+X [ERROR] fetch failed
+
+
+[32mIf you think this is a bug then please create an issue at https://github.com/cloudflare/workers-sdk/issues/new/choose[0m
+🪵  Logs were written to "C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_11-06-49_926.log"
+[ELIFECYCLE] Command failed with exit code 1.

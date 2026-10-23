@@ -1,0 +1,162 @@
+{
+  "checkedAt": "2026-10-23T12:57:59.511Z",
+  "branch": "main",
+  "headBeforeCommit": "7c63f488fb10449da0a6782477bf59af287a8641",
+  "originDelta": "0\t0",
+  "files": 251,
+  "bytes": 3964992,
+  "baseline": "CHECK-2026-10-23T12-35-39-480Z-ce4bb88e",
+  "localRehearsal": "passed",
+  "source": [
+    {
+      "file": "migrations/0003_sessions.sql",
+      "sha256": "30224f12de1a571754b76dfd33e159be5a9c58597535fe8f8c41d8b429f9da61"
+    },
+    {
+      "file": "migrations/0004_categories.sql",
+      "sha256": "a3d51187ef7ca02867c07a66650aa18d82ead0beb2d9cb7aeae22edaf41edaf8"
+    },
+    {
+      "file": "migrations/0005_editable_builtin_categories.sql",
+      "sha256": "455906a6573c0721e60428f9fa21bbebfbeaee17616c930754e22574328f843b"
+    },
+    {
+      "file": "playwright.remote.config.ts",
+      "sha256": "74c8e56a61524d5fbcea96beeb5cb34973ba949a85738dc7df242ae8cb07f582"
+    },
+    {
+      "file": "server/categories.ts",
+      "sha256": "013948ec961edef0b40fd8d63ad567a54dd8eb7b1599b23c38d7e241bb35da07"
+    },
+    {
+      "file": "server/index.ts",
+      "sha256": "4017adaf920cf8fee620ce18ce9f665cd6371d9691e16704a51b3ffadaa6f143"
+    },
+    {
+      "file": "server/policies.ts",
+      "sha256": "067dcc2a4605ffc1a29ae6e0ba0d9a4fd4628b0614d9b93e9b9c532079ab4f55"
+    },
+    {
+      "file": "server/session.ts",
+      "sha256": "2b763832388bf1a127f78d291b8ec130435e72885df5d2cd6bf79250cbc67f30"
+    },
+    {
+      "file": "server/uploads.ts",
+      "sha256": "57174bb1e10bf8468c19d47376016cfbe1b6299ef48309ed314ca6482d93e3cb"
+    },
+    {
+      "file": "shared/categories.ts",
+      "sha256": "6dcbca5c063a53061145c6b091acb1e99ef07bb562d1772585b6cfb557667264"
+    },
+    {
+      "file": "src/App.vue",
+      "sha256": "2836c98ea5934c8062235da0169b9725417ba67b8233d920f57b37e9c220bcd2"
+    },
+    {
+      "file": "src/CategoryPanel.vue",
+      "sha256": "66bdd169ec9db19c128b5178ffab1b1f0a42c1983191820ba18f904b6d014a9c"
+    },
+    {
+      "file": "src/ExtensionToggle.vue",
+      "sha256": "e865fad2632aadcc02e9a899de5e0e89b136e8dc77405fa9e7af8f6b07c0676e"
+    },
+    {
+      "file": "src/ModalDialog.vue",
+      "sha256": "2e5a628a2e9c9156437219f3231d26f56672dab8dfac276ed265e14a1a99ebdd"
+    },
+    {
+      "file": "src/policies.ts",
+      "sha256": "c55a6dc8ff3b9a96ddfa4591a2453ae8cbbcba738e350d4e20036ef4f4f4f158"
+    },
+    {
+      "file": "src/style.css",
+      "sha256": "fb78b752a158e0a21bace016b4424ec23a1bbf595a6207cb0b900a46b7fa3791"
+    },
+    {
+      "file": "tests/e2e/categories.spec.ts",
+      "sha256": "a8355317246ee0eda7af8e381b78dd4d9b87896bcb63e320bd3db1e04cd28c54"
+    },
+    {
+      "file": "tests/e2e/category-interactions.spec.ts",
+      "sha256": "c2ed5839b3991124ec10104fe6756ffd374fb8ff9c571863f87afa54fbde6386"
+    },
+    {
+      "file": "tests/e2e/errors.spec.ts",
+      "sha256": "0ae8baaccb7c98bf85fdd48fb1535e546beac9060f4c25d8bd541d48b182b384"
+    },
+    {
+      "file": "tests/e2e/final-boundaries.spec.ts",
+      "sha256": "fe5c0088aba31835012247dd55acdd3fd93d26a4aa70a4e4221a7b0d536ac204"
+    },
+    {
+      "file": "tests/e2e/fixtures.ts",
+      "sha256": "134d681d31a433c6efe9a86cc036fc247bfc5b0d0807ae6bdf3b0b7e309a420e"
+    },
+    {
+      "file": "tests/e2e/layout.spec.ts",
+      "sha256": "4e37b35ec067033c7b8fb40a2b332f5fec44305b6497001fa8103bb25fa6567b"
+    },
+    {
+      "file": "tests/e2e/policies.spec.ts",
+      "sha256": "d93bc4fc6a96a4e775cda577c0d5eb8b03d4b21be25934c6d65bfa5f6f935a59"
+    },
+    {
+      "file": "tests/e2e/sessions.spec.ts",
+      "sha256": "53cdfbde34dd9a2798b8d7e77cef6d3acd58849a196c69570cb94ab1ea1b2b00"
+    },
+    {
+      "file": "tests/e2e/uploads.spec.ts",
+      "sha256": "44f2f5541d86da53c4e36c98adf67c20c71b35990b5026c58c06a65a86fc82aa"
+    },
+    {
+      "file": "tests/integration/categories.test.ts",
+      "sha256": "3570dcfcbef98b13e93a781b23ae70dfa6f209c1118e54ad58d5b006913df037"
+    },
+    {
+      "file": "tests/integration/category-boundaries.test.ts",
+      "sha256": "e0d18b8b3bf92aa9e5e16e05b940b2df16d70b0795992c8de4b000d32f823b2c"
+    },
+    {
+      "file": "tests/integration/category-members.test.ts",
+      "sha256": "db9e577df117be6e641c84dbebd24da5860fca1201930f4cac03f5440f041384"
+    },
+    {
+      "file": "tests/integration/fixtures.ts",
+      "sha256": "3a6805e821b13b8463bbfef72445adf51a94c635148b7f0fcf5f198d5387b35b"
+    },
+    {
+      "file": "tests/integration/policies.test.ts",
+      "sha256": "867b9576f33e8db61a08a43e1cc8b58c4678740f5c05a807663e4860fd1294b9"
+    },
+    {
+      "file": "tests/integration/sessions.test.ts",
+      "sha256": "294885fa41b6a594bc2b06ac453f0ea352265e10ebe5680b72b230289ac63ce8"
+    },
+    {
+      "file": "tests/integration/upload-failures.test.ts",
+      "sha256": "efe2aa01caa3d369a277816914324c5f74eddfd72aab10d896dade673a6bcf03"
+    },
+    {
+      "file": "tests/integration/uploads.test.ts",
+      "sha256": "e1ef77e05fe20d6c5f40919ff26cf1915af3672bc29dc64ddf1cbb4c2cbc681e"
+    },
+    {
+      "file": "tests/remote/release.spec.ts",
+      "sha256": "a5acef8059a5228c44b775b237e18649323caaa3f7d83a6f6d18921684eb7306"
+    },
+    {
+      "file": "tests/remote/smoke.spec.ts",
+      "sha256": "35b5345f5621a48be395fa4b506b09ba25a66530e28d938ff4ff5962a5d7ba59"
+    },
+    {
+      "file": "tests/unit/categories.test.ts",
+      "sha256": "cdf2950cf6fda84e44be75cff257c98c7dca49d62eaff6148f6885be065e79a8"
+    },
+    {
+      "file": "vite.config.ts",
+      "sha256": "ebdcc17393904534b7e83986af9e4568b3706e844f79a72622abf6337607dd5c"
+    }
+  ],
+  "issues": [],
+  "result": "passed"
+}

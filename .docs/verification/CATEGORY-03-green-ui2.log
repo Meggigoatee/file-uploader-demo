@@ -1,0 +1,27 @@
+$ node .docs/harness/e2e.mjs "tests/e2e/category-interactions.spec.ts" "tests/e2e/categories.spec.ts"
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+[WebServer] (node:20880) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:6644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:6344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 tests\e2e\categories.spec.ts:11:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks (765ms)
+  ok 2 tests\e2e\categories.spec.ts:34:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members (1.3s)
+  ok 3 tests\e2e\categories.spec.ts:62:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh (476ms)
+  ok 4 tests\e2e\categories.spec.ts:86:1 › CATEGORY: real app limit rejection keeps every policy and category input (599ms)
+  ok 5 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (868ms)
+  ok 6 tests\e2e\category-interactions.spec.ts:39:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation (757ms)
+  ok 7 tests\e2e\category-interactions.spec.ts:69:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance (641ms)
+
+  7 passed (9.1s)

@@ -1,0 +1,42 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!
+
+Running 22 tests using 1 worker
+
+  ok  1 tests\e2e\categories.spec.ts:11:1 › CATEGORY: five-item guides, read-only filters and bulk block/allow update prechecks (757ms)
+  ok  2 tests\e2e\categories.spec.ts:34:1 › CATEGORY: custom membership persists, edits without implicit writes, delete also allows members (1.3s)
+  ok  3 tests\e2e\categories.spec.ts:62:1 › CATEGORY: real saved response loss locks editing/uploads until policy refresh (416ms)
+  ok  4 tests\e2e\categories.spec.ts:86:1 › CATEGORY: real app limit rejection keeps every policy and category input (614ms)
+  ok  5 tests\e2e\category-interactions.spec.ts:3:1 › CATEGORY-03: shared checkbox UI, one whole-category action and editable builtin members (1.2s)
+  ok  6 tests\e2e\category-interactions.spec.ts:54:1 › CATEGORY-03: category names and deletion use one accessible popup pattern with cancellation (794ms)
+  ok  7 tests\e2e\category-interactions.spec.ts:84:1 › CATEGORY-03: popup distinguishes policy registration and lost member save keeps recovery guidance (594ms)
+  ok  8 tests\e2e\errors.spec.ts:10:1 › TC11: explicit mutation rejection preserves input; real saved but lost response locks until GET (499ms)
+  ok  9 tests\e2e\errors.spec.ts:30:1 › TC11: initial GET network failure stays locked, then recovery loads real policies (286ms)
+  ok 10 tests\e2e\errors.spec.ts:40:1 › TC09/16: server policy rejection refreshes remaining queue and never changes completed results (627ms)
+  ok 11 tests\e2e\errors.spec.ts:64:1 › TC10/16: actual local app budget exhaustion stops next request and preserves queue (2.6s)
+  ok 12 tests\e2e\errors.spec.ts:79:1 › TC17: keyboard add, raw length preservation and narrow layout (424ms)
+  ok 13 tests\e2e\layout.spec.ts:7:1 › UI-R01: upload above policies; add and registration lookup have independent inputs (539ms)
+  ok 14 tests\e2e\layout.spec.ts:37:1 › UI-R01: per-file upload is left of remove, same size, sends one row and locks safely (507ms)
+  ok 15 tests\e2e\policies.spec.ts:7:1 › TC11/12: policy persistence, exact registration and guide only fills input (725ms)
+  ok 16 tests\e2e\sessions.spec.ts:3:1 › SESSION: fresh browser policies are independent, reload persists and tabs share the cookie (1.0s)
+  ok 17 tests\e2e\sessions.spec.ts:33:1 › SESSION: blocked cookies leave editing and uploads locked with a recoverable error (305ms)
+  ok 18 tests\e2e\uploads.spec.ts:10:1 › TC13: mixed queue, drop, removal, whole batch limit and refresh (764ms)
+  ok 19 tests\e2e\uploads.spec.ts:38:1 › TC15: real save with malformed success JSON stays unconfirmed (415ms)
+  ok 20 tests\e2e\uploads.spec.ts:50:1 › TC15: actual XHR timeout after real storage stays unconfirmed and stops next request (1.0m)
+  ok 21 tests\e2e\uploads.spec.ts:68:1 › TC14/15: real write then withheld/lost response; manual retry sends failures only (721ms)
+  ok 22 tests\e2e\uploads.spec.ts:104:1 › TC16: failed fresh policy GET starts no upload and preserves queue (342ms)
+
+  22 passed (1.3m)
+$ node .docs/harness/e2e.mjs
+[WebServer] (node:32760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:27548) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:27820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

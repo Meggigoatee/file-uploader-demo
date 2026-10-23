@@ -1,9 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 
-test.beforeEach(async ({request})=>{
-  const data=await (await request.get('/api/policies')).json();
-  for(const p of data.fixed) await request.patch('/api/policies/fixed/'+p.extension,{data:{blocked:false}});
-  for(const p of data.custom) await request.delete('/api/policies/custom/'+p.extension);
+test.beforeEach(async ({request}) => {
+  expect((await request.post('/api/session')).status()).toBe(200);
 });
 
 test('UI-R01: upload above policies; add and registration lookup have independent inputs', async ({page,request})=>{
@@ -22,8 +20,7 @@ test('UI-R01: upload above policies; add and registration lookup have independen
   const result=page.getByRole('region',{name:'등록 여부 확인',exact:true});
   await expect(result).toContainText('고정 확장자 · 현재 해제');
   await expect(add).toHaveValue('zip');
-  await page.getByRole('button',{name:'png',exact:true}).click();
-  await expect(add).toHaveValue('png');
+  await add.fill('png');
   await expect(lookup).toHaveValue('exe');
   expect((await (await request.get('/api/policies')).json()).customCount).toBe(0);
   await page.getByRole('button',{name:'추가',exact:true}).click();
@@ -34,7 +31,7 @@ test('UI-R01: upload above policies; add and registration lookup have independen
   await expect(result).toContainText('이미 커스텀 차단 목록에 등록되어 있습니다.');
   await lookup.press('Enter');
   expect((await (await request.get('/api/policies')).json()).customCount).toBe(1);
-  await page.screenshot({path:'.docs/verification/UI-R01-desktop.png',fullPage:true});
+  await page.screenshot({path:'.docs/verification/'+(process.env.UPLOADER_VERIFICATION_PREFIX ?? 'LOCAL')+'-layout-desktop.png',fullPage:true});
 });
 
 test('UI-R01: per-file upload is left of remove, same size, sends one row and locks safely', async ({page})=>{

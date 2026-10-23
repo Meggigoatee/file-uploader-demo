@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-23T10:47:22.679Z",
+  "documents": 10,
+  "localLinks": 279,
+  "anchors": 11,
+  "broken": [],
+  "protectedUnchanged": {
+    "package.json": true,
+    "pnpm-lock.yaml": true,
+    "pnpm-workspace.yaml": true,
+    ".docs/과제_파일업로드_AI개발.md": true
+  },
+  "ignoredState": [
+    ".wrangler/state",
+    ".wrangler/local-dev.log",
+    "node_modules",
+    "dist"
+  ],
+  "remoteBindingsDisabled": true,
+  "initialCheckIssues": [
+    {
+      "kind": "sandboxLocalhostRead",
+      "reason": "EACCES",
+      "resolution": "User execution context confirmed HTTP200 and 127.0.0.1:5173 listening."
+    },
+    {
+      "file": ".docs/VALIDATION.md",
+      "href": "./verification/LOCAL-20261023-docs.json",
+      "reason": "missing path",
+      "resolution": "Output report now exists; target rechecked after creation."
+    }
+  ],
+  "result": "passed"
+}

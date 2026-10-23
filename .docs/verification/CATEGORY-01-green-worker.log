@@ -1,0 +1,9 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  20:10:50
+   Duration  2.34s (transform 66ms, setup 0ms, import 105ms, tests 828ms, environment 0ms)
+

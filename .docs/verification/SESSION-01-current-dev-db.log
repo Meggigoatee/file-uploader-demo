@@ -1,0 +1,9 @@
+$ wrangler d1 migrations apply file-uploader-demo --local
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: local 
+
+Use --remote if you want to access the remote instance.
+
+✅ No migrations to apply!

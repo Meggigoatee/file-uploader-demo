@@ -1,0 +1,67 @@
+
+ RUN  v4.1.10 D:/garage/file-uploader-demo
+
+X [ERROR] Failed to write to log file Error: EPERM: operation not permitted, open 'C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_11-06-50_033.log'
+
+      at open (node:internal/fs/promises:640:25)
+      at writeFile (node:internal/fs/promises:1257:14)
+      at D:\garage\file-uploader-demo\node_modules\.pnpm\wrangler@4.127.1\node_modules\wrangler\wrangler-dist\cli.js:61531:7
+      at Mutex.runWith (D:\garage\file-uploader-demo\node_modules\.pnpm\miniflare@5.20260828.0-alpha\node_modules\miniflare\dist\src\index.js:85795:48)
+      at appendToDebugLogFile (D:\garage\file-uploader-demo\node_modules\.pnpm\wrangler@4.127.1\node_modules\wrangler\wrangler-dist\cli.js:61528:3) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'open',
+    path: 'C:\\Users\\inhea\\AppData\\Roaming\\xdg.config\\.wrangler\\logs\\wrangler-2026-10-23_11-06-50_033.log'
+  }
+
+
+X [ERROR] Would have written: 
+
+  --- 2026-10-23T11:06:50.358Z debug
+  🪵  Writing logs to "C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_11-06-50_033.log"
+  ---
+  
+
+
+service core:user:vitest-plugin-runner-: Uncaught Error: No such module "cloudflare:test-internal".
+  imported from "index.mjs"
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start cloudflare-pool worker for test files D:/garage/file-uploader-demo/tests/integration/categories.test.ts.
+ ❯ node_modules/.pnpm/vitest@4.1.10_@types+node@2_24d58469ff12bd8366fe26f5cb090bb7/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:3465:94
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ Pool.schedule node_modules/.pnpm/vitest@4.1.10_@types+node@2_24d58469ff12bd8366fe26f5cb090bb7/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:3465:5
+
+Caused by: MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.
+Runtime stderr:
+{"timestamp":"1792753610553","level":"error","source":"src/workerd/server/json-logger.c++:127","message":"service core:user:vitest-plugin-runner-: Uncaught Error: No such module \"cloudflare:test-internal\".\n  imported from \"index.mjs\"","context_depth":0}
+ ❯ StartupLogBuffer.handleStartupFailure node_modules/.pnpm/miniflare@5.20260828.0-alpha/node_modules/miniflare/dist/src/index.js:95827:13
+ ❯ Runtime.updateConfig node_modules/.pnpm/miniflare@5.20260828.0-alpha/node_modules/miniflare/dist/src/index.js:95907:24
+ ❯ processTicksAndRejections node:internal/process/task_queues:104:5
+ ❯ _Miniflare.#assembleAndUpdateConfig node_modules/.pnpm/miniflare@5.20260828.0-alpha/node_modules/miniflare/dist/src/index.js:113451:30
+ ❯ node_modules/.pnpm/miniflare@5.20260828.0-alpha/node_modules/miniflare/dist/src/index.js:112258:7
+ ❯ Mutex.runWith node_modules/.pnpm/miniflare@5.20260828.0-alpha/node_modules/miniflare/dist/src/index.js:85795:48
+ ❯ _Miniflare.#waitForReady node_modules/.pnpm/miniflare@5.20260828.0-alpha/node_modules/miniflare/dist/src/index.js:113574:5
+ ❯ getProjectMiniflare node_modules/.pnpm/@cloudflare+vitest-plugin@1_0929c74d495b4f19c87345d2cacbdef8/node_modules/@cloudflare/vitest-plugin/dist/pool/index.mjs:65234:2
+ ❯ CloudflarePoolWorker.start node_modules/.pnpm/@cloudflare+vitest-plugin@1_0929c74d495b4f19c87345d2cacbdef8/node_modules/@cloudflare/vitest-plugin/dist/pool/index.mjs:64710:13
+ ❯ PoolRunner.start node_modules/.pnpm/vitest@4.1.10_@types+node@2_24d58469ff12bd8366fe26f5cb090bb7/node_modules/vitest/dist/chunks/cli-api.BK8pd4xc.js:2899:4
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'ERR_RUNTIME_FAILURE' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  no tests
+      Tests  no tests
+     Errors  1 error
+   Start at  20:06:49
+   Duration  825ms (transform 0ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+close timed out after 10000ms
+Tests closed successfully but something prevents Vite server from exiting
+You can try to identify the cause by enabling "hanging-process" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter
+🪵  Logs were written to "C:\Users\inhea\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-10-23_11-06-50_033.log"
