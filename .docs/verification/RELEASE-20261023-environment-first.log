@@ -1,0 +1,1 @@
+{"result":"passed","report":".docs/verification/RELEASE-20261023-environment.json","checks":{"localBaseline151":true,"activeVersion100Percent":true,"bindingsAndRuntime":true,"migrationsSchemaForeignKeysAndInvariants":true,"privateR2Accessible":true,"httpsHTMLAndExactBuiltAssetsAndAPIRouting":true}}

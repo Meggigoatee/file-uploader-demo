@@ -1,12 +1,12 @@
 # 파일 업로드 과제 개발 문서
 
-기준일: 2026-10-22 (Asia/Seoul). 수정 계획 승인 후 **S0~S6 구현·회귀와 S8 실제 배포·원격 검증을 완료**했다. [공개 데모](https://file-uploader-demo.meggigoatee.workers.dev). 아래 명령으로 로컬 실행과 검증을 재현한다. 실제 결과는 VALIDATION/TDD_LOG에 별도 기록한다.
+기준일: 2026-10-23 (Asia/Seoul). 핵심 구현에 이어 세션/카테고리의 로컬 검증·최신 배포·운영 검증을 완료했다. [공개 데모](https://file-uploader-demo.meggigoatee.workers.dev). 아래 명령으로 로컬 실행과 검증을 재현한다. 실제 결과는 VALIDATION/TDD_LOG에 별도 기록한다.
 
 ## 문서 안내
 
-최신 FINAL-LOCAL-01 최종 로컬 검증은 **단위65/Worker57/E2E29=151개·타입/빌드 통과**다. 카테고리/저장 실패 검증 누락48개를 보강하고 [구현·테스트 대조표](./FINAL_LOCAL_REVIEW.md)를 남겼다. CATEGORY-03은 카테고리 전체 버튼·소속+/×·공통 팝업·개별 체크박스를 통일하고 기본 분류 구성도 세션별 편집/유지한다. 새 세션에서만 기본 각5개이며 사용자 수정 뒤에는 고정 개수가 아니다. 일반 dev migration5를 적용했고 배포하지 않았다.
+최신 FINAL-LOCAL-01 로컬 검증은 **단위65/Worker57/E2E29=151개·타입/빌드 통과**다. 카테고리/저장 실패 검증 누락48개를 보강하고 [구현·테스트 대조표](./FINAL_LOCAL_REVIEW.md)를 남겼다. CATEGORY-03은 전체 버튼·소속+/×·공통 팝업·개별 체크박스를 통일하고 기본 분류 구성도 세션별로 유지한다. 새 세션에서만 기본 각5개이며 사용자 수정 뒤에는 고정 개수가 아니다. **RELEASE-20261023에서 origin 푸시·원격 migration3~5·배포·환경/운영 검증까지 완료**했다.
 
-SESSION-01은 익명 쿠키+D1 세션별 정책 분리(당시 로컬85개 통과)다. 이후 사용자 요청으로 CATEGORY-01/02의 카테고리 필터·일괄 차단/허용·분류별5개·사용자 카테고리를 로컬 구현했다. [후속 계획](./CATEGORY_PLAN.md), 실제 최신 회귀는 VALIDATION/TDD_LOG를 따른다. 카테고리 삭제는 소속 차단도 해제한다. 완료 항목 일괄 비우기는 미합의다. 이번 변경은 배포·커밋/푸시하지 않았으며 공개 데모는 이전 UI-R01 공유 정책 버전이다.
+SESSION-01은 익명 쿠키+D1 세션별 정책 분리(당시 로컬85개 통과)다. 이후 사용자 요청으로 카테고리 필터·일괄 차단/허용·소속 편집·사용자 카테고리를 구현했다. [후속 계획](./CATEGORY_PLAN.md), 최신 결과는 VALIDATION/TDD_LOG를 따른다. 카테고리 삭제는 현재 소속 차단도 해제한다. 완료 항목 일괄 비우기는 미합의다. 공개 데모는 이제 세션/카테고리 버전이며 [배포·운영 원장](./RELEASE_20261023.md)에 환경 실패 해결·최종 저장/정리 증거를 기록했다.
 
 | 문서 | 용도 |
 | --- | --- |
@@ -24,6 +24,7 @@ SESSION-01은 익명 쿠키+D1 세션별 정책 분리(당시 로컬85개 통과
 | [CONSIDERATIONS.md](./CONSIDERATIONS.md) | 보안·데이터·UX·운영 고려사항과 포함/제외 근거 |
 | [VALIDATION.md](./VALIDATION.md) | 요구사항별 검증 계획과 실행 결과 기록 위치 |
 | [FINAL_LOCAL_REVIEW.md](./FINAL_LOCAL_REVIEW.md) | 최종 로컬 검증의 구현/요건/테스트 대조표, 누락 보강·경계·실패 검증의 증거와 한계 |
+| [RELEASE_20261023.md](./RELEASE_20261023.md) | 커밋/푸시·배포 버전, 환경 gate와 소규모 운영 검증·R2 실제 바이트/정리 결과 |
 | [FEATURE_BRAINSTORM.md](./FEATURE_BRAINSTORM.md) | 사용자/AI 제안 구분, 업로드·정책 관리 UX 비교, 대안 및 상호 합의 상태 |
 | [PROMPT_LOG.md](./PROMPT_LOG.md) | 시간순 AI 입력의 의도, 도구 사용, 채택·수정·폐기 및 회고 |
 | [conversations/2026-10-21-001.md](./conversations/2026-10-21-001.md) | 첫 요청과 응답, 작업 결과를 기록한 별도 대화 파일 |
@@ -61,7 +62,7 @@ SESSION-01은 익명 쿠키+D1 세션별 정책 분리(당시 로컬85개 통과
 - 로컬 Node.js `v24.16.0`과 pnpm `11.5.1`을 기존 설치 그대로 사용한다. PC 계정의 pnpm 스토어는 `D:\.pnpm-store\v11`이다.
 - 최소 패키지 설정·lockfile을 작성하고 의존성 13개를 직접 등록했다. 캐시 버전을 재사용하고 누락 패키지만 다운로드했다. Playwright Chromium 설치, 도구 CLI, 메모리 내 Vue 빌드·임시 로컬 Workers/D1/R2·브라우저 기동을 확인했다.
 - 앱·테스트·설정·실제 SQL을 작성했고 로컬 D1/R2/Chromium에서 회귀를 수행했다. 상세 증거는 VALIDATION/TDD_LOG에 있다.
-- 정책 관리·실제 단건 저장·대기 목록·다중 UX·수동 재시도에 이어 세션별 카테고리 필터·일괄 변경·사용자 카테고리·공통 팝업/체크박스 조작을 로컬 구현했다. 최신 전체 회귀는 단위42/Worker39/E2E22=103개·타입/빌드 통과다. 현재 카테고리 변경은 배포하지 않았다.
+- 정책 관리·실제 저장·다중 UX·수동 재시도에 이어 세션별 카테고리 필터·일괄 변경·사용자 카테고리·공통 팝업/체크박스를 구현했다. 최신 전체 회귀는 단위65/Worker57/E2E29=151개·타입/빌드 통과이며 공개 배포·제한된 운영 검증도 완료했다.
 - 사용자 로그인/R2 활성화 후 프로젝트 전용 D1/R2를 생성하고 실제 배포했다. 공개 브라우저 1개와 원격 R2 바이트/DB를 확인했다. 후속 UI-R01 기준 로컬 단위42·Worker22·E2E13 및 타입/빌드가 최종 통과했다.
 
 ## 로컬 실행
@@ -103,7 +104,7 @@ pnpm run check
 
 이 절은 명시적 배포 요청을 받은 경우의 절차다. 기능 개발이나 로컬 환경 준비 요청만으로 실행하지 않는다.
 
-배포 URL은 `https://file-uploader-demo.meggigoatee.workers.dev`, 최신 UI-R01 배포 버전은 `1b382c8c-43b4-40a6-be43-560479d442f9`이다. 이전 S8 배포 기록은 VALIDATION에 보존한다. 전용 D1 `file-uploader-demo`와 비공개 R2 `file-uploader-demo`가 연결되어 있다. 버킷 r2.dev 공개 접근은 꺼져 있다. 원격 39바이트 테스트 객체를 읽어 원본과 비교한 뒤 삭제했다. 정책은 이전 값으로 복구했고 누적 예산 39바이트/1회는 환급하지 않았다.
+배포 URL은 `https://file-uploader-demo.meggigoatee.workers.dev`, 최신 세션/카테고리 버전은 `60a46602-a2c8-4117-b8a8-7921631517db`(소스b7d4112)다. 이전 S8/UI-R01 기록은 VALIDATION에 보존한다. 전용 D1/R2 `file-uploader-demo`가 연결되어 있고 R2 dev URL/사용자 도메인 공개 접근은 없다. 환경 gate 통과 후 두 세션의 정책/카테고리와28바이트 파일2개를 확인했다. 원격 R2 해시 일치 후 소유 데이터만 정리했으며 누적 예산56바이트/2회는 환급하지 않았다.
 
 아래는 처음 배포하는 계정에서의 절차다. 현재 계정에는 이미 리소스가 생성되어 있어 재배포 시 migration/build/deploy 단계만 사용한다. 새 계정이면 D1 생성 결과를 `wrangler.jsonc`에 반영한다. 구독 checkout은 사용자가 직접 수행하며 계정 전체 무료 사용을 보장하지 않는다.
 
@@ -117,7 +118,7 @@ pnpm run build
 pnpm exec wrangler deploy --config dist/file_uploader_demo/wrangler.json
 ```
 
-실제 수행 결과는 VALIDATION의 S8 증거를 따른다. 원격 smoke 재실행은 `pnpm exec playwright test --config playwright.remote.config.ts`다. 이 검사는 실제 파일 하나를 저장하고 자체 정책 변경을 복구한다. R2 파일 정리와 실제 바이트 비교는 별도 CLI로 확인했다. Workers 밖의 실제 장애/계정 한도 응답은 모방·검증하지 않는다.
+실제 수행 결과와 명령은 [RELEASE-20261023](./RELEASE_20261023.md)을 따른다. 환경 확인은 `.docs/harness/release-environment.mjs`, 기능 검사는 `pnpm exec playwright test --config playwright.remote.config.ts tests/remote/release.spec.ts`다. 기능 검사는 최근 환경passed 결과를 먼저 요구하며 최대128바이트 파일2개 저장/차단2요청을 순차 실행한다. 전체 remote 디렉터리를 실행하면 과거 smoke도 포함되므로 이번 제한된 절차에서는 파일을 명시한다. `.docs/harness/release-storage.mjs`로 이번 원격 객체 바이트/해시와 예산을 확인하고 소유 데이터만 정리한다. 환경 실패가 남으면 기능 검사를 시작하지 않는다. 부하/대량 업로드·실제 플랫폼 장애/계정 한도 모방은 하지 않는다.
 
 ## 이후 기록 원칙
 

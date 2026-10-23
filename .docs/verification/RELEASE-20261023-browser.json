@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-23T13:05:34.624Z",
+  "baseURL": "https://file-uploader-demo.meggigoatee.workers.dev",
+  "result": "passed",
+  "environmentReport": ".docs/verification/RELEASE-20261023-environment.json",
+  "deploymentVersionId": "60a46602-a2c8-4117-b8a8-7921631517db",
+  "run": "3595c44f33",
+  "sessionCount": 2,
+  "requests": {
+    "uploadTotal": 4,
+    "blocked": 2,
+    "stored": 2,
+    "maxFileBytes": 128,
+    "concurrency": 1,
+    "retries": 0
+  },
+  "checks": {
+    "freshSessionDefaults": true,
+    "customNormalizationDuplicateAndFixedProtection": true,
+    "categoryCreateRenameMembershipPersistence": true,
+    "sessionIsolationReloadAndSharedPolicies": true,
+    "filtersReadOnlyAndCounts": true,
+    "serverBlockAndOtherSessionUpload": true,
+    "membershipRemovalKeepsPolicyAndBulkAllow": true,
+    "categoryDeleteAllowsCurrentMembersAndPolicyDelete": true,
+    "completedResultPreserved": true
+  },
+  "uploads": [
+    {
+      "id": "08fdbb37-eb12-44aa-a11c-277f906d3776",
+      "size": 28,
+      "sha256": "3b9eb9048c1d979578e60f79584f81f06a25aa5f998c0f62efb46b00a7026dc5"
+    },
+    {
+      "id": "573e8587-bf02-4e3d-9afc-7ffc83a59ba5",
+      "size": 28,
+      "sha256": "29a11569254f641bfdd5640aa7ee339b62851cf52783e4ede6b7a54f7daf63cd"
+    }
+  ]
+}

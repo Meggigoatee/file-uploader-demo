@@ -1,5 +1,7 @@
 # 최소 설계안
 
+2026-10-23 RELEASE-20261023에서 세션/카테고리 코드를 공개 배포하고 환경·소규모 운영 검증을 완료했다. [배포/저장 증거](./RELEASE_20261023.md). 아래 과거 ‘미배포’ 판단은 해당 설계 당시의 상태다.
+
 ## CATEGORY-03 최신 카테고리 구성·API
 
 기본/사용자 카테고리의 구성원을 모두 DB에서 읽는다. `0005_editable_builtin_categories.sql`은 custom_categories에 nullable `builtin_key`(photos/videos/audio/documents CHECK)와 UNIQUE(session_id,builtin_key) 인덱스를 추가한다. 기존 세션에 기본4분류/각5개 소속만 채우며 사용자 카테고리·차단 정책을 바꾸지 않는다. 신규 세션은 기존 세션/고정7개 초기화 batch에 기본 카테고리/소속도 포함한다. 수정한 구성원을 다음 GET/재초기화로 원래5개로 되돌리지 않는다.
@@ -17,7 +19,7 @@
 
 ## 2026-10-23 CATEGORY-01 카테고리 후속 설계
 
-현재 로컬 코드에 카테고리 필터·일괄 차단/허용·사용자 카테고리를 추가했다. 이전 S7 조건부 언급은 당시 범위다. 원격에는 배포하지 않았다.
+카테고리 필터·일괄 차단/허용·사용자 카테고리를 추가했다. 이전 S7 조건부 언급은 당시 범위이며, 로컬 검증 후 RELEASE-20261023에서 원격에도 배포했다.
 
 - 기본 사전은 `shared/categories.ts`의 사진/영상/음성/문서 각5개다. 서버와 화면이 같은 사전을 사용하며 최초 정책에 자동 등록하지 않는다.
 - `0004_categories.sql`: `custom_categories(id TEXT PK, session_id TEXT FK → anonymous_sessions ON DELETE CASCADE, name TEXT COLLATE NOCASE CHECK 길이1~30, UNIQUE(session_id,name))`, `category_extensions(category_id TEXT FK → custom_categories ON DELETE CASCADE, extension TEXT CHECK 기존 영문소문자·숫자1~20, PK(category_id,extension))`다. 이름 유일성 인덱스는 세션 조회를, 구성원 PK는 카테고리별 조회를 지원한다.

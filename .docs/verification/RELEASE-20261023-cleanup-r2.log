@@ -1,0 +1,14 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: remote 
+
+Deleting object "uploads/08fdbb37-eb12-44aa-a11c-277f906d3776" from bucket "file-uploader-demo".
+Delete complete.
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+Resource location: remote 
+
+Deleting object "uploads/573e8587-bf02-4e3d-9afc-7ffc83a59ba5" from bucket "file-uploader-demo".
+Delete complete.

@@ -1,0 +1,27 @@
+
+ ⛅️ wrangler 4.127.1 (update available 4.152.0)
+───────────────────────────────────────────────
+🌀 Building list of assets...
+✨ Read 5 files from the assets directory D:\garage\file-uploader-demo\dist\client
+🌀 Starting asset upload...
+🌀 Found 3 new or modified static assets to upload. Proceeding with upload...
++ /index.html
++ /assets/index-lQT8KY4A.css
++ /assets/index-ZdUGYlBE.js
+Uploaded 1 of 3 assets
+Uploaded 2 of 3 assets
+Uploaded 3 of 3 assets
+✨ Success! Uploaded 3 files (1.24 sec)
+
+Total Upload: 22.56 KiB / gzip: 6.43 KiB
+Worker Startup Time: 1 ms
+Your Worker has access to the following bindings:
+Binding                               Resource         
+env.DB (file-uploader-demo)           D1 Database      
+env.UPLOADS (file-uploader-demo)      R2 Bucket        
+env.ASSETS                            Assets           
+
+Uploaded file-uploader-demo (8.88 sec)
+Deployed file-uploader-demo triggers (0.90 sec)
+  https://file-uploader-demo.meggigoatee.workers.dev
+Current Version ID: 60a46602-a2c8-4117-b8a8-7921631517db

@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-10-23T13:04:16.476Z",
+  "baseURL": "https://file-uploader-demo.meggigoatee.workers.dev",
+  "stage": "post-deploy",
+  "deploymentVersionId": "60a46602-a2c8-4117-b8a8-7921631517db",
+  "sourceCommit": "b7d411236bbccf9c9327ac205735f5eaffc0bee4",
+  "result": "passed",
+  "checks": {
+    "localBaseline151": true,
+    "activeVersion100Percent": true,
+    "bindingsAndRuntime": true,
+    "migrationsSchemaForeignKeysAndInvariants": true,
+    "privateR2Accessible": true,
+    "httpsHTMLAndExactBuiltAssetsAndAPIRouting": true
+  },
+  "budgetBeforeOperations": {
+    "id": 1,
+    "reserved_bytes": 967734,
+    "reserved_puts": 5
+  },
+  "assets": [
+    {
+      "path": "/assets/index-ZdUGYlBE.js",
+      "bytes": 95221,
+      "sha256": "b4362da75344dc7af01fb994d98904c7fbce7f6bc20ff3c835ca03ccfae0ea6a"
+    },
+    {
+      "path": "/assets/index-lQT8KY4A.css",
+      "bytes": 7061,
+      "sha256": "4cd8190f3c730dc93ad259f389af72c6052430e2835c7b88fa5f3a9978608012"
+    }
+  ],
+  "finishedAt": "2026-10-23T13:04:27.384Z"
+}

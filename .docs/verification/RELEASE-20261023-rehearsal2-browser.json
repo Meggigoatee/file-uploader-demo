@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-23T13:03:44.296Z",
+  "baseURL": "http://127.0.0.1:4173",
+  "result": "passed",
+  "environmentReport": ".docs/verification/RELEASE-20261023-local-environment.json",
+  "deploymentVersionId": null,
+  "run": "6d568e6ae8",
+  "sessionCount": 2,
+  "requests": {
+    "uploadTotal": 4,
+    "blocked": 2,
+    "stored": 2,
+    "maxFileBytes": 128,
+    "concurrency": 1,
+    "retries": 0
+  },
+  "checks": {
+    "freshSessionDefaults": true,
+    "customNormalizationDuplicateAndFixedProtection": true,
+    "categoryCreateRenameMembershipPersistence": true,
+    "sessionIsolationReloadAndSharedPolicies": true,
+    "filtersReadOnlyAndCounts": true,
+    "serverBlockAndOtherSessionUpload": true,
+    "membershipRemovalKeepsPolicyAndBulkAllow": true,
+    "categoryDeleteAllowsCurrentMembersAndPolicyDelete": true,
+    "completedResultPreserved": true
+  },
+  "uploads": [
+    {
+      "id": "962a1208-b979-4988-a121-9848b15a64ff",
+      "size": 28,
+      "sha256": "b3c31563ea49a87719aa01191fa6dbb456581ad38531e79a3e0fb31a68b7da6e"
+    },
+    {
+      "id": "497e765c-9794-460d-be46-9eefce1fe289",
+      "size": 28,
+      "sha256": "ef74c2a6ffa39257f7302656128f89982f92a635e8435bb24fe19932313283bc"
+    }
+  ]
+}

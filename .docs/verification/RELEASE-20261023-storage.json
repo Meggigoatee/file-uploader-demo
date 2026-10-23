@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-10-23T13:06:04.459Z",
+  "result": "passed",
+  "uploads": [
+    {
+      "id": "08fdbb37-eb12-44aa-a11c-277f906d3776",
+      "bytes": 28,
+      "expectedSha256": "3b9eb9048c1d979578e60f79584f81f06a25aa5f998c0f62efb46b00a7026dc5",
+      "actualSha256": "3b9eb9048c1d979578e60f79584f81f06a25aa5f998c0f62efb46b00a7026dc5",
+      "match": true
+    },
+    {
+      "id": "573e8587-bf02-4e3d-9afc-7ffc83a59ba5",
+      "bytes": 28,
+      "expectedSha256": "29a11569254f641bfdd5640aa7ee339b62851cf52783e4ede6b7a54f7daf63cd",
+      "actualSha256": "29a11569254f641bfdd5640aa7ee339b62851cf52783e4ede6b7a54f7daf63cd",
+      "match": true
+    }
+  ],
+  "budgetRefunded": false,
+  "cleanup": {
+    "ownObjectsDeleted": [
+      "08fdbb37-eb12-44aa-a11c-277f906d3776",
+      "573e8587-bf02-4e3d-9afc-7ffc83a59ba5"
+    ],
+    "ownSessionsDeleted": 2,
+    "policyAndCategoryCascadeVerified": true,
+    "foreignKeyViolations": 0,
+    "localBodiesRemoved": true
+  },
+  "budget": {
+    "baseline": {
+      "id": 1,
+      "reserved_bytes": 967734,
+      "reserved_puts": 5
+    },
+    "beforeCleanup": {
+      "id": 1,
+      "reserved_bytes": 967790,
+      "reserved_puts": 7
+    },
+    "minimumExpectedBytesIncrease": 56,
+    "minimumExpectedPutsIncrease": 2,
+    "exactExpectedDeltaObserved": true
+  }
+}

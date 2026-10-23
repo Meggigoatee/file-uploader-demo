@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-23T13:14:17.018Z",
+  "documents": 54,
+  "localLinks": 711,
+  "anchors": 11,
+  "broken": [],
+  "historicalRootReferences": [
+    {
+      "file": ".docs\\conversations\\2026-10-21-001.md",
+      "href": ".docs/과제_파일업로드_AI개발.md",
+      "reason": "Original user transcript uses repository-root context; preserve the original text."
+    },
+    {
+      "file": ".docs\\conversations\\2026-10-21-001.md",
+      "href": ".docs/",
+      "reason": "Original user transcript uses repository-root context; preserve the original text."
+    },
+    {
+      "file": ".docs\\conversations\\2026-10-22-001.md",
+      "href": ".docs/",
+      "reason": "Original user transcript uses repository-root context; preserve the original text."
+    }
+  ],
+  "protectedUnchanged": {
+    "package.json": true,
+    "pnpm-lock.yaml": true,
+    "pnpm-workspace.yaml": true,
+    ".docs/과제_파일업로드_AI개발.md": true,
+    "migrations/0001_initial.sql": true,
+    "migrations/0002_budget.sql": true
+  },
+  "result": "passed"
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "results": [
+      {
+        "id": 1,
+        "reserved_bytes": 967790,
+        "reserved_puts": 7
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.1089
+      },
+      "duration": 0.1089,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 77824,
+      "rows_read": 1,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "id": "629b57f0d16508d043103e7cbb05188652b3a2f732767aca76fd653f8fe96f61",
+        "policy_count": 7,
+        "custom_count": 0
+      },
+      {
+        "id": "7684d167b676124f9e5d3fa2cc0cfa05c6a0f4b2241d8005fc08c2570ea9cc2a",
+        "policy_count": 7,
+        "custom_count": 0
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.15
+      },
+      "duration": 0.15,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 77824,
+      "rows_read": 19,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  },
+  {
+    "results": [
+      {
+        "n": 8
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "ICN",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.0655
+      },
+      "duration": 0.0655,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 77824,
+      "rows_read": 11,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]

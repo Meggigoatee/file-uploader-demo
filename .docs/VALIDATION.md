@@ -1,5 +1,29 @@
 # 검증 계획과 결과
 
+## RELEASE-20261023 — 커밋·배포·최종 운영 검증
+
+사용자의 명시적 커밋/origin푸시·Cloudflare배포·운영검증 요청을 수행했다. [배포 원장](./RELEASE_20261023.md), [대화](./conversations/2026-10-23-012.md). 이전 절의 ‘배포하지 않음’은 당시 로컬 작업의 기록이다. 이번 공개 배포는 익명 세션 분리와 카테고리 변경을 모두 포함한다. 로컬151개 통과를 재사용했고 운영의 부하/대량 업로드·실패/계정쿼터 모방은 하지 않았다.
+
+| 실제 절차·명령 | 결과 | 증거 |
+| --- | --- | --- |
+| `git fetch origin`, 원격 이력·비밀값/로컬데이터·스테이징 검사 | 최초main=origin/main·후보0·253개 범위 확인 | [사전 검사](./verification/RELEASE-20261023-precommit.json), [문서](./verification/RELEASE-20261023-docs-before.json) |
+| `git commit`, `git push origin main` | 배포 소스b7d4112·정상푸시·ahead/behind0/0 | [커밋](./verification/RELEASE-20261023-commit.log), [푸시](./verification/RELEASE-20261023-push.log) |
+| Cloudflare 인증/R2·D1읽기 | D1최초7403실패→계정/d1권한/DB확인→순차재조회/실제SELECT성공. 실패 동안 운영 기능검사0. 최초 외부원인미확정 | [최초 실패](./verification/RELEASE-20261023-pending-migrations.log), [재조회](./verification/RELEASE-20261023-pending-migrations-recheck.log), [기존스키마/예산](./verification/RELEASE-20261023-d1-before.json) |
+| 신규 remote시나리오의 로컬E2E리허설/타입/Node문법 | 격리된실제 로컬Worker에서1/1·타입/문법성공. 기존앱151개 재실행으로 합산하지 않음 | [리허설](./verification/RELEASE-20261023-rehearsal.log), [타입](./verification/RELEASE-20261023-typecheck.log) |
+| `pnpm exec wrangler d1 migrations apply file-uploader-demo --remote` | migration3~5성공·이전예산/정책보존 | [migration](./verification/RELEASE-20261023-migrate-remote.log) |
+| `pnpm exec wrangler deploy --config dist/file_uploader_demo/wrangler.json --tag b7d411236bbc ...` | 종료0·버전60a46602-a2c8-4117-b8a8-7921631517db·100%활성 | [배포](./verification/RELEASE-20261023-deploy.log), [버전/바인딩](./verification/RELEASE-20261023-version-after.json) |
+| `node .docs/harness/release-environment.mjs <version> <commit>` | 첫/재검사모두passed. 버전/바인딩·D1스키마/FK/불변식·비공개R2·HTTPS/API404·JS/CSS로컬번들바이트일치. 통과 전 기능검증 없음 | [첫gate](./verification/RELEASE-20261023-environment-first.json), [최종gate](./verification/RELEASE-20261023-environment.json) |
+| `pnpm exec playwright test --config playwright.remote.config.ts tests/remote/release.spec.ts --output .wrangler/release-production-playwright` | 첫1실패. 저장완료대기없이새로고침해이름변경PUT취소(-1). 업로드0·예산불변·소유세션2개정리 | [첫로그](./verification/RELEASE-20261023-operational-first.log), [원격행](./verification/RELEASE-20261023-first-state-command.json), [정리](./verification/RELEASE-20261023-first-cleanup.json) |
+| 저장확정대기보정→로컬리허설/타입→환경재검사 | 동일내용기대/timeout유지,1/1·타입·환경성공. 제품/번들변경없음 | [리허설2](./verification/RELEASE-20261023-rehearsal2.log), [타입2](./verification/RELEASE-20261023-typecheck2.log) |
+| 같은운영명령·output만 `.wrangler/release-production2-playwright`로분리 | **최종1/1통과·49.2초**,세션/카테고리/정책/UI·서버검증완료 | [운영로그](./verification/RELEASE-20261023-operational.log), [JSON](./verification/RELEASE-20261023-browser.json), [화면](./verification/RELEASE-20261023-public-desktop.png) |
+| `node .docs/harness/release-storage.mjs` | **원격R2 28바이트×2/해시일치**,이번객체/세션정리·FK0·예산환급없음 | [저장증거](./verification/RELEASE-20261023-storage.json), [D1행](./verification/RELEASE-20261023-d1-operational.json), [D1정리](./verification/RELEASE-20261023-cleanup-d1.json), [R2정리](./verification/RELEASE-20261023-cleanup-r2.log) |
+
+운영 시나리오는 별도 context2개를 순차 사용했다. 새 세션 초기값·쿠키·세션별 CRUD/서버 판정·새로고침 보존, 사용자 분류 생성/이름/소속 추가·중복·제거/삭제, 개별/전체 정책·고정/custom 보호·필터 수량/쓰기0/삭제 복귀·완료 결과 유지를 확인했다. A의 exe/pdf 차단2요청은422, B의 pdf와 A의 허용 후 pdf는 각201이다. 업로드 총4요청(차단2/저장2), 성공 총56바이트, 동시 업로드1·자동 retry0·부하/대량 검사0이다.
+
+R2 키는 이번 응답의 UUID2개만 읽고 삭제했다. 원격 바이트와 SHA-256이 원본과 일치하고 예산은967734바이트/5회→967790바이트/7회로 정확히 증가했으며 정리 뒤에도 유지됐다. 실패 시도는 업로드0건이고 두 소유 세션만 정리했다. 다른 기존 파일·세션·정책을 삭제하거나 예산을 초기화하지 않았다. 최종 화면은 view_image로 열어 확인했다. 테스트 절차 보정 외 제품 코드/의존성 수정은 없으며 원본 과제를 보존했다. 결과 기록은 후속 커밋/푸시에 포함한다.
+
+마무리 검사는 배포 전 제품16개 해시 불일치0, 결과/보정 파일의 비밀값·로컬 데이터 후보0, 문서 링크/앵커 누락0·보호 파일6개 보존·Git 공백 검사 성공이다. [최종 검사](./verification/RELEASE-20261023-final-audit.json), [문서 검사](./verification/RELEASE-20261023-docs-final.json). 이 점검을 추가 운영 기능 통과 수로 합산하지 않았다.
+
 ## FINAL-LOCAL-01 — 최종 로컬 테스트 (2026-10-23)
 
 사용자 요청에 따라 완료 기록까지 현재 구현/테스트와 대조했다. [요건·구현·테스트 대응표와 누락 목록](./FINAL_LOCAL_REVIEW.md), [실패/리팩토링 기록](./TDD_LOG.md), [대화](./conversations/2026-10-23-011.md). 기존103개에서 검증이 부족했던 경계48개를 추가했고 이번 요청의 제품 코드 변경은 없다. 기대값/요건 완화·자동 retry·skip은 추가하지 않았다.

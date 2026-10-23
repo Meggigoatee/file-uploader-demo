@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 
 const baseURL = process.env.UPLOADER_BASE_URL ?? 'https://file-uploader-demo.meggigoatee.workers.dev';
 const rehearsal = baseURL === 'http://127.0.0.1:4173';
-const prefix = rehearsal ? 'RELEASE-20261023-rehearsal' : 'RELEASE-20261023';
+const prefix = process.env.UPLOADER_VERIFICATION_PREFIX ?? (rehearsal ? 'RELEASE-20261023-rehearsal' : 'RELEASE-20261023');
 const environmentPath = process.env.UPLOADER_ENVIRONMENT_REPORT ?? '.docs/verification/RELEASE-20261023-environment.json';
 const privateDirectory = resolve('.wrangler/release');
 const ledgerPath = resolve(privateDirectory, prefix + '-ledger.json');
@@ -101,6 +101,8 @@ test('RELEASE: isolated sessions, category/policy lifecycle and two tiny real up
     await card(a.page, groupName).getByRole('button', { name: groupName + ' 이름 변경', exact: true }).click();
     await a.page.getByRole('dialog').getByRole('textbox').fill(renamed);
     await a.page.getByRole('dialog').getByRole('button', { name: '저장', exact: true }).click();
+    await expect(a.page.getByRole('dialog')).not.toBeVisible();
+    await expect(card(a.page, renamed)).toContainText('3종 중 0종 차단');
     await a.page.reload(); await expect(card(a.page, renamed)).toContainText('3종 중 0종 차단');
     const { categories } = await (await a.context.request.get('/api/policies/categories')).json();
     const group = categories.find((c: any) => c.name === renamed); expect(group).toBeTruthy();

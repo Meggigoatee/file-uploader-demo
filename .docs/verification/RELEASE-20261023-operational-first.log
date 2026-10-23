@@ -1,0 +1,43 @@
+
+Running 1 test using 1 worker
+
+(node:24176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 tests\remote\release.spec.ts:15:1 › RELEASE: isolated sessions, category/policy lifecycle and two tiny real uploads (29.8s)
+
+
+  1) tests\remote\release.spec.ts:15:1 › RELEASE: isolated sessions, category/policy lifecycle and two tiny real uploads 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: '운영검증-e0c75df7b2-수정 카테고리', exact: true })
+    Expected substring: "3종 중 0종 차단"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: '운영검증-e0c75df7b2-수정 카테고리', exact: true }) with timeout 5000ms
+      - waiting for getByRole('region', { name: '운영검증-e0c75df7b2-수정 카테고리', exact: true })
+
+
+      102 |     await a.page.getByRole('dialog').getByRole('textbox').fill(renamed);
+      103 |     await a.page.getByRole('dialog').getByRole('button', { name: '저장', exact: true }).click();
+    > 104 |     await a.page.reload(); await expect(card(a.page, renamed)).toContainText('3종 중 0종 차단');
+          |                                                                ^
+      105 |     const { categories } = await (await a.context.request.get('/api/policies/categories')).json();
+      106 |     const group = categories.find((c: any) => c.name === renamed); expect(group).toBeTruthy();
+      107 |     expect((await b.context.request.delete('/api/policies/categories/' + group.id)).status()).toBe(404);
+        at D:\garage\file-uploader-demo\tests\remote\release.spec.ts:104:64
+
+    Error Context: .wrangler\release-production-playwright\release-RELEASE-isolated-s-df514-e-and-two-tiny-real-uploads\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    .wrangler\release-production-playwright\release-RELEASE-isolated-s-df514-e-and-two-tiny-real-uploads\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace .wrangler\release-production-playwright\release-RELEASE-isolated-s-df514-e-and-two-tiny-real-uploads\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\remote\release.spec.ts:15:1 › RELEASE: isolated sessions, category/policy lifecycle and two tiny real uploads 
